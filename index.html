@@ -525,11 +525,14 @@
 
         const pageTitle = document.getElementById('pageTitle');
         if (pageId === 'page1') {
-            pageTitle.textContent = '簡易記帳';
-        } else {
-            pageTitle.textContent = '統計分析';
-            updatePage2Stats();
-        }
+        pageTitle.textContent = '簡易記帳';
+    } else if (pageId === 'page2') {
+        pageTitle.textContent = '統計分析';
+        updatePage2Stats();
+    } else if (pageId === 'page3') { // <-- 新增 page3 的判斷
+        pageTitle.textContent = '儲蓄目標';
+        loadSavingsData();
+    }
 
         // 切換頁面後自動收合選單
         document.getElementById('dropdownContainer').classList.remove('active');
@@ -667,6 +670,40 @@
 
     // 初次載入
     updateUI();
+    // 儲存儲蓄資料
+function saveSavingsData() {
+    const goal = parseFloat(document.getElementById('savingsGoalInput').value) || 0;
+    const current = parseFloat(document.getElementById('savingsCurrentInput').value) || 0;
+
+    const savingsData = { goal, current };
+    localStorage.setItem('savingsData', JSON.stringify(savingsData));
+
+    updateSavingsUI(goal, current);
+    alert('儲蓄目標已成功更新！');
+}
+
+    // 載入並讀取儲蓄資料
+function loadSavingsData() {
+    const saved = JSON.parse(localStorage.getItem('savingsData')) || { goal: 0, current: 0 };
+    
+    document.getElementById('savingsGoalInput').value = saved.goal || '';
+    document.getElementById('savingsCurrentInput').value = saved.current || '';
+
+    updateSavingsUI(saved.goal, saved.current);
+}
+
+    // 更新儲蓄進度條與文字 UI
+function updateSavingsUI(goal, current) {
+    let percent = 0;
+    if (goal > 0) {
+        percent = Math.min((current / goal) * 100, 100); // 最高不超過 100%
+    }
+
+    document.getElementById('savingsPercent').textContent = `${percent.toFixed(1)}%`;
+    document.getElementById('progressBar').style.width = `${percent}%`;
+    document.getElementById('currentAmountText').textContent = current.toFixed(2);
+    document.getElementById('goalAmountText').textContent = goal.toFixed(2);
+}
 </script>
 
 </body>
