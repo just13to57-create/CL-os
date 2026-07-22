@@ -36,7 +36,7 @@
             position: relative;
         }
 
-        /* ----- 新增：右上角導覽頁籤 ----- */
+        /* ----- 修改：右上角選單與標題區塊 ----- */
         .nav-header {
             display: flex;
             justify-content: space-between;
@@ -48,28 +48,25 @@
             margin-bottom: 0;
         }
 
-        .nav-buttons {
-            display: flex;
-            gap: 6px;
-        }
-
-        .nav-btn {
-            background-color: #E2DDD9;
-            color: #6C6B6B;
-            border: none;
+        /* 右上角下拉式頁面切換選單 */
+        .nav-select {
+            width: auto;
             padding: 6px 12px;
+            background-color: #E2DDD9;
+            color: #4A4A4A;
+            border: 1px solid #D1CAC5;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            outline: none;
             transition: all 0.3s ease;
-            width: auto;
-            margin-top: 0;
         }
 
-        .nav-btn.active, .nav-btn:hover {
+        .nav-select:hover, .nav-select:focus {
             background-color: #7A8B7B;
             color: #FFFFFF;
+            border-color: #7A8B7B;
         }
 
         /* 頁面切換顯示控制 */
@@ -288,13 +285,14 @@
 <body>
 
 <div class="card">
-    <!-- 頂部區塊：包含標題與右上角跳轉按鈕 -->
+    <!-- 頂部區塊：包含標題與右上角選單 -->
     <div class="nav-header">
         <h2 id="pageTitle">簡易記帳</h2>
-        <div class="nav-buttons">
-            <button class="nav-btn active" onclick="switchPage('page1', this)">記帳</button>
-            <button class="nav-btn" onclick="switchPage('page2', this)">統計分析</button>
-        </div>
+        <!-- 修改：改為下拉選單功能 -->
+        <select class="nav-select" id="pageSelect" onchange="switchPage(this.value)">
+            <option value="page1">📝 記帳</option>
+            <option value="page2">📊 統計分析</option>
+        </select>
     </div>
 
     <!-- ================= 第一頁：主記帳頁面 ================= -->
@@ -413,16 +411,13 @@
         }
     });
 
-    // 頁面切換邏輯
-    function switchPage(pageId, btn) {
+    // 修改：頁面切換邏輯 (由下拉選單選取值驅動)
+    function switchPage(pageId) {
         // 隱藏所有頁面
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-        // 移除所有按鈕 active 樣式
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-        // 顯示目標頁面與亮起對應按鈕
+        // 顯示目標頁面
         document.getElementById(pageId).classList.add('active');
-        btn.classList.add('active');
 
         // 動態變更標題
         const pageTitle = document.getElementById('pageTitle');
