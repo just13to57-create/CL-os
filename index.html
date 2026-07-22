@@ -119,12 +119,28 @@
             justify-content: center;
         }
 
+        /* 展開/收合明細按鈕樣式 */
+        .toggle-btn {
+            background-color: transparent;
+            color: #6C6B6B;
+            border: 1px dashed #D1CAC5;
+            margin-top: 18px;
+            font-size: 14px;
+        }
+
+        .toggle-btn:hover {
+            background-color: #F0ECE9;
+            color: #4A5859;
+        }
+
+        /* 明細清單 (預設隱藏) */
         .record-list {
-            margin-top: 22px;
+            margin-top: 12px;
             max-height: 220px;
             overflow-y: auto;
             border-top: 1px solid #EBE7E4;
             padding-top: 8px;
+            display: none; /* 預設不顯示 */
         }
 
         .record-item {
@@ -248,6 +264,9 @@
         <canvas id="expenseChart"></canvas>
     </div>
 
+    <!-- 切換顯示/隱藏詳細記錄按鈕 -->
+    <button type="button" class="toggle-btn" id="toggleListBtn" onclick="toggleRecordList()">📋 查看消費明細</button>
+
     <div class="record-list" id="recordList">
         <!-- 記帳明細會動態顯示在這裡 -->
     </div>
@@ -259,6 +278,7 @@
     const form = document.getElementById('expenseForm');
     const recordList = document.getElementById('recordList');
     const totalAmountEl = document.getElementById('totalAmount');
+    const toggleListBtn = document.getElementById('toggleListBtn');
     
     // 初始化 Chart.js 圓餅圖 (使用莫蘭迪調色盤)
     const ctx = document.getElementById('expenseChart').getContext('2d');
@@ -346,6 +366,18 @@
         
         // 更新圓餅圖
         updateChart();
+    }
+
+    // 切換顯示/隱藏詳細記錄
+    function toggleRecordList() {
+        const isHidden = recordList.style.display === '' || recordList.style.display === 'none';
+        if (isHidden) {
+            recordList.style.display = 'block';
+            toggleListBtn.textContent = '▲ 收合消費明細';
+        } else {
+            recordList.style.display = 'none';
+            toggleListBtn.textContent = '📋 查看消費明細';
+        }
     }
 
     // 格式化當前日期時間 (格式：YYYY-MM-DD HH:mm)
