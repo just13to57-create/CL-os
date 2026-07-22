@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>個人簡易記帳本 - 莫蘭迪風格</title>
-    <!-- 引入 Chart.js 用於繪製圓餅圖 -->
+    <!-- 引入 Chart.js 用於繪製圖表 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -33,16 +33,55 @@
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             border: 1px solid #E2DDD9;
+            position: relative;
         }
 
-        h2 {
-            text-align: center;
-            /* 莫蘭迪石灰藍文字 */
-            color: #4A5859;
+        /* ----- 新增：右上角導覽頁籤 ----- */
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 22px;
-            font-weight: 600;
-            letter-spacing: 1px;
         }
+
+        .nav-header h2 {
+            margin-bottom: 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .nav-btn {
+            background-color: #E2DDD9;
+            color: #6C6B6B;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: auto;
+            margin-top: 0;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            background-color: #7A8B7B;
+            color: #FFFFFF;
+        }
+
+        /* 頁面切換顯示控制 */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ---------------------------------- */
 
         .form-group {
             margin-bottom: 16px;
@@ -51,7 +90,6 @@
         label {
             display: block;
             margin-bottom: 6px;
-            /* 莫蘭迪深灰棕 */
             color: #6C6B6B;
             font-weight: 600;
             font-size: 14px;
@@ -75,10 +113,9 @@
             box-shadow: 0 0 0 3px rgba(142, 154, 175, 0.2);
         }
 
-        button {
+        .submit-btn {
             width: 100%;
             padding: 12px;
-            /* 莫蘭迪灰綠色按鈕 */
             background-color: #7A8B7B;
             color: #FFFFFF;
             border: none;
@@ -90,18 +127,17 @@
             margin-top: 5px;
         }
 
-        button:hover {
+        .submit-btn:hover {
             background-color: #687769;
         }
 
-        button:active {
+        .submit-btn:active {
             transform: scale(0.99);
         }
 
         .summary {
             margin-top: 22px;
             padding: 14px;
-            /* 莫蘭迪鼠尾草綠背景 */
             background-color: #E2E8E4;
             border-radius: 8px;
             text-align: center;
@@ -119,13 +155,16 @@
             justify-content: center;
         }
 
-        /* 展開/收合明細按鈕樣式 */
         .toggle-btn {
             background-color: transparent;
             color: #6C6B6B;
             border: 1px dashed #D1CAC5;
             margin-top: 18px;
             font-size: 14px;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         .toggle-btn:hover {
@@ -133,14 +172,13 @@
             color: #4A5859;
         }
 
-        /* 明細清單 (預設隱藏) */
         .record-list {
             margin-top: 12px;
             max-height: 220px;
             overflow-y: auto;
             border-top: 1px solid #EBE7E4;
             padding-top: 8px;
-            display: none; /* 預設不顯示 */
+            display: none;
         }
 
         .record-item {
@@ -174,7 +212,6 @@
         }
 
         .category-badge {
-            /* 莫蘭迪霧藍灰標籤 */
             background-color: #D8E2DC;
             color: #4A5859;
             padding: 3px 8px;
@@ -188,7 +225,6 @@
         .delete-btn {
             background: none;
             border: none;
-            /* 莫蘭迪乾燥玫瑰紅 */
             color: #C97A7E;
             cursor: pointer;
             font-size: 15px;
@@ -199,11 +235,47 @@
         }
 
         .delete-btn:hover {
-            background: none;
             color: #A3565A;
         }
 
-        /* 滾動條美化 (莫蘭迪風格) */
+        /* 第二頁專用樣式 */
+        .stat-card {
+            background-color: #F0ECE9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-card h4 {
+            color: #6C6B6B;
+            font-size: 14px;
+        }
+
+        .stat-card .value {
+            color: #4A5859;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .danger-btn {
+            background-color: #C97A7E;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .danger-btn:hover {
+            background-color: #A3565A;
+        }
+
         .record-list::-webkit-scrollbar {
             width: 6px;
         }
@@ -216,59 +288,87 @@
 <body>
 
 <div class="card">
-    <h2>簡易記帳本</h2>
-    
-    <form id="expenseForm">
-        <div class="form-group">
-            <label for="amount">金額 ($)</label>
-            <input type="number" id="amount" placeholder="請輸入金額" required min="1">
+    <!-- 頂部區塊：包含標題與右上角跳轉按鈕 -->
+    <div class="nav-header">
+        <h2 id="pageTitle">簡易記帳</h2>
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="switchPage('page1', this)">記帳</button>
+            <button class="nav-btn" onclick="switchPage('page2', this)">統計分析</button>
         </div>
-
-        <div class="form-group">
-            <label for="category">類別</label>
-            <select id="category" required>
-                <optgroup label="食">
-                    <option value="食-點心">🍿 食-點心</option>
-                    <option value="食-外賣">🛵 食-外賣</option>
-                    <option value="食-餐廳">🍱 食-餐廳</option>
-                    <option value="食-食材">🥦 食-食材</option>
-                </optgroup>
-                <optgroup label="生活用品">
-                    <option value="生活用品-消耗">🧻 生活用品-消耗</option>
-                    <option value="生活用品-非消耗">🧹 生活用品-非消耗</option>
-                </optgroup>
-                <optgroup label="其他主要類別">
-                    <option value="住">🏠 住</option>
-                    <option value="交通">🚗 交通</option>
-                    <option value="娛樂">🎮 娛樂</option>
-                    <option value="保險">🛡️ 保險</option>
-                    <option value="可報銷">🧾 可報銷</option>
-                </optgroup>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="note">備註 (可選)</label>
-            <input type="text" id="note" placeholder="如：珍珠奶茶、房租">
-        </div>
-
-        <button type="submit">新增記錄</button>
-    </form>
-
-    <div class="summary">
-        總支出：$<span id="totalAmount">0</span>
     </div>
 
-    <!-- 圓餅圖容器 -->
-    <div class="chart-container">
-        <canvas id="expenseChart"></canvas>
+    <!-- ================= 第一頁：主記帳頁面 ================= -->
+    <div id="page1" class="page active">
+        <form id="expenseForm">
+            <div class="form-group">
+                <label for="amount">金額 ($)</label>
+                <input type="number" id="amount" placeholder="請輸入金額" required min="1">
+            </div>
+
+            <div class="form-group">
+                <label for="category">類別</label>
+                <select id="category" required>
+                    <optgroup label="食">
+                        <option value="食-點心">🍿 食-點心</option>
+                        <option value="食-外賣">🛵 食-外賣</option>
+                        <option value="食-餐廳">🍱 食-餐廳</option>
+                        <option value="食-食材">🥦 食-食材</option>
+                    </optgroup>
+                    <optgroup label="生活用品">
+                        <option value="生活用品-消耗">🧻 生活用品-消耗</option>
+                        <option value="生活用品-非消耗">🧹 生活用品-非消耗</option>
+                    </optgroup>
+                    <optgroup label="其他主要類別">
+                        <option value="住">🏠 住</option>
+                        <option value="交通">🚗 交通</option>
+                        <option value="娛樂">🎮 娛樂</option>
+                        <option value="保險">🛡️ 保險</option>
+                        <option value="可報銷">🧾 可報銷</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="note">備註 (可選)</label>
+                <input type="text" id="note" placeholder="如：珍珠奶茶、房租">
+            </div>
+
+            <button type="submit" class="submit-btn">新增記錄</button>
+        </form>
+
+        <div class="summary">
+            總支出：$<span id="totalAmount">0</span>
+        </div>
+
+        <!-- 圓餅圖容器 -->
+        <div class="chart-container">
+            <canvas id="expenseChart"></canvas>
+        </div>
+
+        <!-- 切換顯示/隱藏詳細記錄按鈕 -->
+        <button type="button" class="toggle-btn" id="toggleListBtn" onclick="toggleRecordList()">📋 查看消費明細</button>
+
+        <div class="record-list" id="recordList">
+            <!-- 記帳明細會動態顯示在這裡 -->
+        </div>
     </div>
 
-    <!-- 切換顯示/隱藏詳細記錄按鈕 -->
-    <button type="button" class="toggle-btn" id="toggleListBtn" onclick="toggleRecordList()">📋 查看消費明細</button>
+    <!-- ================= 第二頁：統計分析與管理頁面 ================= -->
+    <div id="page2" class="page">
+        <div class="stat-card">
+            <h4>筆數統計</h4>
+            <div class="value" id="totalCount">0 筆</div>
+        </div>
+        <div class="stat-card">
+            <h4>單筆最高金額</h4>
+            <div class="value" id="maxAmount">$0</div>
+        </div>
+        <div class="stat-card">
+            <h4>平均單筆支出</h4>
+            <div class="value" id="avgAmount">$0</div>
+        </div>
 
-    <div class="record-list" id="recordList">
-        <!-- 記帳明細會動態顯示在這裡 -->
+        <button class="danger-btn" onclick="clearAllData()">🗑️ 清空所有記帳資料</button>
     </div>
 </div>
 
@@ -280,7 +380,7 @@
     const totalAmountEl = document.getElementById('totalAmount');
     const toggleListBtn = document.getElementById('toggleListBtn');
     
-    // 初始化 Chart.js 圓餅圖 (使用莫蘭迪調色盤)
+    // 初始化 Chart.js 圓餅圖
     const ctx = document.getElementById('expenseChart').getContext('2d');
     let expenseChart = new Chart(ctx, {
         type: 'pie',
@@ -288,7 +388,6 @@
             labels: [],
             datasets: [{
                 data: [],
-                // 莫蘭迪特調色系
                 backgroundColor: [
                     '#8E9AAF', '#CBC0D3', '#EFD3D7', '#FEEAFA', 
                     '#DEE2E6', '#A3B18A', '#588157', '#B5838D', 
@@ -306,9 +405,7 @@
                     position: 'bottom',
                     labels: {
                         color: '#6C6B6B',
-                        font: {
-                            size: 12
-                        },
+                        font: { size: 12 },
                         padding: 12
                     }
                 }
@@ -316,10 +413,49 @@
         }
     });
 
+    // 頁面切換邏輯
+    function switchPage(pageId, btn) {
+        // 隱藏所有頁面
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        // 移除所有按鈕 active 樣式
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+        // 顯示目標頁面與亮起對應按鈕
+        document.getElementById(pageId).classList.add('active');
+        btn.classList.add('active');
+
+        // 動態變更標題
+        const pageTitle = document.getElementById('pageTitle');
+        if (pageId === 'page1') {
+            pageTitle.textContent = '簡易記帳';
+        } else {
+            pageTitle.textContent = '統計分析';
+            updatePage2Stats(); // 切換到第二頁時更新數據
+        }
+    }
+
+    // 更新第二頁統計數據
+    function updatePage2Stats() {
+        const count = records.length;
+        let max = 0;
+        let total = 0;
+
+        records.forEach(r => {
+            const amt = Number(r.amount);
+            total += amt;
+            if (amt > max) max = amt;
+        });
+
+        const avg = count > 0 ? Math.round(total / count) : 0;
+
+        document.getElementById('totalCount').textContent = `${count} 筆`;
+        document.getElementById('maxAmount').textContent = `$${max}`;
+        document.getElementById('avgAmount').textContent = `$${avg}`;
+    }
+
     // 更新圖表資料
     function updateChart() {
         const categoryTotals = {};
-
         records.forEach(record => {
             const cat = record.category;
             const amt = Number(record.amount);
@@ -341,8 +477,6 @@
 
             const item = document.createElement('div');
             item.className = 'record-item';
-            
-            // 若為舊紀錄可能沒有日期，做相容處理
             const recordDate = record.date ? record.date : '未知時間';
 
             item.innerHTML = `
@@ -364,7 +498,6 @@
         totalAmountEl.textContent = total;
         localStorage.setItem('expenses', JSON.stringify(records));
         
-        // 更新圓餅圖
         updateChart();
     }
 
@@ -380,7 +513,7 @@
         }
     }
 
-    // 格式化當前日期時間 (格式：YYYY-MM-DD HH:mm)
+    // 格式化當前日期時間
     function getCurrentFormattedDate() {
         const now = new Date();
         const year = now.getFullYear();
@@ -399,7 +532,7 @@
         const amount = document.getElementById('amount').value;
         const category = document.getElementById('category').value;
         const note = document.getElementById('note').value;
-        const currentDate = getCurrentFormattedDate(); // 自動抓取日期
+        const currentDate = getCurrentFormattedDate();
 
         const newRecord = {
             amount: amount,
@@ -408,7 +541,6 @@
             date: currentDate
         };
 
-        // 新紀錄插在最前面，讓最新的顯示在頂部
         records.unshift(newRecord);
         updateUI();
 
@@ -419,6 +551,15 @@
     function deleteRecord(index) {
         records.splice(index, 1);
         updateUI();
+    }
+
+    // 清空所有資料功能
+    function clearAllData() {
+        if (confirm('確定要清空所有記帳記錄嗎？此動作無法復原喔！')) {
+            records = [];
+            updateUI();
+            updatePage2Stats();
+        }
     }
 
     // 初次載入
