@@ -154,8 +154,7 @@
 
         .record-date {
             font-size: 11px;
-            color: #A09A95;
-            letter-spacing: 0.5px;
+            color: #9E9E9E;
         }
 
         .category-badge {
@@ -297,18 +296,6 @@
         }
     });
 
-    // 取得當前格式化日期時間 (例如: 2026/03/30 14:30)
-    function getCurrentFormattedDate() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        
-        return `${year}/${month}/${day} ${hours}:${minutes}`;
-    }
-
     // 更新圖表資料
     function updateChart() {
         const categoryTotals = {};
@@ -329,17 +316,14 @@
         recordList.innerHTML = '';
         let total = 0;
 
-        // 倒序顯示，最新新增的紀錄排在最上面
-        records.slice().reverse().forEach((record, reverseIndex) => {
-            // 計算回原本陣列的真實 index (用於刪除)
-            const realIndex = records.length - 1 - reverseIndex;
+        records.forEach((record, index) => {
             total += Number(record.amount);
 
             const item = document.createElement('div');
             item.className = 'record-item';
             
-            // 處理舊紀錄沒有 date 的情況
-            const displayDate = record.date ? record.date : '早期紀錄';
+            // 若為舊紀錄可能沒有日期，做相容處理
+            const recordDate = record.date ? record.date : '未知時間';
 
             item.innerHTML = `
                 <div class="record-info">
@@ -347,11 +331,11 @@
                         <span class="category-badge">${record.category}</span>
                         <span>${record.note ? record.note : record.category}</span>
                     </div>
-                    <div class="record-date">🕒 ${displayDate}</div>
+                    <div class="record-date">${recordDate}</div>
                 </div>
                 <div>
                     <strong>$${record.amount}</strong>
-                    <button class="delete-btn" onclick="deleteRecord(${realIndex})">✕</button>
+                    <button class="delete-btn" onclick="deleteRecord(${index})">✕</button>
                 </div>
             `;
             recordList.appendChild(item);
@@ -364,6 +348,18 @@
         updateChart();
     }
 
+    // 格式化當前日期時間 (格式：YYYY-MM-DD HH:mm)
+    function getCurrentFormattedDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+
     // 表單提交事件
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -371,15 +367,17 @@
         const amount = document.getElementById('amount').value;
         const category = document.getElementById('category').value;
         const note = document.getElementById('note').value;
+        const currentDate = getCurrentFormattedDate(); // 自動抓取日期
 
         const newRecord = {
             amount: amount,
             category: category,
             note: note,
-            date: getCurrentFormattedDate() // 自動寫入日期與時間
+            date: currentDate
         };
 
-        records.push(newRecord);
+        // 新紀錄插在最前面，讓最新的顯示在頂部
+        records.unshift(newRecord);
         updateUI();
 
         form.reset();
