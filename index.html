@@ -153,6 +153,13 @@
             display: inline-block;
         }
 
+        /* 新增：日期文字樣式 */
+        .record-date {
+            font-size: 11px;
+            color: #A09D9A;
+            margin-bottom: 2px;
+        }
+
         .delete-btn {
             background: none;
             border: none;
@@ -252,7 +259,7 @@
             labels: [],
             datasets: [{
                 data: [],
-                // 莫蘭迪特調色系：霧綠、石灰藍、燕麥灰、乾燥玫瑰、奶茶、豆沙灰、淡芥末黃...
+                // 莫蘭迪特調色系
                 backgroundColor: [
                     '#8E9AAF', '#CBC0D3', '#EFD3D7', '#FEEAFA', 
                     '#DEE2E6', '#A3B18A', '#588157', '#B5838D', 
@@ -305,8 +312,10 @@
 
             const item = document.createElement('div');
             item.className = 'record-item';
+            // 包含日期顯示，舊資料如無日期則不顯示或顯示預設值
             item.innerHTML = `
                 <div>
+                    ${record.date ? `<div class="record-date">${record.date}</div>` : ''}
                     <span class="category-badge">${record.category}</span>
                     <span>${record.note ? record.note : record.category}</span>
                 </div>
@@ -333,10 +342,15 @@
         const category = document.getElementById('category').value;
         const note = document.getElementById('note').value;
 
+        // 自動取得當前系統日期 (格式: YYYY/MM/DD)
+        const now = new Date();
+        const formattedDate = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+
         const newRecord = {
             amount: amount,
             category: category,
-            note: note
+            note: note,
+            date: formattedDate // 存入自動生成的日期
         };
 
         records.push(newRecord);
