@@ -29,7 +29,19 @@
 
     <!-- ================= 第一頁：主記帳頁面 ================= -->
     <div id="page1" class="page active">
+        <!-- 核心新增：月分篩選器 (用於查看特定月份的圖表與明細) -->
+        <div class="form-group" style="background-color: #F0ECE9; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+            <label for="filterMonth">📅 檢視月份：</label>
+            <input type="month" id="filterMonth" onchange="onMonthChange()">
+        </div>
+
         <form id="expenseForm">
+            <!-- 新增：記帳日期 (預設為今天) -->
+            <div class="form-group">
+                <label for="date">日期</label>
+                <input type="date" id="date" required>
+            </div>
+
             <div class="form-group">
                 <label for="amount">金額 ($)</label>
                 <input type="number" id="amount" placeholder="請輸入金額" required min="0.01" step="0.01">
@@ -73,7 +85,7 @@
         </form>
 
         <div class="summary">
-            總支出：$<span id="totalAmount">0.00</span>
+            <span id="selectedMonthText">當月</span> 總支出：$<span id="totalAmount">0.00</span>
         </div>
 
         <!-- 圓餅圖容器 -->
@@ -92,15 +104,15 @@
     <!-- ================= 第二頁：統計分析與管理頁面 ================= -->
     <div id="page2" class="page">
         <div class="stat-card">
-            <h4>筆數統計</h4>
+            <h4 id="statCountTitle">當月筆數統計</h4>
             <div class="value" id="totalCount">0 筆</div>
         </div>
         <div class="stat-card">
-            <h4>單筆最高金額</h4>
+            <h4 id="statMaxTitle">當月單筆最高金額</h4>
             <div class="value" id="maxAmount">$0.00</div>
         </div>
         <div class="stat-card">
-            <h4>平均單筆支出</h4>
+            <h4 id="statAvgTitle">當月平均單筆支出</h4>
             <div class="value" id="avgAmount">$0.00</div>
         </div>
 
