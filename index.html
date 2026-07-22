@@ -36,7 +36,7 @@
             position: relative;
         }
 
-        /* ----- 修改：右上角選單與標題區塊 ----- */
+        /* ----- 新增：右上角導覽頁籤 ----- */
         .nav-header {
             display: flex;
             justify-content: space-between;
@@ -48,25 +48,28 @@
             margin-bottom: 0;
         }
 
-        /* 右上角下拉式頁面切換選單 */
-        .nav-select {
-            width: auto;
-            padding: 6px 12px;
+        .nav-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .nav-btn {
             background-color: #E2DDD9;
-            color: #4A4A4A;
-            border: 1px solid #D1CAC5;
+            color: #6C6B6B;
+            border: none;
+            padding: 6px 12px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            outline: none;
             transition: all 0.3s ease;
+            width: auto;
+            margin-top: 0;
         }
 
-        .nav-select:hover, .nav-select:focus {
+        .nav-btn.active, .nav-btn:hover {
             background-color: #7A8B7B;
             color: #FFFFFF;
-            border-color: #7A8B7B;
         }
 
         /* 頁面切換顯示控制 */
@@ -285,14 +288,13 @@
 <body>
 
 <div class="card">
-    <!-- 頂部區塊：包含標題與右上角選單 -->
+    <!-- 頂部區塊：包含標題與右上角跳轉按鈕 -->
     <div class="nav-header">
         <h2 id="pageTitle">簡易記帳</h2>
-        <!-- 修改：改為下拉選單功能 -->
-        <select class="nav-select" id="pageSelect" onchange="switchPage(this.value)">
-            <option value="page1">📝 記帳</option>
-            <option value="page2">📊 統計分析</option>
-        </select>
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="switchPage('page1', this)">記帳</button>
+            <button class="nav-btn" onclick="switchPage('page2', this)">統計分析</button>
+        </div>
     </div>
 
     <!-- ================= 第一頁：主記帳頁面 ================= -->
@@ -300,7 +302,8 @@
         <form id="expenseForm">
             <div class="form-group">
                 <label for="amount">金額 ($)</label>
-                <input type="number" id="amount" placeholder="請輸入金額" required min="1">
+                <!-- 調整點：新增 step="0.01" 與 min="0.01" 支援小數點後兩位 -->
+                <input type="number" id="amount" placeholder="請輸入金額" required min="0.01" step="0.01">
             </div>
 
             <div class="form-group">
@@ -335,7 +338,7 @@
         </form>
 
         <div class="summary">
-            總支出：$<span id="totalAmount">0</span>
+            總支出：$<span id="totalAmount">0.00</span>
         </div>
 
         <!-- 圓餅圖容器 -->
@@ -359,11 +362,11 @@
         </div>
         <div class="stat-card">
             <h4>單筆最高金額</h4>
-            <div class="value" id="maxAmount">$0</div>
+            <div class="value" id="maxAmount">$0.00</div>
         </div>
         <div class="stat-card">
             <h4>平均單筆支出</h4>
-            <div class="value" id="avgAmount">$0</div>
+            <div class="value" id="avgAmount">$0.00</div>
         </div>
 
         <button class="danger-btn" onclick="clearAllData()">🗑️ 清空所有記帳資料</button>
@@ -411,21 +414,20 @@
         }
     });
 
-    // 修改：頁面切換邏輯 (由下拉選單選取值驅動)
-    function switchPage(pageId) {
-        // 隱藏所有頁面
+    // 頁面切換邏輯
+    function switchPage(pageId, btn) {
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-        // 顯示目標頁面
         document.getElementById(pageId).classList.add('active');
+        btn.classList.add('active');
 
-        // 動態變更標題
         const pageTitle = document.getElementById('pageTitle');
         if (pageId === 'page1') {
             pageTitle.textContent = '簡易記帳';
         } else {
             pageTitle.textContent = '統計分析';
-            updatePage2Stats(); // 切換到第二頁時更新數據
+            updatePage2Stats();
         }
     }
 
@@ -436,16 +438,17 @@
         let total = 0;
 
         records.forEach(r => {
-            const amt = Number(r.amount);
+            const amt = parseFloat(r.amount) || 0;
             total += amt;
             if (amt > max) max = amt;
         });
 
-        const avg = count > 0 ? Math.round(total / count) : 0;
+        // 調整點：使用 toFixed(2) 顯示小數點後兩位
+        const avg = count > 0 ? (total / count) : 0;
 
         document.getElementById('totalCount').textContent = `${count} 筆`;
-        document.getElementById('maxAmount').textContent = `$${max}`;
-        document.getElementById('avgAmount').textContent = `$${avg}`;
+        document.getElementById('maxAmount').textContent = `$${max.toFixed(2)}`;
+        document.getElementById('avgAmount').textContent = `$${avg.toFixed(2)}`;
     }
 
     // 更新圖表資料
@@ -453,12 +456,13 @@
         const categoryTotals = {};
         records.forEach(record => {
             const cat = record.category;
-            const amt = Number(record.amount);
+            const amt = parseFloat(record.amount) || 0;
             categoryTotals[cat] = (categoryTotals[cat] || 0) + amt;
         });
 
         expenseChart.data.labels = Object.keys(categoryTotals);
-        expenseChart.data.datasets[0].data = Object.values(categoryTotals);
+        // 確保圖表數據精確
+        expenseChart.data.datasets[0].data = Object.values(categoryTotals).map(v => v.toFixed(2));
         expenseChart.update();
     }
 
@@ -468,12 +472,14 @@
         let total = 0;
 
         records.forEach((record, index) => {
-            total += Number(record.amount);
+            const amt = parseFloat(record.amount) || 0;
+            total += amt;
 
             const item = document.createElement('div');
             item.className = 'record-item';
             const recordDate = record.date ? record.date : '未知時間';
 
+            // 調整點：金額格式化為小數點後兩位
             item.innerHTML = `
                 <div class="record-info">
                     <div class="record-main">
@@ -483,14 +489,15 @@
                     <div class="record-date">${recordDate}</div>
                 </div>
                 <div>
-                    <strong>$${record.amount}</strong>
+                    <strong>$${amt.toFixed(2)}</strong>
                     <button class="delete-btn" onclick="deleteRecord(${index})">✕</button>
                 </div>
             `;
             recordList.appendChild(item);
         });
 
-        totalAmountEl.textContent = total;
+        // 調整點：總金額顯示至小數點兩位
+        totalAmountEl.textContent = total.toFixed(2);
         localStorage.setItem('expenses', JSON.stringify(records));
         
         updateChart();
@@ -524,7 +531,9 @@
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        const amount = document.getElementById('amount').value;
+        // 調整點：轉換並保留格式
+        const rawAmount = parseFloat(document.getElementById('amount').value);
+        const amount = rawAmount ? rawAmount.toFixed(2) : '0.00';
         const category = document.getElementById('category').value;
         const note = document.getElementById('note').value;
         const currentDate = getCurrentFormattedDate();
