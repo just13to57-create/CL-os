@@ -36,7 +36,7 @@
             position: relative;
         }
 
-        /* ----- 新增：右上角導覽頁籤 ----- */
+        /* ----- 右上角選單結構 ----- */
         .nav-header {
             display: flex;
             justify-content: space-between;
@@ -48,28 +48,74 @@
             margin-bottom: 0;
         }
 
-        .nav-buttons {
-            display: flex;
-            gap: 6px;
+        .dropdown-container {
+            position: relative;
         }
 
-        .nav-btn {
+        /* 小方形按鈕 */
+        .dropdown-btn {
             background-color: #E2DDD9;
             color: #6C6B6B;
             border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px; /* 小方形略帶圓角 */
+            font-size: 16px;
             cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transition: all 0.3s ease;
-            width: auto;
-            margin-top: 0;
         }
 
-        .nav-btn.active, .nav-btn:hover {
+        .dropdown-btn:hover, .dropdown-container.active .dropdown-btn {
             background-color: #7A8B7B;
             color: #FFFFFF;
+        }
+
+        /* 下拉選單選單 */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 6px;
+            background-color: #FFFFFF;
+            border: 1px solid #E2DDD9;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: none; /* 預設隱藏 */
+            flex-direction: column;
+            width: 110px;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        /* 顯示下拉選單 */
+        .dropdown-container.active .dropdown-menu {
+            display: flex;
+        }
+
+        .dropdown-item {
+            background: none;
+            border: none;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 14px;
+            color: #6C6B6B;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+            width: 100%;
+        }
+
+        .dropdown-item:hover {
+            background-color: #F8F7F5;
+            color: #4A4A4A;
+        }
+
+        .dropdown-item.active {
+            color: #7A8B7B;
+            background-color: #E2E8E4;
         }
 
         /* 頁面切換顯示控制 */
@@ -288,12 +334,17 @@
 <body>
 
 <div class="card">
-    <!-- 頂部區塊：包含標題與右上角跳轉按鈕 -->
+    <!-- 頂部區塊：包含標題與右上角小方形選單 -->
     <div class="nav-header">
         <h2 id="pageTitle">簡易記帳</h2>
-        <div class="nav-buttons">
-            <button class="nav-btn active" onclick="switchPage('page1', this)">記帳</button>
-            <button class="nav-btn" onclick="switchPage('page2', this)">統計分析</button>
+        
+        <!-- 右上角小方形下拉選單 -->
+        <div class="dropdown-container" id="dropdownContainer">
+            <button class="dropdown-btn" onclick="toggleDropdown(event)" aria-label="切換選單">☰</button>
+            <div class="dropdown-menu">
+                <button class="dropdown-item active" onclick="switchPage('page1', this)">記帳</button>
+                <button class="dropdown-item" onclick="switchPage('page2', this)">統計分析</button>
+            </div>
         </div>
     </div>
 
@@ -302,7 +353,6 @@
         <form id="expenseForm">
             <div class="form-group">
                 <label for="amount">金額 ($)</label>
-                <!-- 調整點：新增 step="0.01" 與 min="0.01" 支援小數點後兩位 -->
                 <input type="number" id="amount" placeholder="請輸入金額" required min="0.01" step="0.01">
             </div>
 
@@ -414,10 +464,25 @@
         }
     });
 
+    // 控制下拉選單展開/收合
+    function toggleDropdown(e) {
+        e.stopPropagation();
+        const container = document.getElementById('dropdownContainer');
+        container.classList.toggle('active');
+    }
+
+    // 點擊頁面其他地方時，自動關閉下拉選單
+    window.addEventListener('click', () => {
+        const container = document.getElementById('dropdownContainer');
+        if (container.classList.contains('active')) {
+            container.classList.remove('active');
+        }
+    });
+
     // 頁面切換邏輯
     function switchPage(pageId, btn) {
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.dropdown-item').forEach(b => b.classList.remove('active'));
 
         document.getElementById(pageId).classList.add('active');
         btn.classList.add('active');
@@ -429,6 +494,9 @@
             pageTitle.textContent = '統計分析';
             updatePage2Stats();
         }
+
+        // 切換頁面後自動收合選單
+        document.getElementById('dropdownContainer').classList.remove('active');
     }
 
     // 更新第二頁統計數據
@@ -443,7 +511,6 @@
             if (amt > max) max = amt;
         });
 
-        // 調整點：使用 toFixed(2) 顯示小數點後兩位
         const avg = count > 0 ? (total / count) : 0;
 
         document.getElementById('totalCount').textContent = `${count} 筆`;
@@ -461,7 +528,6 @@
         });
 
         expenseChart.data.labels = Object.keys(categoryTotals);
-        // 確保圖表數據精確
         expenseChart.data.datasets[0].data = Object.values(categoryTotals).map(v => v.toFixed(2));
         expenseChart.update();
     }
@@ -479,7 +545,6 @@
             item.className = 'record-item';
             const recordDate = record.date ? record.date : '未知時間';
 
-            // 調整點：金額格式化為小數點後兩位
             item.innerHTML = `
                 <div class="record-info">
                     <div class="record-main">
@@ -496,7 +561,6 @@
             recordList.appendChild(item);
         });
 
-        // 調整點：總金額顯示至小數點兩位
         totalAmountEl.textContent = total.toFixed(2);
         localStorage.setItem('expenses', JSON.stringify(records));
         
@@ -531,7 +595,6 @@
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // 調整點：轉換並保留格式
         const rawAmount = parseFloat(document.getElementById('amount').value);
         const amount = rawAmount ? rawAmount.toFixed(2) : '0.00';
         const category = document.getElementById('category').value;
