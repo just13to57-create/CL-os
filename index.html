@@ -1,146 +1,279 @@
 <!DOCTYPE html>
+
 <html lang="zh-TW">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>個人簡易記帳本 - 莫蘭迪風格</title>
+
     <!-- 引入外部 CSS 檔 -->
+
     <link rel="stylesheet" href="style.css">
+
     <!-- 引入 Chart.js 用於繪製圖表 -->
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
 
+
+
 <div class="card">
+
     <!-- 頂部區塊：包含標題與右上角小方形選單 -->
+
     <div class="nav-header">
+
         <h2 id="pageTitle">簡易記帳</h2>
+
         
+
         <!-- 右上角小方形下拉選單 -->
+
         <div class="dropdown-container" id="dropdownContainer">
+
             <button class="dropdown-btn" onclick="toggleDropdown(event)" aria-label="切換選單">☰</button>
+
             <div class="dropdown-menu">
+
                 <button class="dropdown-item active" onclick="switchPage('page1', this)">記帳</button>
+
                 <button class="dropdown-item" onclick="switchPage('page2', this)">統計分析</button>
+
                 <button class="dropdown-item" onclick="switchPage('page3', this)">儲蓄目標</button>
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <!-- ================= 第一頁：主記帳頁面 ================= -->
+
     <div id="page1" class="page active">
-        <!-- 核心新增：月分篩選器 (用於查看特定月份的圖表與明細) -->
-        <div class="form-group" style="background-color: #F0ECE9; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-            <label for="filterMonth">📅 檢視月份：</label>
-            <input type="month" id="filterMonth" onchange="onMonthChange()">
-        </div>
 
+        <form id="expenseForm">
 
             <div class="form-group">
+
                 <label for="amount">金額 ($)</label>
+
                 <input type="number" id="amount" placeholder="請輸入金額" required min="0.01" step="0.01">
+
             </div>
 
+
+
             <div class="form-group">
+
                 <label for="category">類別</label>
+
                 <select id="category" required>
+
                     <optgroup label="食">
+
                         <option value="食-點心">🍿 食-點心</option>
+
                         <option value="食-外賣">🛵 食-外賣</option>
+
                         <option value="食-餐廳">🍱 食-餐廳</option>
+
                         <option value="食-食材">🥦 食-食材</option>
+
                     </optgroup>
+
                     <optgroup label="生活用品">
+
                         <option value="生活用品-消耗品">🧻 生活用品-消耗</option>
+
                         <option value="生活用品-耐用品">🧹 生活用品-耐用</option>
+
                     </optgroup>
+
                     <optgroup label="住">
+
                         <option value="住-房租">🏠 住-房租</option>
+
                         <option value="住-水電">💡 住-水電</option>
+
                     </optgroup>
+
                     <optgroup label="交通">
+
                         <option value="交通-打車">🚕 交通-打車</option>
+
                         <option value="交通-大眾">🚌 交通-大眾</option>
+
                     </optgroup>
+
                     <optgroup label="其他主要類別">
+
                         <option value="娛樂">🎮 娛樂</option>
+
                         <option value="保險">🛡️ 保險</option>
+
                         <option value="可報銷">🧾 報銷</option>
+
                     </optgroup>
+
                 </select>
+
             </div>
 
+
+
             <div class="form-group">
+
                 <label for="note">備註 (可選)</label>
+
                 <input type="text" id="note" placeholder="如：珍珠奶茶、房租">
+
             </div>
+
+
 
             <button type="submit" class="submit-btn">新增記錄</button>
+
         </form>
 
+
+
         <div class="summary">
-            <span id="selectedMonthText">當月</span> 總支出：$<span id="totalAmount">0.00</span>
+
+            總支出：$<span id="totalAmount">0.00</span>
+
         </div>
+
+
 
         <!-- 圓餅圖容器 -->
+
         <div class="chart-container">
+
             <canvas id="expenseChart"></canvas>
+
         </div>
+
+
 
         <!-- 切換顯示/隱藏詳細記錄按鈕 -->
+
         <button type="button" class="toggle-btn" id="toggleListBtn" onclick="toggleRecordList()">📋 查看消費明細</button>
 
+
+
         <div class="record-list" id="recordList">
+
             <!-- 記帳明細會動態顯示在這裡 -->
+
         </div>
+
     </div>
+
+
 
     <!-- ================= 第二頁：統計分析與管理頁面 ================= -->
+
     <div id="page2" class="page">
+
         <div class="stat-card">
-            <h4 id="statCountTitle">當月筆數統計</h4>
+
+            <h4>筆數統計</h4>
+
             <div class="value" id="totalCount">0 筆</div>
+
         </div>
+
         <div class="stat-card">
-            <h4 id="statMaxTitle">當月單筆最高金額</h4>
+
+            <h4>單筆最高金額</h4>
+
             <div class="value" id="maxAmount">$0.00</div>
+
         </div>
+
         <div class="stat-card">
-            <h4 id="statAvgTitle">當月平均單筆支出</h4>
+
+            <h4>平均單筆支出</h4>
+
             <div class="value" id="avgAmount">$0.00</div>
+
         </div>
+
+
 
         <button class="danger-btn" onclick="clearAllData()">🗑️ 清空所有記帳資料</button>
+
     </div>
+
+
 
     <!-- ================= 第三頁：儲蓄目標頁面 ================= -->
+
     <div id="page3" class="page">
+
         <div class="form-group">
+
             <label for="savingsGoalInput">目標金額 ($)</label>
+
             <input type="number" id="savingsGoalInput" placeholder="例如：10000" min="1">
+
         </div>
+
         <div class="form-group">
+
             <label for="savingsCurrentInput">目前已存金額 ($)</label>
+
             <input type="number" id="savingsCurrentInput" placeholder="例如：2500" min="0">
+
         </div>
+
         <button type="button" class="submit-btn" onclick="saveSavingsData()">更新儲蓄目標</button>
 
+
+
         <div class="summary" style="margin-top: 20px; background-color: #F0ECE9;">
+
             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+
                 <span>儲蓄進度</span>
+
                 <span id="savingsPercent">0%</span>
+
             </div>
+
             <div style="width: 100%; background-color: #D1CAC5; border-radius: 10px; height: 12px; overflow: hidden;">
+
                 <div id="progressBar" style="width: 0%; background-color: #7A8B7B; height: 100%; transition: width 0.4s ease;"></div>
+
             </div>
+
             <div style="font-size: 13px; color: #6C6B6B; margin-top: 8px;">
+
                 已存 $<span id="currentAmountText">0</span> / 目標 $<span id="goalAmountText">0</span>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
+
+
 <!-- 引入外部 JavaScript 檔 (放在 body 底部以確保元素已載入) -->
+
 <script src="script.js"></script>
+
 </body>
+
 </html>
