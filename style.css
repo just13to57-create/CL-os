@@ -1,0 +1,320 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    /* 莫蘭迪暖灰底色 */
+    background-color: #E8E5E1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.card {
+    /* 莫蘭迪白與淺灰色組合 */
+    background: #FAFAFA;
+    width: 100%;
+    max-width: 480px;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    border: 1px solid #E2DDD9;
+    position: relative;
+}
+
+/* ----- 右上角選單結構 ----- */
+.nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.nav-header h2 {
+    margin-bottom: 0;
+}
+
+.dropdown-container {
+    position: relative;
+}
+
+/* 小方形按鈕 */
+.dropdown-btn {
+    background-color: #E2DDD9;
+    color: #6C6B6B;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px; /* 小方形略帶圓角 */
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.dropdown-btn:hover, .dropdown-container.active .dropdown-btn {
+    background-color: #7A8B7B;
+    color: #FFFFFF;
+}
+
+/* 下拉選單選單 */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 6px;
+    background-color: #FFFFFF;
+    border: 1px solid #E2DDD9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: none; /* 預設隱藏 */
+    flex-direction: column;
+    width: 110px;
+    z-index: 10;
+    overflow: hidden;
+}
+
+/* 顯示下拉選單 */
+.dropdown-container.active .dropdown-menu {
+    display: flex;
+}
+
+.dropdown-item {
+    background: none;
+    border: none;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 14px;
+    color: #6C6B6B;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    width: 100%;
+}
+
+.dropdown-item:hover {
+    background-color: #F8F7F5;
+    color: #4A4A4A;
+}
+
+.dropdown-item.active {
+    color: #7A8B7B;
+    background-color: #E2E8E4;
+}
+
+/* 頁面切換顯示控制 */
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #6C6B6B;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+input, select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #D1CAC5;
+    background-color: #F8F7F5;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #4A4A4A;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #8E9AAF;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(142, 154, 175, 0.2);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #7A8B7B;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+    margin-top: 5px;
+}
+
+.submit-btn:hover {
+    background-color: #687769;
+}
+
+.submit-btn:active {
+    transform: scale(0.99);
+}
+
+.summary {
+    margin-top: 22px;
+    padding: 14px;
+    background-color: #E2E8E4;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    color: #435345;
+    font-size: 16px;
+}
+
+.chart-container {
+    position: relative;
+    margin-top: 20px;
+    width: 100%;
+    max-height: 260px;
+    display: flex;
+    justify-content: center;
+}
+
+.toggle-btn {
+    background-color: transparent;
+    color: #6C6B6B;
+    border: 1px dashed #D1CAC5;
+    margin-top: 18px;
+    font-size: 14px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.toggle-btn:hover {
+    background-color: #F0ECE9;
+    color: #4A5859;
+}
+
+.record-list {
+    margin-top: 12px;
+    max-height: 220px;
+    overflow-y: auto;
+    border-top: 1px solid #EBE7E4;
+    padding-top: 8px;
+    display: none;
+}
+
+.record-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 6px;
+    border-bottom: 1px solid #F0ECE9;
+    color: #555;
+    font-size: 15px;
+}
+
+.record-item:last-child {
+    border-bottom: none;
+}
+
+.record-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.record-main {
+    display: flex;
+    align-items: center;
+}
+
+.record-date {
+    font-size: 11px;
+    color: #9E9E9E;
+}
+
+.category-badge {
+    background-color: #D8E2DC;
+    color: #4A4A59;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 8px;
+    display: inline-block;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #C97A7E;
+    cursor: pointer;
+    font-size: 15px;
+    width: auto;
+    padding: 0 6px;
+    margin-left: 8px;
+    transition: color 0.2s;
+}
+
+.delete-btn:hover {
+    color: #A3565A;
+}
+
+/* 第二頁專用樣式 */
+.stat-card {
+    background-color: #F0ECE9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-card h4 {
+    color: #6C6B6B;
+    font-size: 14px;
+}
+
+.stat-card .value {
+    color: #4A5859;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.danger-btn {
+    background-color: #C97A7E;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.danger-btn:hover {
+    background-color: #A3565A;
+}
+
+.record-list::-webkit-scrollbar {
+    width: 6px;
+}
+.record-list::-webkit-scrollbar-thumb {
+    background-color: #D1CAC5;
+    border-radius: 3px;
+}
