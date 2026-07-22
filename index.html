@@ -121,7 +121,7 @@
 
         .record-list {
             margin-top: 22px;
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
             border-top: 1px solid #EBE7E4;
             padding-top: 8px;
@@ -141,23 +141,33 @@
             border-bottom: none;
         }
 
+        .record-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .record-main {
+            display: flex;
+            align-items: center;
+        }
+
+        .record-date {
+            font-size: 11px;
+            color: #A09A95;
+            letter-spacing: 0.5px;
+        }
+
         .category-badge {
             /* 莫蘭迪霧藍灰標籤 */
             background-color: #D8E2DC;
             color: #4A5859;
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: 600;
             margin-right: 8px;
             display: inline-block;
-        }
-
-        /* 新增：日期文字樣式 */
-        .record-date {
-            font-size: 11px;
-            color: #A09D9A;
-            margin-bottom: 2px;
         }
 
         .delete-btn {
@@ -287,6 +297,18 @@
         }
     });
 
+    // 取得當前格式化日期時間 (例如: 2026/03/30 14:30)
+    function getCurrentFormattedDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        
+        return `${year}/${month}/${day} ${hours}:${minutes}`;
+    }
+
     // 更新圖表資料
     function updateChart() {
         const categoryTotals = {};
@@ -307,21 +329,29 @@
         recordList.innerHTML = '';
         let total = 0;
 
-        records.forEach((record, index) => {
+        // 倒序顯示，最新新增的紀錄排在最上面
+        records.slice().reverse().forEach((record, reverseIndex) => {
+            // 計算回原本陣列的真實 index (用於刪除)
+            const realIndex = records.length - 1 - reverseIndex;
             total += Number(record.amount);
 
             const item = document.createElement('div');
             item.className = 'record-item';
-            // 包含日期顯示，舊資料如無日期則不顯示或顯示預設值
+            
+            // 處理舊紀錄沒有 date 的情況
+            const displayDate = record.date ? record.date : '早期紀錄';
+
             item.innerHTML = `
-                <div>
-                    ${record.date ? `<div class="record-date">${record.date}</div>` : ''}
-                    <span class="category-badge">${record.category}</span>
-                    <span>${record.note ? record.note : record.category}</span>
+                <div class="record-info">
+                    <div class="record-main">
+                        <span class="category-badge">${record.category}</span>
+                        <span>${record.note ? record.note : record.category}</span>
+                    </div>
+                    <div class="record-date">🕒 ${displayDate}</div>
                 </div>
                 <div>
                     <strong>$${record.amount}</strong>
-                    <button class="delete-btn" onclick="deleteRecord(${index})">✕</button>
+                    <button class="delete-btn" onclick="deleteRecord(${realIndex})">✕</button>
                 </div>
             `;
             recordList.appendChild(item);
@@ -342,15 +372,11 @@
         const category = document.getElementById('category').value;
         const note = document.getElementById('note').value;
 
-        // 自動取得當前系統日期 (格式: YYYY/MM/DD)
-        const now = new Date();
-        const formattedDate = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
-
         const newRecord = {
             amount: amount,
             category: category,
             note: note,
-            date: formattedDate // 存入自動生成的日期
+            date: getCurrentFormattedDate() // 自動寫入日期與時間
         };
 
         records.push(newRecord);
