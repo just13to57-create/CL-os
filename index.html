@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>個人簡易記帳本</title>
+    <!-- 引入 Chart.js 用於繪製圓餅圖 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -24,7 +26,7 @@
         .card {
             background: #ffffff;
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -88,9 +90,18 @@
             color: #2e7d32;
         }
 
+        .chart-container {
+            position: relative;
+            margin-top: 20px;
+            width: 100%;
+            max-height: 280px;
+            display: flex;
+            justify-content: center;
+        }
+
         .record-list {
             margin-top: 20px;
-            max-height: 250px;
+            max-height: 200px;
             overflow-y: auto;
         }
 
@@ -145,18 +156,29 @@
         <div class="form-group">
             <label for="category">類別</label>
             <select id="category" required>
-                <option value="餐飲">🍔 餐飲</option>
-                <option value="交通">🚗 交通</option>
-                <option value="娛樂">🎮 娛樂</option>
-                <option value="購物">🛍️ 購物</option>
-                <option value="日常">🏠 日常</option>
-                <option value="其他">💡 其他</option>
+                <optgroup label="食">
+                    <option value="食-點心">🍿 食-點心</option>
+                    <option value="食-外賣">🛵 食-外賣</option>
+                    <option value="食-餐廳">🍱 食-餐廳</option>
+                    <option value="食-食材">🥦 食-食材</option>
+                </optgroup>
+                <optgroup label="生活用品">
+                    <option value="生活用品-消耗">🧻 生活用品-消耗</option>
+                    <option value="生活用品-非消耗">🧹 生活用品-非消耗</option>
+                </optgroup>
+                <optgroup label="其他主要類別">
+                    <option value="住">🏠 住</option>
+                    <option value="交通">🚗 交通</option>
+                    <option value="娛樂">🎮 娛樂</option>
+                    <option value="保險">🛡️ 保險</option>
+                    <option value="可報銷">🧾 可報銷</option>
+                </optgroup>
             </select>
         </div>
 
         <div class="form-group">
             <label for="note">備註 (可選)</label>
-            <input type="text" id="note" placeholder="如：午餐便當">
+            <input type="text" id="note" placeholder="如：珍珠奶茶、房租">
         </div>
 
         <button type="submit">新增記錄</button>
@@ -166,20 +188,65 @@
         總支出：$<span id="totalAmount">0</span>
     </div>
 
+    <!-- 圓餅圖容器 -->
+    <div class="chart-container">
+        <canvas id="expenseChart"></canvas>
+    </div>
+
     <div class="record-list" id="recordList">
         <!-- 記帳明細會動態顯示在這裡 -->
     </div>
 </div>
 
 <script>
-    // 讀取本地儲存資料
     let records = JSON.parse(localStorage.getItem('expenses')) || [];
 
     const form = document.getElementById('expenseForm');
     const recordList = document.getElementById('recordList');
     const totalAmountEl = document.getElementById('totalAmount');
+    
+    // 初始化 Chart.js 圓餅圖
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+    let expenseChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                    '#9966FF', '#FF9F40', '#8AC926', '#1982C4', 
+                    '#6A4C93', '#F55C47', '#42B883'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
 
-    // 更新畫面與本地儲存
+    // 更新圖表資料
+    function updateChart() {
+        const categoryTotals = {};
+
+        records.forEach(record => {
+            const cat = record.category;
+            const amt = Number(record.amount);
+            categoryTotals[cat] = (categoryTotals[cat] || 0) + amt;
+        });
+
+        expenseChart.data.labels = Object.keys(categoryTotals);
+        expenseChart.data.datasets[0].data = Object.values(categoryTotals);
+        expenseChart.update();
+    }
+
+    // 更新 UI 與 LocalStorage
     function updateUI() {
         recordList.innerHTML = '';
         let total = 0;
@@ -204,6 +271,9 @@
 
         totalAmountEl.textContent = total;
         localStorage.setItem('expenses', JSON.stringify(records));
+        
+        // 更新圓餅圖
+        updateChart();
     }
 
     // 表單提交事件
@@ -223,7 +293,6 @@
         records.push(newRecord);
         updateUI();
 
-        // 重置表單
         form.reset();
     });
 
