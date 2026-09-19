@@ -258,3 +258,32 @@ nav {
     align-items: center;
     height: 120px;            /* 限制固定高度，不讓圓餅圖佔太大空間 */
 }
+
+
+/* 支出明細專屬卡片樣式 */
+.transaction-section {
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    max-height: 160px; /* 限制明細區塊的最大高度，確保不超出手機版面 */
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.transaction-header h3 {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-main);
+}
+
+/* 明細列表專屬的內部捲動區塊 (只有明細超過高度時才會出現精緻捲動軸) */
+.transaction-scroll-box {
+    overflow-y: auto;
+    max-height: 110px;
+    padding-right: 4px;
+}
