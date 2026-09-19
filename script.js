@@ -5,7 +5,7 @@
 let transactions = [];
 let myChart = null;
 
-// 網頁載入時自動從 localStorage 讀取資料
+// 網頁載入時自動從 localStorage 讀取資料並初始化明細為收合狀態
 window.onload = function() {
     loadFromLocalStorage();
     const savedPage = localStorage.getItem('current_page');
@@ -16,9 +16,19 @@ window.onload = function() {
     }
    
     updateUI();
+
+    // 確保一進入頁面時，支出明細預設是「收合」狀態，文字顯示「展開」
+    const listContainer = document.getElementById('transaction-list');
+    const toggleText = document.getElementById('toggle-text');
+    if (listContainer) {
+        listContainer.classList.add('collapsed');
+    }
+    if (toggleText) {
+        toggleText.innerText = '展開';
+    }
 };
 
-// 頁面切換函數 (已移除不存在的底部導覽按鈕控制)
+// 頁面切換函數
 function switchPage(pageNum) {
     for (let i = 1; i <= 5; i++) {
         const pageEl = document.getElementById(`page-${i}`);
@@ -33,17 +43,11 @@ function switchPage(pageNum) {
     localStorage.setItem('current_page', pageNum);
 }
 
-// 控制右上角彈出式選單的開關
+// 【已修正】控制右上角彈出式選單的開關 (對應您網頁右上角的選單按鈕)
 function toggleMenu() {
-    const listContainer = document.getElementById('transaction-list');
-    const toggleText = document.getElementById('toggle-text');
-    
-    if (listContainer) {
-        listContainer.classList.toggle('collapsed');
-        const isCollapsed = listContainer.classList.contains('collapsed');
-        if (toggleText) {
-            toggleText.innerText = isCollapsed ? '展開' : '收合';
-        }
+    const modal = document.getElementById('nav-modal');
+    if (modal) {
+        modal.classList.toggle('active');
     }
 }
 
@@ -257,13 +261,18 @@ function updateChart(dataObj) {
     });
 }
 
-// 控制支出明細區塊的展開與折疊
+// 控制支出明細區塊的展開與折疊（文字切換：展開 ⇄ 收合）
 function toggleTransactionBox() {
     const listContainer = document.getElementById('transaction-list');
+    const toggleText = document.getElementById('toggle-text');
     const header = document.querySelector('.transaction-header');
     
     if (listContainer) {
         listContainer.classList.toggle('collapsed');
+        const isCollapsed = listContainer.classList.contains('collapsed');
+        if (toggleText) {
+            toggleText.innerText = isCollapsed ? '展開' : '收合';
+        }
     }
     if (header) {
         header.classList.toggle('expanded');
