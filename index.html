@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>手機版理財記賬助手</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -63,14 +63,9 @@
             <div class="morandi-card form-card">
                 <h3>新增支出</h3>
                 <form id="expense-form" onsubmit="addTransaction(event)" class="form-group">
-                    <input type="text" id="desc" placeholder="項目說明(例如: 晚餐，可不填)" class="form-input">
+                    <!-- 第一行：金額 (左) 與 分類 (右) -->
                     <div class="form-row">
-                        <input type="number" class="form-input half" id="amount" placeholder="金額">
-                        <select class="form-input half" id="category">...</select>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-input" id="description" placeholder="說明 (例如: 午餐)">
-                    </div>
+                        <input type="number" id="amount" placeholder="金額" required class="form-input half">
                         <select id="category" class="form-input half">
                             <optgroup label="住房">
                                 <option value="房租">住房 - 房租</option>
@@ -107,8 +102,13 @@
                             </optgroup>
                             <option value="保險">保險</option>
                         </select>
-                        <input type="number" id="amount" placeholder="金額" required class="form-input half">
                     </div>
+
+                    <!-- 第二行：說明欄位 -->
+                    <div class="form-group">
+                        <input type="text" id="description" placeholder="說明 (例如: 午餐，可不填)" class="form-input">
+                    </div>
+
                     <button type="submit" class="btn-submit">新增紀錄</button>
                 </form>
             </div>
