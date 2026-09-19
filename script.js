@@ -251,14 +251,8 @@ function updateChart(categoryTotals) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                layout: {
-                padding: {
-                    top: 20,    // 上方留白
-                    bottom: 20, // 下方留白
-                    left: 10,   // 左方留白
-                    right: 15   // 右方留白（讓右邊的文字圖例跟邊框保持距離）
-                }
-            },
+                radius: '70%',      // 整個圓的直徑縮小到 70%（數字越小圓越小）
+                cutout: '65%',      // 中間挖空的比例（讓環形保持好看的粗細）
                 plugins: {
                    legend: {
                        position: 'right',
@@ -268,7 +262,6 @@ function updateChart(categoryTotals) {
                     }
                 }
             },
-            cutout: '50%' // <--- 【關鍵】調整這裡的百分比！
         }
         });
         return;
