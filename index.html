@@ -62,10 +62,40 @@
                     <input type="text" id="desc" placeholder="項目說明(例如: 晚餐，可不填)" class="form-input">
                     <div class="form-row">
                         <select id="category" class="form-input half">
-                            <option value="餐飲">餐飲</option>
-                            <option value="交通">交通</option>
-                            <option value="娛樂">娛樂</option>
-                            <option value="其他">其他</option>
+                            <optgroup label="住房">
+                                <option value="房租">住房 - 房租</option>
+                                <option value="水電">住房 - 水電</option>
+                                <option value="住房其他">住房 - 其他</option>
+                            </optgroup>
+                            <optgroup label="飲食">
+                                <option value="食材">飲食 - 食材</option>
+                                <option value="外食">飲食 - 外食</option>
+                                <option value="點心">飲食 - 點心</option>
+                            </optgroup>
+                            <optgroup label="交通">
+                                <option value="大眾運輸">交通 - 大眾運輸</option>
+                                <option value="打車">交通 - 打車</option>
+                                <option value="油錢">交通 - 油錢</option>
+                            </optgroup>
+                            <optgroup label="生活用品">
+                                <option value="耐用品">生活 - 耐用品</option>
+                                <option value="消耗品">生活 - 消耗品</option>
+                            </optgroup>
+                            <optgroup label="通訊">      
+                                <option value="話費">通訊 - 話費</option>
+                                <option value="訂閱">通訊 - 訂閱</option>
+                            </optgroup> 
+                            <optgroup label="娛樂">
+                                <option value="旅遊">娛樂 - 旅遊</option>
+                                <option value="社交">娛樂 - 社交</option>
+                                <option value="娛樂其他">娛樂 - 其他</option>
+                            </optgroup>
+                            <optgroup label="教育">
+                                <option value="課程">教育 - 課程</option>
+                                <option value="書籍">教育 - 書籍</option>
+                                <option value="教育其他">教育 - 其他</option>
+                            </optgroup>
+                            <option value="保險">保險</option>
                         </select>
                         <input type="number" id="amount" placeholder="金額" required class="form-input half">
                     </div>
