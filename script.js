@@ -296,3 +296,43 @@ function updateChart(categoryTotals) {
         }
     });
 }
+
+// 計算緊急預備金
+function calculateEmergencyFund() {
+    const monthlyExpense = parseFloat(document.getElementById('monthly-expense').value) || 0;
+    const currentSaving = parseFloat(document.getElementById('current-saving').value) || 0;
+
+    const target3m = monthlyExpense * 3;
+    const target6m = monthlyExpense * 6;
+
+    // 更新畫面顯示
+    document.getElementById('target-3m').innerText = `$ ${target3m.toLocaleString()}`;
+    document.getElementById('target-6m').innerText = `$ ${target6m.toLocaleString()}`;
+
+    // 計算達成率（以 6 個月目標為基準）
+    let progress = 0;
+    if (target6m > 0) {
+        progress = Math.min(Math.round((currentSaving / target6m) * 100), 100);
+    }
+    document.getElementById('saving-progress-text').innerText = `${progress}%`;
+
+    // 儲存至 LocalStorage 避免重新整理遺失
+    localStorage.setItem('emergency_monthly_expense', monthlyExpense);
+    localStorage.setItem('emergency_current_saving', currentSaving);
+}
+
+// 頁面載入時讀取儲存的預備金資料
+window.addEventListener('DOMContentLoaded', () => {
+    const savedExpense = localStorage.getItem('emergency_monthly_expense');
+    const savedSaving = localStorage.getItem('emergency_current_saving');
+
+    if (savedExpense !== null) {
+        document.getElementById('monthly-expense').value = savedExpense;
+    }
+    if (savedSaving !== null) {
+        document.getElementById('current-saving').value = savedSaving;
+    }
+    
+    // 初始化計算一次
+    calculateEmergencyFund();
+});
