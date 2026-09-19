@@ -241,7 +241,7 @@ function updateChart(categoryTotals) {
     }
 
     if (filteredData.length === 0) {
-        // 如果沒有資料，畫一個空白提示環形圖
+        
         myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -251,6 +251,14 @@ function updateChart(categoryTotals) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                padding: {
+                    top: 10,    // 上方留白
+                    bottom: 10, // 下方留白
+                    left: 10,   // 左方留白
+                    right: 15   // 右方留白（讓右邊的文字圖例跟邊框保持距離）
+                }
+            },
                 plugins: {
                    legend: {
                        position: 'right',
