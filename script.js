@@ -22,16 +22,17 @@ function addTransaction(event) {
     const descInput = document.getElementById('desc');
     const amountInput = document.getElementById('amount');
     const categoryInput = document.getElementById('category');
+   
+    if (!amountInput || !categoryInput) return;
 
-    // 檢查欄位是否存在
-    if (!descInput || !amountInput || !categoryInput) {
-        console.error("找不到表單欄位！");
-        return;
+    // 如果沒填說明文字，就直接使用類別名稱作為預設說明
+    const category = categoryInput.value;
+    let desc = descInput.value.trim();
+    if (desc === "") {
+        desc = category; 
     }
 
-    const desc = descInput.value;
     const amount = parseFloat(amountInput.value);
-    const category = categoryInput.value;
 
     const transaction = { 
         id: Date.now(), 
