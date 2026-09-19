@@ -66,6 +66,12 @@ function updateUI() {
     const listContainer = document.getElementById('transaction-list');
     const balanceEl = document.getElementById('total-balance');
     
+    // 更新筆數顯示
+    const countEl = document.getElementById('transaction-count');
+    if (countEl) {
+        countEl.innerText = `共 ${transactions.length} 筆`;
+    }
+
     if (transactions.length === 0) {
         listContainer.innerHTML = `<p class="empty-text">目前尚無記賬資料</p>`;
         balanceEl.innerText = `$ 0`;
@@ -75,12 +81,29 @@ function updateUI() {
 
     let total = 0;
     let html = '';
-    let categoryTotals = { '餐飲': 0, '交通': 0, '娛樂': 0, '其他': 0 };
+
+   
+    // 初始化所有新分類的累計金額
+    let categoryTotals = {
+        '房租': 0, '水電': 0, '住房其他': 0,
+        '食材': 0, '外食': 0, '點心': 0,
+        '大眾運輸': 0, '打車': 0, '油錢': 0,
+        '耐用品': 0, '消耗品': 0,
+        '話費': 0, '訂閱': 0,
+        '旅遊': 0, '社交': 0, '娛樂其他': 0,
+        '課程': 0, '書籍': 0, '教育其他': 0,
+        '保險': 0
+    };
     document.getElementById('transaction-count').innerText = `共 ${transactions.length} 筆`;
 
     transactions.slice().reverse().forEach(t => {
         total += t.amount;
-        categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+        // 若該分類存在則累加，防呆避免未定義錯誤
+        if (categoryTotals.hasOwnProperty(t.category)) {
+            categoryTotals[t.category] += t.amount;
+        } else {
+            categoryTotals['住房其他'] += t.amount; // 預設歸類
+        }
 
         html += `
             <div class="transaction-item">
@@ -99,31 +122,45 @@ function updateUI() {
     updateChart(categoryTotals);
 }
 
-// 繪製莫蘭迪色系圓餅圖
+// 繪製莫蘭迪色系圓餅圖 (支援多分類)
 function updateChart(dataObj) {
     const canvasEl = document.getElementById('expenseChart');
     if (!canvasEl) return;
     
     const ctx = canvasEl.getContext('2d');
-    const labels = Object.keys(dataObj);
-    const data = Object.values(dataObj);
+    
+    // 過濾掉金額為 0 的分類，讓圓餅圖乾淨不擁擠
+    const filteredLabels = [];
+    const filteredData = [];
+    
+    for (let [key, value] of Object.entries(dataObj)) {
+        if (value > 0) {
+            filteredLabels.push(key);
+            filteredData.push(value);
+        }
+    }
 
     if (myChart) {
         myChart.destroy();
     }
 
+    // 如果全部都是 0 就不畫圖
+    if (filteredData.length === 0) return;
+
+    // 莫蘭迪色系色票庫
+    const morandiColors = [
+        '#8C9DAE', '#A37073', '#D4A373', '#738A75', 
+        '#9B88A8', '#C29B88', '#7395AE', '#A0AAB2',
+        '#B48A84', '#859071', '#D0B49F', '#78686E'
+    ];
+
     myChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: labels,
+            labels: filteredLabels,
             datasets: [{
-                data: data,
-                backgroundColor: [
-                    '#8C9DAE', // 莫蘭迪灰藍
-                    '#A37073', // 莫蘭迪玫瑰紅
-                    '#D4A373', // 莫蘭迪暖黃
-                    '#738A75'  // 莫蘭迪草綠
-                ],
+                data: filteredData,
+                backgroundColor: morandiColors.slice(0, filteredData.length),
                 borderWidth: 1
             }]
         },
@@ -134,8 +171,8 @@ function updateChart(dataObj) {
                 legend: {
                     position: 'right',
                     labels: {
-                        boxWidth: 12,
-                        font: { size: 11 }
+                        boxWidth: 10,
+                        font: { size: 10 }
                     }
                 }
             }
