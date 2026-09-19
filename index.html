@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>手機版理財記賬助手</title>
-    <!-- 引入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>手機版理財記賬助手 (結構與樣式分離)</title>
     <style>
-        /* 僅限制尺寸為手機比例，不加手機外框 */
+        /* ==========================================
+           1. 莫蘭迪色系變數與全局設定 (CSS 集中管理)
+           ========================================== */
+        :root {
+            --bg-body: #E8ECEF;         /* 畫面外部大背景 (莫蘭迪灰藍) */
+            --bg-phone: #F7F6F2;        /* 手機容器底色 (溫潤米白) */
+            --color-primary: #8C9DAE;   /* 主色調 (莫蘭迪灰藍) */
+            --color-primary-hover: #7A8B9C; 
+            --text-main: #4A5568;       /* 主要文字顏色 */
+            --text-sub: #718096;        /* 次要文字顏色 */
+            --card-bg: #FFFFFF;         /* 卡片背景 */
+            --card-border: #E2E0DB;     /* 卡片邊框 */
+            --success-color: #738A75;   /* 收入/成功 (莫蘭迪草綠) */
+            --danger-color: #A37073;    /* 支出/危險 (莫蘭迪乾燥玫瑰紅) */
+        }
+
         body {
-            background-color: #f3f4f6;
+            background-color: var(--bg-body);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,150 +30,254 @@
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
+
+        /* 2. 手機容器尺寸與外觀 */
         .phone-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;      /* 手機精緻寬度 */
             height: 100vh;
-            max-height: 844px;
-            background-color: #ffffff;
+            max-height: 720px;     /* 手機剛好的短尺寸高度 */
+            background-color: var(--bg-phone);
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 20px rgba(115, 128, 140, 0.15);
         }
-        /* 隱藏未啟用的頁面 */
+
+        /* 3. 單頁式切換邏輯 */
         .page-content {
             display: none;
+            flex-direction: column;
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            padding-bottom: 80px; /* 預留底部導覽列空間 */
         }
         .page-content.active {
             display: flex;
+        }
+
+        /* 4. 共用莫蘭迪元件樣式 */
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--text-main);
+            margin: 0 0 4px 0;
+        }
+        header p {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin: 0;
+        }
+
+        .morandi-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .morandi-card:hover {
+            background-color: #FAF9F5;
+        }
+
+        /* 餘額卡片 */
+        .balance-card {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .balance-card span {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+        .balance-card h2 {
+            font-size: 1.75rem;
+            font-weight: bold;
+            margin: 4px 0 0 0;
+        }
+
+        /* 表單樣式 */
+        .form-group {
+            display: flex;
             flex-direction: column;
-            flex: 1;
+            gap: 8px;
+        }
+        .form-input {
+            width: 100%;
+            font-size: 0.875rem;
+            padding: 8px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            border-color: var(--color-primary);
+        }
+        .form-row {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-submit {
+            width: 100%;
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-submit:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        /* 交易明細清單 */
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+        }
+        .text-income { color: var(--success-color); font-weight: bold; }
+        .text-expense { color: var(--danger-color); font-weight: bold; }
+
+        /* 5. 底部固定導覽列 */
+        nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 10;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .nav-btn.active {
+            color: var(--text-main);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <div class="phone-container">
-        <!-- 主體內容區 (5頁內容) -->
         
         <!-- 【第一頁：清單首頁】 -->
-        <div id="page-1" class="page-content active p-4 overflow-y-auto pb-20">
-            <header class="mb-4">
-                <h1 class="text-2xl font-bold text-gray-800">理財導航首頁</h1>
-                <p class="text-sm text-gray-500">歡迎回來，這是您的 5 階段理財計劃</p>
+        <div id="page-1" class="page-content active">
+            <header>
+                <h1>理財導航首頁</h1>
+                <p>歡迎回來，這是您的 5 階段理財計劃</p>
             </header>
-            <div class="space-y-3">
-                <div onclick="switchPage(2)" class="p-4 bg-blue-50 border border-blue-200 rounded-xl cursor-pointer hover:bg-blue-100 transition">
-                    <h3 class="font-bold text-blue-800">第二頁：記賬功能 (現正使用)</h3>
-                    <p class="text-xs text-blue-600">記錄日常收支、檢視當前餘額</p>
+            <div style="margin-top: 16px;">
+                <div onclick="switchPage(2)" class="morandi-card" style="cursor: pointer;">
+                    <h3 style="margin: 0 0 4px 0; font-size: 0.95rem; color: var(--text-main);">第二頁：記賬功能 (現正使用)</h3>
+                    <p style="margin: 0;">記錄日常收支、檢視當前餘額</p>
                 </div>
-                <div onclick="switchPage(3)" class="p-4 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition">
-                    <h3 class="font-bold text-gray-800">第三頁：理財階段一 (預留)</h3>
-                    <p class="text-xs text-gray-500">點擊切換至下階段討論</p>
+                <div onclick="switchPage(3)" class="morandi-card" style="cursor: pointer;">
+                    <h3 style="margin: 0 0 4px 0; font-size: 0.95rem; color: var(--text-main);">第三頁：理財階段一 (預留)</h3>
+                    <p style="margin: 0;">點擊切換至下階段討論</p>
                 </div>
-                <div onclick="switchPage(4)" class="p-4 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition">
-                    <h3 class="font-bold text-gray-800">第四頁：理財階段二 (預留)</h3>
-                    <p class="text-xs text-gray-500">點擊切換至下階段討論</p>
+                <div onclick="switchPage(4)" class="morandi-card" style="cursor: pointer;">
+                    <h3 style="margin: 0 0 4px 0; font-size: 0.95rem; color: var(--text-main);">第四頁：理財階段二 (預留)</h3>
+                    <p style="margin: 0;">點擊切換至下階段討論</p>
                 </div>
-                <div onclick="switchPage(5)" class="p-4 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition">
-                    <h3 class="font-bold text-gray-800">第五頁：理財階段三 (預留)</h3>
-                    <p class="text-xs text-gray-500">點擊切換至下階段討論</p>
+                <div onclick="switchPage(5)" class="morandi-card" style="cursor: pointer;">
+                    <h3 style="margin: 0 0 4px 0; font-size: 0.95rem; color: var(--text-main);">第五頁：理財階段三 (預留)</h3>
+                    <p style="margin: 0;">點擊切換至下階段討論</p>
                 </div>
             </div>
         </div>
 
         <!-- 【第二頁：記賬頁面】 -->
-        <div id="page-2" class="page-content p-4 overflow-y-auto pb-20">
-            <header class="mb-4 flex justify-between items-center">
-                <h1 class="text-xl font-bold text-gray-800">日常記賬</h1>
-                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">記賬模式</span>
+        <div id="page-2" class="page-content">
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div>
+                    <h1>日常記賬</h1>
+                    <p>管理您的日常收支</p>
+                </div>
+                <span style="font-size: 0.75rem; background-color: #E2E8F0; padding: 4px 8px; border-radius: 12px; color: var(--text-main);">記賬模式</span>
             </header>
             
-            <!-- 餘額總覽卡片 -->
-            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-2xl mb-4 shadow-md">
-                <p class="text-xs opacity-80">當前總結餘</p>
-                <h2 id="total-balance" class="text-3xl font-bold mt-1">$ 0</h2>
+            <!-- 結餘總覽卡片 -->
+            <div class="balance-card">
+                <span>當前總結餘</span>
+                <h2 id="total-balance">$ 0</h2>
             </div>
 
             <!-- 新增記賬表單 -->
-            <div class="bg-gray-50 p-3 rounded-xl mb-4 border border-gray-200">
-                <h3 class="text-sm font-bold text-gray-700 mb-2">新增收支</h3>
-                <form id="expense-form" onsubmit="addTransaction(event)" class="space-y-2">
-                    <input type="text" id="desc" placeholder="項目說明 (例如: 晚餐)" required class="w-full text-sm p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    <div class="flex gap-2">
-                        <input type="number" id="amount" placeholder="金額" required class="w-1/2 text-sm p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <select id="type" class="w-1/2 text-sm p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <div class="morandi-card" style="cursor: default; margin-bottom: 12px;">
+                <h3 style="margin: 0 0 8px 0; font-size: 0.875rem; color: var(--text-main);">新增收支</h3>
+                <form id="expense-form" onsubmit="addTransaction(event)" class="form-group">
+                    <input type="text" id="desc" placeholder="項目說明 (例如: 晚餐)" required class="form-input">
+                    <div class="form-row">
+                        <input type="number" id="amount" placeholder="金額" required class="form-input" style="width: 50%;">
+                        <select id="type" class="form-input" style="width: 50%;">
                             <option value="income">收入 (+)</option>
                             <option value="expense" selected>支出 (-)</option>
                         </select>
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white text-sm py-2 rounded-lg font-medium hover:bg-blue-700 transition">新增紀錄</button>
+                    <button type="submit" class="btn-submit">新增紀錄</button>
                 </form>
             </div>
 
             <!-- 歷史清單 -->
             <div>
-                <h3 class="text-sm font-bold text-gray-700 mb-2">收支明細</h3>
-                <div id="transaction-list" class="space-y-2">
-                    <p class="text-xs text-gray-400 text-center py-4">目前尚無記賬資料</p>
+                <h3 style="margin: 0 0 8px 0; font-size: 0.875rem; color: var(--text-main);">收支明細</h3>
+                <div id="transaction-list">
+                    <p style="font-size: 0.75rem; color: var(--text-sub); text-align: center; padding: 16px 0;">目前尚無記賬資料</p>
                 </div>
             </div>
         </div>
 
-        <!-- 【第三頁：理財方式一】 -->
-        <div id="page-3" class="page-content p-4 overflow-y-auto pb-20">
-            <header class="mb-4">
-                <h1 class="text-xl font-bold text-gray-800">理財階段一：緊急預備金</h1>
-                <p class="text-xs text-gray-500">規劃您的防守型資產</p>
-            </header>
-            <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-sm text-amber-800">
-                <p class="font-bold mb-1">💡 階段討論中...</p>
-                <p class="text-xs">這裡將放置第一階段的理財建議與目標金額設定。</p>
-            </div>
+        <!-- 【第三至五頁預留】 -->
+        <div id="page-3" class="page-content">
+            <header><h1>理財階段一</h1></header>
+            <div class="morandi-card" style="margin-top: 12px; cursor: default;"><p style="margin: 0;">💡 階段討論中...</p></div>
         </div>
-
-        <!-- 【第四頁：理財方式二】 -->
-        <div id="page-4" class="page-content p-4 overflow-y-auto pb-20">
-            <header class="mb-4">
-                <h1 class="text-xl font-bold text-gray-800">理財階段二：債務管理</h1>
-                <p class="text-xs text-gray-500">清理高利率負債</p>
-            </header>
-            <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl text-sm text-purple-800">
-                <p class="font-bold mb-1">💡 階段討論中...</p>
-                <p class="text-xs">這裡預留給信用卡債務、信貸清償策略。</p>
-            </div>
+        <div id="page-4" class="page-content">
+            <header><h1>理財階段二</h1></header>
+            <div class="morandi-card" style="margin-top: 12px; cursor: default;"><p style="margin: 0;">💡 階段討論中...</p></div>
         </div>
-
-        <!-- 【第五頁：理財方式三】 -->
-        <div id="page-5" class="page-content p-4 overflow-y-auto pb-20">
-            <header class="mb-4">
-                <h1 class="text-xl font-bold text-gray-800">理財階段三：投資增值</h1>
-                <p class="text-xs text-gray-500">定期定額與資產配置</p>
-            </header>
-            <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl text-sm text-emerald-800">
-                <p class="font-bold mb-1">💡 階段討論中...</p>
-                <p class="text-xs">這裡預留給長期的投資規劃。</p>
-            </div>
+        <div id="page-5" class="page-content">
+            <header><h1>理財階段三</h1></header>
+            <div class="morandi-card" style="margin-top: 12px; cursor: default;"><p style="margin: 0;">💡 階段討論中...</p></div>
         </div>
 
         <!-- 底部導覽列 -->
-        <nav class="absolute bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex justify-around items-center px-2 z-10 shadow-lg">
-            <button onclick="switchPage(1)" id="nav-btn-1" class="nav-btn flex flex-col items-center text-blue-600">
-                <span class="text-xs font-bold">首頁</span>
-            </button>
-            <button onclick="switchPage(2)" id="nav-btn-2" class="nav-btn flex flex-col items-center text-gray-400">
-                <span class="text-xs font-medium">記賬</span>
-            </button>
-            <button onclick="switchPage(3)" id="nav-btn-3" class="nav-btn flex flex-col items-center text-gray-400">
-                <span class="text-xs font-medium">階段1</span>
-            </button>
-            <button onclick="switchPage(4)" id="nav-btn-4" class="nav-btn flex flex-col items-center text-gray-400">
-                <span class="text-xs font-medium">階段2</span>
-            </button>
-            <button onclick="switchPage(5)" id="nav-btn-5" class="nav-btn flex flex-col items-center text-gray-400">
-                <span class="text-xs font-medium">階段3</span>
-            </button>
+        <nav>
+            <button onclick="switchPage(1)" id="nav-btn-1" class="nav-btn active"><span>首頁</span></button>
+            <button onclick="switchPage(2)" id="nav-btn-2" class="nav-btn"><span>記賬</span></button>
+            <button onclick="switchPage(3)" id="nav-btn-3" class="nav-btn"><span>階段1</span></button>
+            <button onclick="switchPage(4)" id="nav-btn-4" class="nav-btn"><span>階段2</span></button>
+            <button onclick="switchPage(5)" id="nav-btn-5" class="nav-btn"><span>階段3</span></button>
         </nav>
     </div>
 
@@ -171,12 +288,10 @@
         function switchPage(pageNum) {
             for (let i = 1; i <= 5; i++) {
                 document.getElementById(`page-${i}`).classList.remove('active');
-                const btn = document.getElementById(`nav-btn-${i}`);
-                btn.className = "nav-btn flex flex-col items-center text-gray-400 font-medium text-xs";
+                document.getElementById(`nav-btn-${i}`).classList.remove('active');
             }
             document.getElementById(`page-${pageNum}`).classList.add('active');
-            const activeBtn = document.getElementById(`nav-btn-${pageNum}`);
-            activeBtn.className = "nav-btn flex flex-col items-center text-blue-600 font-bold text-xs";
+            document.getElementById(`nav-btn-${pageNum}`).classList.add('active');
         }
 
         function addTransaction(event) {
@@ -196,7 +311,7 @@
             const balanceEl = document.getElementById('total-balance');
             
             if (transactions.length === 0) {
-                listContainer.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">目前尚無記賬資料</p>`;
+                listContainer.innerHTML = `<p style="font-size: 0.75rem; color: var(--text-sub); text-align: center; padding: 16px 0;">目前尚無記賬資料</p>`;
                 balanceEl.innerText = `$ 0`;
                 return;
             }
@@ -207,13 +322,13 @@
             transactions.slice().reverse().forEach(t => {
                 const isIncome = t.type === 'income';
                 const sign = isIncome ? '+' : '-';
-                const colorClass = isIncome ? 'text-green-600' : 'text-red-600';
+                const cssClass = isIncome ? 'text-income' : 'text-expense';
                 total += isIncome ? t.amount : -t.amount;
 
                 html += `
-                    <div class="flex justify-between items-center p-2.5 bg-white border border-gray-100 rounded-lg shadow-sm text-sm">
-                        <span class="text-gray-700 font-medium">${t.desc}</span>
-                        <span class="${colorClass} font-bold">${sign}$ ${t.amount}</span>
+                    <div class="transaction-item">
+                        <span style="color: var(--text-main); font-weight: 500;">${t.desc}</span>
+                        <span class="${cssClass}">${sign}$ ${t.amount}</span>
                     </div>
                 `;
             });
