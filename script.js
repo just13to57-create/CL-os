@@ -52,6 +52,10 @@ function addTransaction(event) {
     
     transactions.push(transaction);
     updateUI();
+
+   transactions.push(transaction);
+   localStorage.setItem('transactions', JSON.stringify(transactions)); // 👈 存入瀏覽器
+   updateUI();
     
     // 清空表單
     document.getElementById('expense-form').reset();
