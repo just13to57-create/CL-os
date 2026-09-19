@@ -6,6 +6,7 @@
     <title>手機版理財記賬助手</title>
     <!-- 引入獨立的 CSS 樣式表 -->
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -52,22 +53,29 @@
                 <span>當前總結餘</span>
                 <h2 id="total-balance">$ 0</h2>
             </div>
+            <!-- 圓餅圖顯示區塊 -->
+            <div class="chart-container">
+                <canvas id="expenseChart"></canvas>
+            </div>
 
             <!-- 新增記賬表單 -->
             <div class="morandi-card form-card">
                 <h3>新增收支</h3>
                 <form id="expense-form" onsubmit="addTransaction(event)" class="form-group">
                     <input type="text" id="desc" placeholder="項目說明 (例如: 晚餐)" required class="form-input">
-                    <div class="form-row">
-                        <input type="number" id="amount" placeholder="金額" required class="form-input half">
-                        <select id="type" class="form-input half">
-                            <option value="income">收入 (+)</option>
-                            <option value="expense" selected>支出 (-)</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-submit">新增紀錄</button>
-                </form>
-            </div>
+                   <!-- 在輸入項目說明的 input 下方，原本的 form-row 裡面加入分類選單 -->
+          <div class="form-row">
+              <select id="category" class="form-input half">
+                  <option value="餐飲">餐飲</option>
+                  <option value="交通">交通</option>
+                  <option value="娛樂">娛樂</option>
+                  <option value="其他">其他</option>
+              </select>
+              <select id="type" class="form-input half" onchange="toggleCategory()">
+                  <option value="income">收入 (+)</option>
+                  <option value="expense" selected>支出 (-)</option>
+              </select>
+          </div>
 
             <!-- 歷史清單 -->
             <div>
