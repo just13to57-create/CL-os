@@ -76,6 +76,7 @@ function updateUI() {
     let total = 0;
     let html = '';
     let categoryTotals = { '餐飲': 0, '交通': 0, '娛樂': 0, '其他': 0 };
+    document.getElementById('transaction-count').innerText = `共 ${transactions.length} 筆`;
 
     transactions.slice().reverse().forEach(t => {
         total += t.amount;
