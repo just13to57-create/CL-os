@@ -1,17 +1,14 @@
 /* ==========================================
-   記賬助手核心邏輯 (純支出記賬與分類圓餅圖)
+   記賬助手完整核心邏輯 (分類圓餅圖 + 修改/刪除 + LocalStorage)
    ========================================== */
 
 let transactions = [];
 let myChart = null;
 
-// 網頁載入時，從 localStorage 讀取過去的記錄
+// 網頁載入時自動從 localStorage 讀取資料
 window.onload = function() {
-    const savedData = localStorage.getItem('transactions');
-    if (savedData) {
-        transactions = JSON.parse(savedData);
-        updateUI();
-    }
+    loadFromLocalStorage();
+    updateUI();
 };
 
 // 頁面切換函數
@@ -24,21 +21,20 @@ function switchPage(pageNum) {
     document.getElementById(`nav-btn-${pageNum}`).classList.add('active');
 }
 
-// 新增記賬處理函數 (純支出)
+// 新增記賬處理函數 (支援選填說明與新分類)
 function addTransaction(event) {
-    event.preventDefault(); // 防止網頁重新整理
+    event.preventDefault(); 
     
     const descInput = document.getElementById('desc');
     const amountInput = document.getElementById('amount');
     const categoryInput = document.getElementById('category');
-   
+
     if (!amountInput || !categoryInput) return;
 
-    // 如果沒填說明文字，就直接使用類別名稱作為預設說明
     const category = categoryInput.value;
     let desc = descInput.value.trim();
     if (desc === "") {
-        desc = category; 
+        desc = category; // 若未填說明，預設為類別名稱
     }
 
     const amount = parseFloat(amountInput.value);
@@ -51,13 +47,9 @@ function addTransaction(event) {
     };
     
     transactions.push(transaction);
+    saveToLocalStorage();
     updateUI();
-
-   transactions.push(transaction);
-   localStorage.setItem('transactions', JSON.stringify(transactions)); // 👈 存入瀏覽器
-   updateUI();
     
-    // 清空表單
     document.getElementById('expense-form').reset();
 }
 
@@ -66,7 +58,6 @@ function updateUI() {
     const listContainer = document.getElementById('transaction-list');
     const balanceEl = document.getElementById('total-balance');
     
-    // 更新筆數顯示
     const countEl = document.getElementById('transaction-count');
     if (countEl) {
         countEl.innerText = `共 ${transactions.length} 筆`;
@@ -81,9 +72,8 @@ function updateUI() {
 
     let total = 0;
     let html = '';
-
-   
-    // 初始化所有新分類的累計金額
+    
+    // 初始化所有子分類的累計金額
     let categoryTotals = {
         '房租': 0, '水電': 0, '住房其他': 0,
         '食材': 0, '外食': 0, '點心': 0,
@@ -94,24 +84,30 @@ function updateUI() {
         '課程': 0, '書籍': 0, '教育其他': 0,
         '保險': 0
     };
-    document.getElementById('transaction-count').innerText = `共 ${transactions.length} 筆`;
+
+    transactions.forEach((t, index) => {
+        if (!t.id) t.id = Date.now() + index;
+    });
 
     transactions.slice().reverse().forEach(t => {
         total += t.amount;
-        // 若該分類存在則累加，防呆避免未定義錯誤
         if (categoryTotals.hasOwnProperty(t.category)) {
             categoryTotals[t.category] += t.amount;
         } else {
-            categoryTotals['住房其他'] += t.amount; // 預設歸類
+            categoryTotals['住房其他'] += t.amount;
         }
 
         html += `
-            <div class="transaction-item">
+            <div class="transaction-item" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
                 <div>
                     <span style="color: var(--text-main); font-weight: 500;">${t.desc}</span>
                     <span style="font-size: 0.7rem; color: var(--text-sub); display: block;">[${t.category}]</span>
                 </div>
-                <span class="text-expense">-$ ${t.amount}</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span class="text-expense" style="font-weight: bold; color: var(--accent);">-$ ${t.amount}</span>
+                    <button onclick="editTransaction(${t.id})" style="background: none; border: none; cursor: pointer; font-size: 0.85rem;" title="修改">✏️</button>
+                    <button onclick="deleteTransaction(${t.id})" style="background: none; border: none; cursor: pointer; font-size: 0.85rem;" title="刪除">🗑️</button>
+                </div>
             </div>
         `;
     });
@@ -122,14 +118,71 @@ function updateUI() {
     updateChart(categoryTotals);
 }
 
-// 繪製莫蘭迪色系圓餅圖 (支援多分類)
+// 刪除單筆明細
+function deleteTransaction(id) {
+    if (confirm('確定要刪除這筆支出嗎？')) {
+        transactions = transactions.filter(t => t.id !== id);
+        saveToLocalStorage();
+        updateUI();
+    }
+}
+
+// 修改單筆明細
+function editTransaction(id) {
+    const t = transactions.find(item => item.id === id);
+    if (!t) return;
+
+    const newDesc = prompt('修改項目說明：', t.desc);
+    if (newDesc === null) return; 
+
+    const newAmountStr = prompt('修改金額：', t.amount);
+    if (newAmountStr === null) return;
+    
+    const newAmount = parseFloat(newAmountStr);
+    if (isNaN(newAmount) || newAmount <= 0) {
+        alert('請輸入有效的金額！');
+        return;
+    }
+
+    t.desc = newDesc.trim() || t.category;
+    t.amount = newAmount;
+    
+    saveToLocalStorage();
+    updateUI();
+}
+
+// 重新整理按鈕對應功能
+function resetAppData() {
+    if (confirm('是否要重新整理並載入資料？')) {
+        loadFromLocalStorage();
+        updateUI();
+    }
+}
+
+// 儲存至瀏覽器 LocalStorage
+function saveToLocalStorage() {
+    localStorage.setItem('my_transactions', JSON.stringify(transactions));
+}
+
+// 從瀏覽器 LocalStorage 讀取
+function loadFromLocalStorage() {
+    const saved = localStorage.getItem('my_transactions');
+    if (saved) {
+        try {
+            transactions = JSON.parse(saved);
+        } catch(e) {
+            transactions = [];
+        }
+    }
+}
+
+// 繪製莫蘭迪色系圓餅圖
 function updateChart(dataObj) {
     const canvasEl = document.getElementById('expenseChart');
     if (!canvasEl) return;
     
     const ctx = canvasEl.getContext('2d');
     
-    // 過濾掉金額為 0 的分類，讓圓餅圖乾淨不擁擠
     const filteredLabels = [];
     const filteredData = [];
     
@@ -144,10 +197,8 @@ function updateChart(dataObj) {
         myChart.destroy();
     }
 
-    // 如果全部都是 0 就不畫圖
     if (filteredData.length === 0) return;
 
-    // 莫蘭迪色系色票庫
     const morandiColors = [
         '#8C9DAE', '#A37073', '#D4A373', '#738A75', 
         '#9B88A8', '#C29B88', '#7395AE', '#A0AAB2',
