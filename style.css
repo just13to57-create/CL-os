@@ -387,3 +387,51 @@ header p {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
 }
+
+/* ==========================================
+   第二頁進階美化與視覺升級樣式
+   ========================================== */
+
+/* 1. 總結餘卡片：改用高質感的莫蘭迪灰藍漸層與精緻邊框 */
+.balance-card {
+    background: linear-gradient(135deg, #F4F3F0 0%, #E9E6DF 100%);
+    border: 1px solid #DCD8D0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    text-align: center;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+.balance-card span {
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    letter-spacing: 0.5px;
+}
+
+.balance-card h2 {
+    font-size: 1.4rem;
+    color: var(--accent); /* 使用強調色讓金額更醒目 */
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* 2. 支出明細加上類別小色標 (Category Dot Tag) */
+.category-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    color: var(--text-sub);
+}
+
+.category-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* 3. 按鈕點擊回饋特效 (Active Press State) */
+.btn-submit:active, .nav-modal-content button:active, .morandi-card:active {
+    transform: scale(0.98);
+}
