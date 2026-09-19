@@ -65,6 +65,12 @@
                 <form id="expense-form" onsubmit="addTransaction(event)" class="form-group">
                     <input type="text" id="desc" placeholder="項目說明(例如: 晚餐，可不填)" class="form-input">
                     <div class="form-row">
+                        <input type="number" class="form-input half" id="amount" placeholder="金額">
+                        <select class="form-input half" id="category">...</select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="description" placeholder="說明 (例如: 午餐)">
+                    </div>
                         <select id="category" class="form-input half">
                             <optgroup label="住房">
                                 <option value="房租">住房 - 房租</option>
