@@ -12,12 +12,6 @@
     --nav-border: #E2DFDA;     /* 導覽列邊框 */
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
 
 body {
     background-color: #E9E6DF;  /* 網頁外側背景 */
@@ -27,6 +21,14 @@ body {
     height: 100vh;
     overflow: hidden;
 }
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
 
 /* ==========================================
    2. 手機容器與排版
