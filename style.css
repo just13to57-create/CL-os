@@ -346,3 +346,22 @@ header p {
     color: var(--text-sub);
     margin-top: 2px;
 }
+
+/* ==========================================
+   支出明細抽屜式折疊與展開樣式
+   ========================================== */
+.transaction-scroll-box {
+    max-height: 200px; /* 展開時的高度（約可容納 5 筆） */
+    overflow-y: auto;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+/* 點擊折疊後的狀態 (完全收合) */
+.transaction-scroll-box.collapsed {
+    max-height: 0px !important;
+    overflow: hidden !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
