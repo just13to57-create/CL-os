@@ -18,15 +18,27 @@ window.onload = function() {
     updateUI();
 };
 
-// 頁面切換函數
+// 頁面切換函數 (已移除不存在的底部導覽按鈕控制)
 function switchPage(pageNum) {
     for (let i = 1; i <= 5; i++) {
-        document.getElementById(`page-${i}`).classList.remove('active');
-        document.getElementById(`nav-btn-${i}`).classList.remove('active');
+        const pageEl = document.getElementById(`page-${i}`);
+        if (pageEl) {
+            pageEl.classList.remove('active');
+        }
     }
-    document.getElementById(`page-${pageNum}`).classList.add('active');
-    document.getElementById(`nav-btn-${pageNum}`).classList.add('active');
+    const targetPage = document.getElementById(`page-${pageNum}`);
+    if (targetPage) {
+        targetPage.classList.add('active');
+    }
     localStorage.setItem('current_page', pageNum);
+}
+
+// 控制右上角彈出式選單的開關
+function toggleMenu() {
+    const modal = document.getElementById('nav-modal');
+    if (modal) {
+        modal.classList.toggle('active');
+    }
 }
 
 // 新增記賬處理函數 (支援選填說明與新分類)
