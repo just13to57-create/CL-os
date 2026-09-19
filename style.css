@@ -251,10 +251,10 @@ nav {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 8px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    max-height: 200px; /* 限制圖表高度，保持手機版精緻感 */
+    height: 120px;            /* 限制固定高度，不讓圓餅圖佔太大空間 */
 }
