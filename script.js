@@ -8,6 +8,13 @@ let myChart = null;
 // 網頁載入時自動從 localStorage 讀取資料
 window.onload = function() {
     loadFromLocalStorage();
+    const savedPage = localStorage.getItem('current_page');
+    if (savedPage) {
+        switchPage(parseInt(savedPage));
+    } else {
+        switchPage(1);
+    }
+   
     updateUI();
 };
 
