@@ -21,7 +21,7 @@
             <div class="page-1-list">
                 <div onclick="switchPage(2)" class="morandi-card">
                     <h3>第二頁：記賬功能 (現正使用)</h3>
-                    <p>記錄日常收支、檢視當前餘額</p>
+                    <p>記錄日常支出、檢視當月花費</p>
                 </div>
                 <div onclick="switchPage(3)" class="morandi-card">
                     <h3>第三頁：理財階段一 (預留)</h3>
@@ -42,15 +42,15 @@
         <div id="page-2" class="page-content">
             <header class="page-header-flex">
                 <div>
-                    <h1>日常記賬</h1>
-                    <p>管理您的日常收支</p>
+                    <h1>日常支出記賬</h1>
+                    <p>掌握您的消費流向</p>
                 </div>
                 <span class="badge">記賬模式</span>
             </header>
             
-            <!-- 結餘總覽卡片 -->
+            <!-- 總支出總覽卡片 -->
             <div class="balance-card">
-                <span>當前總結餘</span>
+                <span>當前總支出</span>
                 <h2 id="total-balance">$ 0</h2>
             </div>
 
@@ -61,7 +61,7 @@
 
             <!-- 新增記賬表單 -->
             <div class="morandi-card form-card">
-                <h3>新增收支</h3>
+                <h3>新增支出</h3>
                 <form id="expense-form" onsubmit="addTransaction(event)" class="form-group">
                     <input type="text" id="desc" placeholder="項目說明 (例如: 晚餐)" required class="form-input">
                     <div class="form-row">
@@ -71,10 +71,7 @@
                             <option value="娛樂">娛樂</option>
                             <option value="其他">其他</option>
                         </select>
-                        <select id="type" class="form-input half">
-                            <option value="income">收入 (+)</option>
-                            <option value="expense" selected>支出 (-)</option>
-                        </select>
+                        <input type="number" id="amount" placeholder="金額" required class="form-input half">
                     </div>
                     <button type="submit" class="btn-submit">新增紀錄</button>
                 </form>
@@ -82,7 +79,7 @@
 
             <!-- 歷史清單 -->
             <div>
-                <h3>收支明細</h3>
+                <h3>支出明細</h3>
                 <div id="transaction-list">
                     <p class="empty-text">目前尚無記賬資料</p>
                 </div>
