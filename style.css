@@ -1,289 +1,306 @@
 /* ==========================================
-   1. 莫蘭迪色系變數與全局設定
+   1. 全域變數與重置 (莫蘭迪色系)
    ========================================== */
 :root {
-    --bg-body: #E8ECEF;         /* 畫面外部大背景 (灰藍) */
-    --bg-phone: #F7F6F2;        /* 手機容器底色 (暖米白) */
-    --color-primary: #8C9DAE;   /* 主色調 (莫蘭迪灰藍) */
-    --color-primary-hover: #7A8B9C; 
-    --text-main: #4A5568;       /* 主要文字顏色 */
-    --text-sub: #718096;        /* 次要文字顏色 */
-    --card-bg: #FFFFFF;         /* 卡片背景 */
-    --card-border: #E2E0DB;     /* 卡片邊框 */
-    --success-color: #738A75;   /* 收入 (莫蘭迪草綠) */
-    --danger-color: #A37073;    /* 支出 (莫蘭迪玫瑰紅) */
+    --bg-phone: #F4F3F0;       /* 手機背景：極淺莫蘭迪米灰 */
+    --card-bg: #FFFFFF;        /* 卡片背景：純白 */
+    --card-border: #E2DFDA;    /* 卡片邊框：柔和淺灰 */
+    --text-main: #4A5568;      /* 主要文字：莫蘭迪深灰藍 */
+    --text-sub: #8C9DAE;       /* 次要文字：莫蘭迪灰藍 */
+    --accent: #A37073;         /* 強調色：莫蘭迪玫瑰紅 */
+    --nav-bg: #FFFFFF;         /* 導覽列背景：純白 */
+    --nav-border: #E2DFDA;     /* 導覽列邊框 */
 }
 
-body {
-    background-color: var(--bg-body);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+* {
+    box-sizing: border-box;
     margin: 0;
+    padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+body {
+    background-color: #E9E6DF;  /* 網頁外側背景 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
 /* ==========================================
-   2. 手機容器與共用排版
+   2. 手機容器與排版
    ========================================== */
 .phone-container {
     width: 100%;
-    max-width: 380px;      /* 精緻手機寬度 */
-    height: 100vh;
-    max-height: 680px;     /* 手機剛好的短尺寸高度 */
+    max-width: 380px;      /* 手機固定寬度 */
+    height: 680px;         /* 手機固定高度，剛好一目了然 */
     background-color: var(--bg-phone);
     display: flex;
     flex-direction: column;
     position: relative;
     box-shadow: 0 4px 20px rgba(115, 128, 140, 0.15);
-    border-radius: 24px;
-    overflow: hidden;
+    border-radius: 24px;   /* 四個角圓角 */
+    overflow: hidden;      /* 隱藏超出圓角的邊緣內容 */
 }
 
+/* 頁面內容區塊 */
 .page-content {
     display: none;
     flex-direction: column;
     flex: 1;
-    padding: 12px 16px;       /* 上下內距縮小，避免過長 */
-    overflow-y: hidden;       /* 關閉滑動軸，強制內容塞在畫面內 */
-    padding-bottom: 70px;     /* 預留底部導覽列空間 */
+    padding: 12px 16px;
+    overflow-y: hidden;    /* 關閉整頁滾動軸，確保排版剛好塞進畫面 */
+    padding-bottom: 70px;  /* 預留底部導覽列空間 */
 }
 
 .page-content.active {
     display: flex;
 }
 
-/* 共用標頭樣式 */
+/* ==========================================
+   3. 共用元件與卡片 (莫蘭迪風格)
+   ========================================== */
+header {
+    margin-bottom: 8px;
+}
+
 header h1 {
-    font-size: 1.25rem;
-    font-weight: bold;
+    font-size: 1.15rem;
     color: var(--text-main);
-    margin: 0 0 4px 0;
+    font-weight: 600;
 }
+
 header p {
-    font-size: 0.8rem;
-    color: var(--text-sub);
-    margin: 0;
-}
-
-/* 共用卡片樣式 */
-.morandi-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-.morandi-card:hover {
-    background-color: #FAF9F5;
-}
-
-/* ==========================================
-   3. 第一頁專用樣式 (首頁清單)
-   ========================================== */
-.page-1-list {
-    margin-top: 16px;
-}
-.page-1-list h3 {
-    margin: 0 0 4px 0;
-    font-size: 0.95rem;
-    color: var(--text-main);
-}
-.page-1-list p {
-    margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-sub);
 }
 
-/* ==========================================
-   4. 第二頁專用樣式 (記賬功能)
-   ========================================== */
 .page-header-flex {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
 }
+
 .badge {
-    font-size: 0.75rem;
-    background-color: #E2E8F0;
-    padding: 4px 8px;
+    background-color: #E2DFDA;
+    color: var(--text-main);
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+}
+
+.morandi-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 12px;
-    color: var(--text-main);
+    padding: 10px 14px;
+    margin-bottom: 8px;
 }
 
+.morandi-card h3 {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    margin-bottom: 6px;
+}
+
+/* 總結餘卡片 */
 .balance-card {
-    background-color: var(--color-primary);
-    color: #FFFFFF;
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 12px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    text-align: center;
 }
+
 .balance-card span {
-    font-size: 0.75rem;
-    opacity: 0.9;
+    font-size: 0.7rem;
+    color: var(--text-sub);
 }
+
 .balance-card h2 {
-    font-size: 1.75rem;
-    font-weight: bold;
-    margin: 4px 0 0 0;
-}
-
-.form-card {
-    cursor: default;
-}
-.form-card h3 {
-    margin: 0 0 8px 0;
-    font-size: 0.875rem;
+    font-size: 1.4rem;
     color: var(--text-main);
+    margin-top: 2px;
 }
 
+/* ==========================================
+   4. 表單與輸入元件
+   ========================================== */
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
-.form-input {
-    width: 100%;
-    font-size: 0.875rem;
-    padding: 8px 12px;
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    outline: none;
-    box-sizing: border-box;
-    background-color: #FFFFFF;
-}
-.form-input:focus {
-    border-color: var(--color-primary);
-}
+
 .form-row {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
-.half {
+
+.form-input {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    background-color: #FAFAFA;
+    font-size: 0.8rem;
+    color: var(--text-main);
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: var(--text-sub);
+}
+
+.form-input.half {
     width: 50%;
 }
 
 .btn-submit {
     width: 100%;
-    background-color: var(--color-primary);
+    padding: 7px;
+    background-color: var(--text-main);
     color: #FFFFFF;
-    font-size: 0.875rem;
-    font-weight: 500;
-    padding: 10px;
     border: none;
     border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background 0.2s;
 }
+
 .btn-submit:hover {
-    background-color: var(--color-primary-hover);
-}
-
-.transaction-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 12px;
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    margin-bottom: 8px;
-    font-size: 0.875rem;
-}
-.text-income { color: var(--success-color); font-weight: bold; }
-.text-expense { color: var(--danger-color); font-weight: bold; }
-.empty-text {
-    font-size: 0.75rem;
-    color: var(--text-sub);
-    text-align: center;
-    padding: 16px 0;
+    background-color: #3b4452;
 }
 
 /* ==========================================
-   5. 第三至五頁專用樣式 (理財階段)
+   5. 圓餅圖與明細區塊
    ========================================== */
-.stage-card {
-    margin-top: 12px;
-    cursor: default;
-}
-.stage-card p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-main);
-}
-
-/* ==========================================
-   6. 底部固定導覽列樣式
-   ========================================== */
-nav {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background-color: var(--card-bg);
-    border-top: 1px solid var(--card-border);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 10;
-}
-.nav-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--text-sub);
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-.nav-btn.active {
-    color: var(--text-main);
-    font-weight: bold;
-}
 .chart-container {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 12px;
-    padding: 8px;
-    margin-bottom: 10px;
+    padding: 6px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 120px;            /* 限制固定高度，不讓圓餅圖佔太大空間 */
+    height: 110px; /* 固定高度，精緻不佔位 */
 }
 
-
-/* 支出明細專屬卡片樣式 */
+/* 支出明細專屬卡片 */
 .transaction-section {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 10px 14px;
     margin-bottom: 8px;
-    display: flex;
-    flex-direction: column;
-    max-height: 160px; /* 限制明細區塊的最大高度，確保不超出手機版面 */
 }
 
 .transaction-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .transaction-header h3 {
     margin: 0;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     color: var(--text-main);
 }
 
-/* 明細列表專屬的內部捲動區塊 (只有明細超過高度時才會出現精緻捲動軸) */
+/* 明細專屬的內部捲動區塊 */
 .transaction-scroll-box {
+    max-height: 90px;
     overflow-y: auto;
-    max-height: 110px;
-    padding-right: 4px;
+    padding-right: 2px;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px solid #F0ECE6;
+    font-size: 0.8rem;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.text-expense {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.empty-text {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    text-align: center;
+    padding: 6px 0;
+}
+
+/* ==========================================
+   6. 底部固定導覽列
+   ========================================== */
+nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 56px;
+    background-color: var(--nav-bg);
+    border-top: 1px solid var(--nav-border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    color: var(--text-sub);
+    font-size: 0.7rem;
+    transition: color 0.2s;
+}
+
+.nav-btn span {
+    margin-top: 2px;
+}
+
+.nav-btn.active {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* 第一頁首頁卡片清單樣式 */
+.page-1-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.page-1-list .morandi-card {
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.page-1-list .morandi-card:hover {
+    background-color: #FAFAFA;
+    transform: translateY(-1px);
+}
+
+.page-1-list .morandi-card p {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    margin-top: 2px;
 }
