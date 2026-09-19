@@ -113,8 +113,8 @@
 
            <!-- 獨立一格的支出明細區塊 -->
             <div class="transaction-section">
-                <!-- 點擊標題列可以開合 -->
-                <div class="transaction-header" id="transaction-header-box" style="cursor: pointer;">
+                <!-- 直接用 onclick 呼叫函數，最穩妥不會失效 -->
+                <div class="transaction-header" onclick="toggleTransactionBox()" style="cursor: pointer;">
                     <h3>支出明細</h3>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span id="transaction-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
