@@ -238,3 +238,10 @@ function updateChart(dataObj) {
         }
     });
 }
+// 控制彈出式選單的開關 (請加在 script.js 的最下方)
+function toggleMenu() {
+    const modal = document.getElementById('nav-modal');
+    if (modal) {
+        modal.classList.toggle('active');
+    }
+}
