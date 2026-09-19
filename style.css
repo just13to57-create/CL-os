@@ -2,16 +2,13 @@
    1. 全域變數與重置 (莫蘭迪色系)
    ========================================== */
 :root {
-    --bg-phone: #F4F3F0;       /* 手機背景：極淺莫蘭迪米灰 */
-    --card-bg: #FFFFFF;        /* 卡片背景：純白 */
-    --card-border: #E2DFDA;    /* 卡片邊框：柔和淺灰 */
-    --text-main: #4A5568;      /* 主要文字：莫蘭迪深灰藍 */
-    --text-sub: #8C9DAE;       /* 次要文字：莫蘭迪灰藍 */
-    --accent: #A37073;         /* 強調色：莫蘭迪玫瑰紅 */
-    --nav-bg: #FFFFFF;         /* 導覽列背景：純白 */
-    --nav-border: #E2DFDA;     /* 導覽列邊框 */
+    --bg-phone: #F4F3F0;       
+    --card-bg: #FFFFFF;        
+    --card-border: #E2DFDA;    
+    --text-main: #4A5568;      
+    --text-sub: #8C9DAE;       
+    --accent: #A37073;         
 }
-
 
 body {
     background-color: #E9E6DF;  /* 網頁外側背景 */
