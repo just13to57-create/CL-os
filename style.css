@@ -246,3 +246,14 @@ nav {
     color: var(--text-main);
     font-weight: bold;
 }
+.chart-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 200px; /* 限制圖表高度，保持手機版精緻感 */
+}
