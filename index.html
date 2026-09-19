@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>手機版理財記賬助手</title>
-    <!-- 引入 Tailwind CSS 讓樣式現代且排版迅速 -->
+    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 鎖定手機外觀比例與外框限制 */
+        /* 僅限制尺寸為手機比例，不加手機外框 */
         body {
             background-color: #f3f4f6;
             display: flex;
@@ -23,20 +23,10 @@
             height: 100vh;
             max-height: 844px;
             background-color: #ffffff;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             display: flex;
-            flex-direction: {
-                /* 預留彈性 */
-            };
+            flex-direction: column;
             position: relative;
             overflow: hidden;
-        }
-        @media (min-width: 401px) {
-            .phone-container {
-                border-radius: 40px;
-                border: 12px solid #1f2937;
-                height: 844px;
-            }
         }
         /* 隱藏未啟用的頁面 */
         .page-content {
@@ -55,7 +45,7 @@
         <!-- 主體內容區 (5頁內容) -->
         
         <!-- 【第一頁：清單首頁】 -->
-        <div id="page-1" class="page-content active p-4 overflow-y-auto">
+        <div id="page-1" class="page-content active p-4 overflow-y-auto pb-20">
             <header class="mb-4">
                 <h1 class="text-2xl font-bold text-gray-800">理財導航首頁</h1>
                 <p class="text-sm text-gray-500">歡迎回來，這是您的 5 階段理財計劃</p>
@@ -81,7 +71,7 @@
         </div>
 
         <!-- 【第二頁：記賬頁面】 -->
-        <div id="page-2" class="page-content p-4 overflow-y-auto">
+        <div id="page-2" class="page-content p-4 overflow-y-auto pb-20">
             <header class="mb-4 flex justify-between items-center">
                 <h1 class="text-xl font-bold text-gray-800">日常記賬</h1>
                 <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">記賬模式</span>
@@ -113,49 +103,48 @@
             <div>
                 <h3 class="text-sm font-bold text-gray-700 mb-2">收支明細</h3>
                 <div id="transaction-list" class="space-y-2">
-                    <!-- 動態載入項目 -->
                     <p class="text-xs text-gray-400 text-center py-4">目前尚無記賬資料</p>
                 </div>
             </div>
         </div>
 
         <!-- 【第三頁：理財方式一】 -->
-        <div id="page-3" class="page-content p-4 overflow-y-auto">
+        <div id="page-3" class="page-content p-4 overflow-y-auto pb-20">
             <header class="mb-4">
                 <h1 class="text-xl font-bold text-gray-800">理財階段一：緊急預備金</h1>
                 <p class="text-xs text-gray-500">規劃您的防守型資產</p>
             </header>
             <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl text-sm text-amber-800">
                 <p class="font-bold mb-1">💡 階段討論中...</p>
-                <p class="text-xs">這裡將放置第一階段的理財建議、目標金額設定與計算工具。等您確認後我們隨時可以修改這部分的代碼！</p>
+                <p class="text-xs">這裡將放置第一階段的理財建議與目標金額設定。</p>
             </div>
         </div>
 
         <!-- 【第四頁：理財方式二】 -->
-        <div id="page-4" class="page-content p-4 overflow-y-auto">
+        <div id="page-4" class="page-content p-4 overflow-y-auto pb-20">
             <header class="mb-4">
                 <h1 class="text-xl font-bold text-gray-800">理財階段二：債務管理</h1>
                 <p class="text-xs text-gray-500">清理高利率負債</p>
             </header>
             <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl text-sm text-purple-800">
                 <p class="font-bold mb-1">💡 階段討論中...</p>
-                <p class="text-xs">這裡預留給信用卡債務、信貸清償策略的計算或紀錄功能。</p>
+                <p class="text-xs">這裡預留給信用卡債務、信貸清償策略。</p>
             </div>
         </div>
 
         <!-- 【第五頁：理財方式三】 -->
-        <div id="page-5" class="page-content p-4 overflow-y-auto">
+        <div id="page-5" class="page-content p-4 overflow-y-auto pb-20">
             <header class="mb-4">
                 <h1 class="text-xl font-bold text-gray-800">理財階段三：投資增值</h1>
                 <p class="text-xs text-gray-500">定期定額與資產配置</p>
             </header>
             <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl text-sm text-emerald-800">
                 <p class="font-bold mb-1">💡 階段討論中...</p>
-                <p class="text-xs">這裡預留給長期的投資規劃、資產配置比例追蹤。</p>
+                <p class="text-xs">這裡預留給長期的投資規劃。</p>
             </div>
         </div>
 
-        <!-- 底部導覽列 (固定切換 5 個頁面) -->
+        <!-- 底部導覽列 -->
         <nav class="absolute bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 flex justify-around items-center px-2 z-10 shadow-lg">
             <button onclick="switchPage(1)" id="nav-btn-1" class="nav-btn flex flex-col items-center text-blue-600">
                 <span class="text-xs font-bold">首頁</span>
@@ -175,47 +164,33 @@
         </nav>
     </div>
 
-    <!-- 簡單的頁面切換與記賬邏輯 JavaScript -->
+    <!-- JavaScript 邏輯 -->
     <script>
         let transactions = [];
 
-        // 頁面切換函數
         function switchPage(pageNum) {
-            // 隱藏所有頁面
             for (let i = 1; i <= 5; i++) {
                 document.getElementById(`page-${i}`).classList.remove('active');
                 const btn = document.getElementById(`nav-btn-${i}`);
                 btn.className = "nav-btn flex flex-col items-center text-gray-400 font-medium text-xs";
             }
-            // 顯示指定頁面
             document.getElementById(`page-${pageNum}`).classList.add('active');
-            // 高亮當前導覽按鈕
             const activeBtn = document.getElementById(`nav-btn-${pageNum}`);
             activeBtn.className = "nav-btn flex flex-col items-center text-blue-600 font-bold text-xs";
         }
 
-        // 新增記賬邏輯
         function addTransaction(event) {
             event.preventDefault();
             const desc = document.getElementById('desc').value;
             const amount = parseFloat(document.getElementById('amount').value);
             const type = document.getElementById('type').value;
 
-            const transaction = {
-                id: Date.now(),
-                desc,
-                amount,
-                type
-            };
-
+            const transaction = { id: Date.now(), desc, amount, type };
             transactions.push(transaction);
             updateUI();
-            
-            // 清空表單
             document.getElementById('expense-form').reset();
         }
 
-        // 更新介面與計算總額
         function updateUI() {
             const listContainer = document.getElementById('transaction-list');
             const balanceEl = document.getElementById('total-balance');
@@ -233,7 +208,6 @@
                 const isIncome = t.type === 'income';
                 const sign = isIncome ? '+' : '-';
                 const colorClass = isIncome ? 'text-green-600' : 'text-red-600';
-                
                 total += isIncome ? t.amount : -t.amount;
 
                 html += `
