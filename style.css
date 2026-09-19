@@ -30,8 +30,8 @@ body {
 .phone-container {
     width: 100%;
     max-width: 380px;      /* 精緻手機寬度 */
-    height: 100vh;
-    max-height: 680px;     /* 手機剛好的短尺寸高度 */
+    height: 85vh;
+    max-height: 600px;     /* 手機剛好的短尺寸高度 */
     background-color: var(--bg-phone);
     display: flex;
     flex-direction: column;
