@@ -111,13 +111,15 @@
                 <canvas id="expenseChart"></canvas>
             </div>
 
+           <!-- 獨立一格的支出明細區塊 -->
             <div class="transaction-section">
-                <div class="transaction-header" onclick="toggleTransactionBox()" style="cursor: pointer;">
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <span id="toggle-arrow" style="font-size: 0.75rem; transition: transform 0.2s;">▶</span>
-                        <h3>支出明細</h3>
+                <!-- 點擊標題列可以開合 -->
+                <div class="transaction-header" id="transaction-header-box" style="cursor: pointer;">
+                    <h3>支出明細</h3>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span id="transaction-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
+                        <span id="toggle-text" style="font-size: 0.75rem; color: var(--accent); font-weight: 500;">展開</span>
                     </div>
-                    <span id="transaction-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
                 </div>
                 <!-- 明細列表容器，預設加上 .collapsed 隱藏 -->
                 <div id="transaction-list" class="transaction-scroll-box collapsed">
