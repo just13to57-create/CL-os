@@ -35,9 +35,15 @@ function switchPage(pageNum) {
 
 // 控制右上角彈出式選單的開關
 function toggleMenu() {
-    const modal = document.getElementById('nav-modal');
-    if (modal) {
-        modal.classList.toggle('active');
+    const listContainer = document.getElementById('transaction-list');
+    const toggleText = document.getElementById('toggle-text');
+    
+    if (listContainer) {
+        listContainer.classList.toggle('collapsed');
+        const isCollapsed = listContainer.classList.contains('collapsed');
+        if (toggleText) {
+            toggleText.innerText = isCollapsed ? '展開' : '收合';
+        }
     }
 }
 
