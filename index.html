@@ -112,15 +112,18 @@
             </div>
 
             <div class="transaction-section">
-                <div class="transaction-header">
-                    <h3>支出明細</h3>
+                <div class="transaction-header" onclick="toggleTransactionBox()" style="cursor: pointer;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span id="toggle-arrow" style="font-size: 0.75rem; transition: transform 0.2s;">▶</span>
+                        <h3>支出明細</h3>
+                    </div>
                     <span id="transaction-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
                 </div>
-                <div id="transaction-list" class="transaction-scroll-box">
+                <!-- 明細列表容器，預設加上 .collapsed 隱藏 -->
+                <div id="transaction-list" class="transaction-scroll-box collapsed">
                     <p class="empty-text">目前尚無記賬資料</p>
                 </div>
             </div>
-        </div>
 
         <!-- 【第三頁：理財階段一】 -->
         <div id="page-3" class="page-content">
