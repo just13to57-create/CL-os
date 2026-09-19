@@ -253,8 +253,8 @@ function updateChart(categoryTotals) {
                 maintainAspectRatio: false,
                 layout: {
                 padding: {
-                    top: 10,    // 上方留白
-                    bottom: 10, // 下方留白
+                    top: 20,    // 上方留白
+                    bottom: 20, // 下方留白
                     left: 10,   // 左方留白
                     right: 15   // 右方留白（讓右邊的文字圖例跟邊框保持距離）
                 }
