@@ -250,3 +250,16 @@ function updateChart(dataObj) {
         }
     });
 }
+
+// 控制支出明細區塊的展開與折疊
+function toggleTransactionBox() {
+    const listContainer = document.getElementById('transaction-list');
+    const header = document.querySelector('.transaction-header');
+    
+    if (listContainer) {
+        listContainer.classList.toggle('collapsed');
+    }
+    if (header) {
+        header.classList.toggle('expanded');
+    }
+}
