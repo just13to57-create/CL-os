@@ -119,6 +119,18 @@ function updateUI() {
         if (!t.id) t.id = Date.now() + index;
     });
 
+    // 定義各主分類對應的莫蘭迪色標
+    const categoryColors = {
+        '房租': '#8C9DAE', '水電': '#8C9DAE', '住房其他': '#8C9DAE',
+        '食材': '#A37073', '外食': '#A37073', '點心': '#A37073',
+        '大眾運輸': '#D4A373', '打車': '#D4A373', '油錢': '#D4A373',
+        '耐用品': '#738A75', '消耗品': '#738A75',
+        '話費': '#9B88A8', '訂閱': '#9B88A8',
+        '旅遊': '#C29B88', '社交': '#C29B88', '娛樂其他': '#C29B88',
+        '課程': '#7395AE', '書籍': '#7395AE', '教育其他': '#7395AE',
+        '保險': '#B48A84'
+    };
+
     transactions.slice().reverse().forEach(t => {
         total += t.amount;
         if (categoryTotals.hasOwnProperty(t.category)) {
@@ -127,16 +139,22 @@ function updateUI() {
             categoryTotals['住房其他'] += t.amount;
         }
 
+        // 取得該分類對應的色標，若無則預設灰色
+        const dotColor = categoryColors[t.category] || '#A0AAB2';
+
         html += `
-            <div class="transaction-item" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee;">
+            <div class="transaction-item" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #F0ECE6;">
                 <div>
-                    <span style="color: var(--text-main); font-weight: 500;">${t.desc}</span>
-                    <span style="font-size: 0.7rem; color: var(--text-sub); display: block;">[${t.category}]</span>
+                    <span style="color: var(--text-main); font-weight: 500; font-size: 0.8rem;">${t.desc}</span>
+                    <span class="category-tag" style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.7rem; color: var(--text-sub); display: block;">
+                        <span class="category-dot" style="width: 6px; height: 6px; border-radius: 50%; display: inline-block; background-color: ${dotColor};"></span>
+                        ${t.category}
+                    </span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px;">
                     <span class="text-expense" style="font-weight: bold; color: var(--accent);">-$ ${t.amount}</span>
-                    <button onclick="editTransaction(${t.id})" style="background: none; border: none; cursor: pointer; font-size: 0.85rem;" title="修改">✏️</button>
-                    <button onclick="deleteTransaction(${t.id})" style="background: none; border: none; cursor: pointer; font-size: 0.85rem;" title="刪除">🗑️</button>
+                    <button onclick="editTransaction(${t.id})" style="background: none; border: none; cursor: pointer; font-size: 0.8rem;" title="修改">✏️</button>
+                    <button onclick="deleteTransaction(${t.id})" style="background: none; border: none; cursor: pointer; font-size: 0.8rem;" title="刪除">🗑️</button>
                 </div>
             </div>
         `;
