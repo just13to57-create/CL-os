@@ -1,10 +1,21 @@
 /* ==========================================
-   莫蘭迪色系與手機尺寸專用 CSS
+   1. 莫蘭迪色系變數與全局設定
    ========================================== */
+:root {
+    --bg-body: #E8ECEF;         /* 畫面外部大背景 (灰藍) */
+    --bg-phone: #F7F6F2;        /* 手機容器底色 (暖米白) */
+    --color-primary: #8C9DAE;   /* 主色調 (莫蘭迪灰藍) */
+    --color-primary-hover: #7A8B9C; 
+    --text-main: #4A5568;       /* 主要文字顏色 */
+    --text-sub: #718096;        /* 次要文字顏色 */
+    --card-bg: #FFFFFF;         /* 卡片背景 */
+    --card-border: #E2E0DB;     /* 卡片邊框 */
+    --success-color: #738A75;   /* 收入 (莫蘭迪草綠) */
+    --danger-color: #A37073;    /* 支出 (莫蘭迪玫瑰紅) */
+}
 
-/* 全局背景與置中設定 */
 body {
-    background-color: #E8ECEF; /* 莫蘭迪灰藍色系背景 */
+    background-color: var(--bg-body);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,45 +24,225 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* 手機容器尺寸與外觀設定 */
+/* ==========================================
+   2. 手機容器與共用排版
+   ========================================== */
 .phone-container {
     width: 100%;
-    max-width: 380px;      /* 稍微收窄的精緻手機寬度 */
+    max-width: 380px;      /* 精緻手機寬度 */
     height: 100vh;
-    max-height: 720px;     /* 縮短高度，使畫面在手機螢幕中更緊湊剛好 */
-    background-color: #F7F6F2; /* 莫蘭迪暖米白底色，減輕視覺疲勞 */
+    max-height: 720px;     /* 手機剛好的短尺寸高度 */
+    background-color: var(--bg-phone);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(115, 128, 140, 0.15); /* 柔和的陰影 */
+    box-shadow: 0 4px 20px rgba(115, 128, 140, 0.15);
 }
 
-/* 頁面內容基本設定 */
 .page-content {
     display: none;
-}
-
-/* 頁面啟用狀態：顯示為彈性盒子排版 */
-.page-content.active {
-    display: flex;
     flex-direction: column;
     flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    padding-bottom: 80px; /* 預留底部導覽列空間 */
 }
 
-/* 莫蘭迪色系常用輔助樣式（可搭配 Tailwind 或原生使用） */
+.page-content.active {
+    display: flex;
+}
+
+/* 共用標頭樣式 */
+header h1 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--text-main);
+    margin: 0 0 4px 0;
+}
+header p {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+    margin: 0;
+}
+
+/* 共用卡片樣式 */
 .morandi-card {
-    background-color: #FFFFFF;
-    border: 1px solid #E2E0DB;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 12px;
-}
-
-.morandi-btn-primary {
-    background-color: #8C9DAE; /* 莫蘭迪灰藍主色 */
-    color: #FFFFFF;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
     transition: background-color 0.2s;
 }
+.morandi-card:hover {
+    background-color: #FAF9F5;
+}
 
-.morandi-btn-primary:hover {
-    background-color: #7A8B9C;
+/* ==========================================
+   3. 第一頁專用樣式 (首頁清單)
+   ========================================== */
+.page-1-list {
+    margin-top: 16px;
+}
+.page-1-list h3 {
+    margin: 0 0 4px 0;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+.page-1-list p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-sub);
+}
+
+/* ==========================================
+   4. 第二頁專用樣式 (記賬功能)
+   ========================================== */
+.page-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.badge {
+    font-size: 0.75rem;
+    background-color: #E2E8F0;
+    padding: 4px 8px;
+    border-radius: 12px;
+    color: var(--text-main);
+}
+
+.balance-card {
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+.balance-card span {
+    font-size: 0.75rem;
+    opacity: 0.9;
+}
+.balance-card h2 {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin: 4px 0 0 0;
+}
+
+.form-card {
+    cursor: default;
+}
+.form-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 0.875rem;
+    color: var(--text-main);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.form-input {
+    width: 100%;
+    font-size: 0.875rem;
+    padding: 8px 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    outline: none;
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+}
+.form-input:focus {
+    border-color: var(--color-primary);
+}
+.form-row {
+    display: flex;
+    gap: 8px;
+}
+.half {
+    width: 50%;
+}
+
+.btn-submit {
+    width: 100%;
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-submit:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+}
+.text-income { color: var(--success-color); font-weight: bold; }
+.text-expense { color: var(--danger-color); font-weight: bold; }
+.empty-text {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    text-align: center;
+    padding: 16px 0;
+}
+
+/* ==========================================
+   5. 第三至五頁專用樣式 (理財階段)
+   ========================================== */
+.stage-card {
+    margin-top: 12px;
+    cursor: default;
+}
+.stage-card p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-main);
+}
+
+/* ==========================================
+   6. 底部固定導覽列樣式
+   ========================================== */
+nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10;
+}
+.nav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-sub);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+.nav-btn.active {
+    color: var(--text-main);
+    font-weight: bold;
 }
