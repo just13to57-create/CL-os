@@ -251,8 +251,17 @@ function updateChart(categoryTotals) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } }
-            }
+                plugins: {
+                   legend: {
+                       position: 'right',
+                       labels: {
+                          boxWidth: 10,   // 圖例前方的小色塊寬度
+                          font: { size: 10 } // 圖例文字大小
+                    }
+                }
+            },
+            cutout: '60%' // <--- 【關鍵】調整這裡的百分比！
+        }
         });
         return;
     }
