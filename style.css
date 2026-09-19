@@ -1,20 +1,13 @@
 /* ==========================================
-   1. 全域變數與重置 (莫蘭迪與溫柔大地色系)
+   1. 全域變數與重置 (莫蘭迪色系)
    ========================================== */
 :root {
-    --bg-phone: #F4F3F0;        
-    --card-bg: #FFFFFF;         
-    --card-border: #E5E0D8;    
+    --bg-phone: #F4F3F0;       
+    --card-bg: #FFFFFF;        
+    --card-border: #E2DFDA;    
     --text-main: #4A5568;      
-    --text-sub: #9C948C;        
-    --accent: #8C7A6B;          /* 溫潤的暖可可色 */
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --text-sub: #8C9DAE;       
+    --accent: #A37073;         
 }
 
 body {
@@ -26,20 +19,28 @@ body {
     overflow: hidden;
 }
 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+
 /* ==========================================
    2. 手機容器與排版
    ========================================== */
 .phone-container {
     width: 100%;
     max-width: 380px;      /* 手機固定寬度 */
-    height: 680px;          /* 手機固定高度，剛好一目了然 */
+    height: 680px;         /* 手機固定高度，剛好一目了然 */
     background-color: var(--bg-phone);
     display: flex;
     flex-direction: column;
     position: relative;
     box-shadow: 0 4px 20px rgba(115, 128, 140, 0.15);
-    border-radius: 24px;    /* 四個角圓角 */
-    overflow: hidden;       /* 隱藏超出圓角的邊緣內容 */
+    border-radius: 24px;   /* 四個角圓角 */
+    overflow: hidden;      /* 隱藏超出圓角的邊緣內容 */
 }
 
 /* 頁面內容區塊 */
@@ -47,17 +48,39 @@ body {
     display: none;
     flex-direction: column;
     flex: 1;
-    padding: 10px 14px 16px 14px;
-    gap: 6px;               /* 縮小各卡片間距，讓排版更緊密、充實 */
-    overflow-y: hidden;     /* 關閉整頁滾動軸 */
+    padding: 10px 14px;
+    gap: 6px; /* 縮小各卡片間距，讓排版更緊密、充實 */
+    overflow-y: hidden;    /* 關閉整頁滾動軸，確保排版剛好塞進畫面 */
 }
 
 .page-content.active {
     display: flex;
 }
 
+/* 讓圓餅圖或上方卡片在明細收起時，能自動延展吃滿剩餘空間 */
+.chart-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1; /* 自動填滿收合後空出來的空間 */
+    min-height: 90px;
+}
+
+/* 支出明細專屬卡片：平時收合時只保留標題的精緻高度 */
+.transaction-section {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 8px 12px;
+    /* 不設固定高，讓它依據收合/展開自動縮放 */
+}
+
 /* ==========================================
-   3. 共用元件與卡片 (大地色風格)
+   3. 共用元件與卡片 (莫蘭迪風格)
    ========================================== */
 header {
     margin-bottom: 8px;
@@ -88,27 +111,38 @@ header p {
     border-radius: 10px;
 }
 
-/* 總結餘卡片：溫潤的燕麥大地色漸層 */
-.balance-card {
-    background: linear-gradient(135deg, #F7F5F0 0%, #EFECE6 100%);
+.morandi-card {
+    background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 12px;
     padding: 10px 14px;
-    text-align: center;
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8);
     margin-bottom: 8px;
+}
+
+.morandi-card h3 {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    margin-bottom: 6px;
+}
+
+/* 總結餘卡片 */
+.balance-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    text-align: center;
 }
 
 .balance-card span {
     font-size: 0.7rem;
     color: var(--text-sub);
-    letter-spacing: 0.5px;
 }
 
 .balance-card h2 {
     font-size: 1.4rem;
-    color: var(--accent);
-    font-weight: 700;
+    color: var(--text-main);
     margin-top: 2px;
 }
 
@@ -162,12 +196,8 @@ header p {
     background-color: #3b4452;
 }
 
-.btn-submit:active, .nav-modal-content button:active, .morandi-card:active {
-    transform: scale(0.98);
-}
-
 /* ==========================================
-   5. 圖表與支出明細區塊
+   5. 圓餅圖與明細區塊
    ========================================== */
 .chart-container {
     background-color: var(--card-bg);
@@ -203,20 +233,18 @@ header p {
     color: var(--text-main);
 }
 
-/* 明細抽屜式折疊與展開動畫 */
+/* 明細專屬的內部捲動區塊 */
 .transaction-scroll-box {
-    max-height: 200px; /* 展開時的高度 */
+    max-height: 45px;
     overflow-y: auto;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding-right: 2px;
+   transition: max-height 0.3s ease, padding 0.3s ease;
 }
 
 .transaction-scroll-box.collapsed {
-    max-height: 0px !important;
-    overflow: hidden !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    max-height: 0px;
+    overflow: hidden;
+    padding: 0;
 }
 
 /* 展開時的箭頭旋轉動畫 */
@@ -238,7 +266,7 @@ header p {
 }
 
 .text-expense {
-    color: #A37073;
+    color: var(--accent);
     font-weight: 500;
 }
 
@@ -249,30 +277,15 @@ header p {
     padding: 6px 0;
 }
 
-/* 分類小色標樣式 */
-.category-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.7rem;
-    color: var(--text-sub);
-}
-
-.category-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
 /* ==========================================
-   6. 彈出式選單與第一頁清單
+   彈出式選單與頂部按鈕微調
    ========================================== */
 .header-btns {
     display: flex;
     gap: 6px;
 }
 
+/* 彈出選單遮罩層 */
 .nav-modal-overlay {
     position: absolute;
     top: 0;
@@ -291,6 +304,7 @@ header p {
     display: flex;
 }
 
+/* 彈出選單內容方塊 */
 .nav-modal-content {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -327,6 +341,12 @@ header p {
     background-color: #F0ECE6;
 }
 
+/* 調整頁面內容的底部留白 (因為沒有底端導覽列了，可以不需要預留那麼多空間) */
+.page-content {
+    padding-bottom: 16px !important;
+}
+
+/* 第一頁首頁卡片清單樣式 */
 .page-1-list {
     display: flex;
     flex-direction: column;
@@ -334,11 +354,6 @@ header p {
 }
 
 .page-1-list .morandi-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 10px 14px;
-    margin-bottom: 8px;
     cursor: pointer;
     transition: transform 0.1s, background-color 0.2s;
 }
@@ -352,4 +367,114 @@ header p {
     font-size: 0.75rem;
     color: var(--text-sub);
     margin-top: 2px;
+}
+
+/* ==========================================
+   支出明細抽屜式折疊與展開樣式
+   ========================================== */
+.transaction-scroll-box {
+    max-height: 200px; /* 展開時的高度（約可容納 5 筆） */
+    overflow-y: auto;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+/* 點擊折疊後的狀態 (完全收合) */
+.transaction-scroll-box.collapsed {
+    max-height: 0px !important;
+    overflow: hidden !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* ==========================================
+   第二頁進階美化與視覺升級樣式
+   ========================================== */
+
+/* 1. 總結餘卡片：改用高質感的莫蘭迪灰藍漸層與精緻邊框 */
+.balance-card {
+    background: linear-gradient(135deg, #F4F3F0 0%, #E9E6DF 100%);
+    border: 1px solid #DCD8D0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    text-align: center;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+.balance-card span {
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    letter-spacing: 0.5px;
+}
+
+.balance-card h2 {
+    font-size: 1.4rem;
+    color: var(--accent); /* 使用強調色讓金額更醒目 */
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* 2. 支出明細加上類別小色標 (Category Dot Tag) */
+.category-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    color: var(--text-sub);
+}
+
+.category-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* 3. 按鈕點擊回饋特效 (Active Press State) */
+.btn-submit:active, .nav-modal-content button:active, .morandi-card:active {
+    transform: scale(0.98);
+}
+
+/* ==========================================
+   溫柔大地色系微調
+   ========================================== */
+
+/* 總結餘卡片：改用溫潤的燕麥大地色漸層 */
+.balance-card {
+    background: linear-gradient(135deg, #F7F5F0 0%, #EFECE6 100%);
+    border: 1px solid #E5E0D8;
+    border-radius: 12px;
+    padding: 10px 14px;
+    text-align: center;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.balance-card span {
+    font-size: 0.7rem;
+    color: #9C948C; /* 溫柔的大地灰棕色 */
+    letter-spacing: 0.5px;
+}
+
+.balance-card h2 {
+    font-size: 1.4rem;
+    color: #8C7A6B; /* 溫潤的暖可可色 */
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* 分類小色標樣式 */
+.category-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    color: #9C948C;
+}
+
+.category-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
 }
