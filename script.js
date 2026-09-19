@@ -5,6 +5,15 @@
 let transactions = [];
 let myChart = null;
 
+// 網頁載入時，從 localStorage 讀取過去的記錄
+window.onload = function() {
+    const savedData = localStorage.getItem('transactions');
+    if (savedData) {
+        transactions = JSON.parse(savedData);
+        updateUI();
+    }
+};
+
 // 頁面切換函數
 function switchPage(pageNum) {
     for (let i = 1; i <= 5; i++) {
