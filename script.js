@@ -15,12 +15,23 @@ function switchPage(pageNum) {
     document.getElementById(`nav-btn-${pageNum}`).classList.add('active');
 }
 
-// 新增記賬處理函數 (統一為支出)
+// 新增記賬處理函數 (純支出)
 function addTransaction(event) {
-    event.preventDefault();
-    const desc = document.getElementById('desc').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const category = document.getElementById('category').value;
+    event.preventDefault(); // 防止網頁重新整理
+    
+    const descInput = document.getElementById('desc');
+    const amountInput = document.getElementById('amount');
+    const categoryInput = document.getElementById('category');
+
+    // 檢查欄位是否存在
+    if (!descInput || !amountInput || !categoryInput) {
+        console.error("找不到表單欄位！");
+        return;
+    }
+
+    const desc = descInput.value;
+    const amount = parseFloat(amountInput.value);
+    const category = categoryInput.value;
 
     const transaction = { 
         id: Date.now(), 
@@ -31,6 +42,8 @@ function addTransaction(event) {
     
     transactions.push(transaction);
     updateUI();
+    
+    // 清空表單
     document.getElementById('expense-form').reset();
 }
 
@@ -73,7 +86,10 @@ function updateUI() {
 
 // 繪製莫蘭迪色系圓餅圖
 function updateChart(dataObj) {
-    const ctx = document.getElementById('expenseChart').getContext('2d');
+    const canvasEl = document.getElementById('expenseChart');
+    if (!canvasEl) return;
+    
+    const ctx = canvasEl.getContext('2d');
     const labels = Object.keys(dataObj);
     const data = Object.values(dataObj);
 
