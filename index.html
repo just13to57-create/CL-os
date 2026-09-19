@@ -3,227 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>手機版理財記賬助手 (結構與樣式分離)</title>
-    <style>
-        /* ==========================================
-           1. 莫蘭迪色系變數與全局設定 (CSS 集中管理)
-           ========================================== */
-        :root {
-            --bg-body: #E8ECEF;         /* 畫面外部大背景 (莫蘭迪灰藍) */
-            --bg-phone: #F7F6F2;        /* 手機容器底色 (溫潤米白) */
-            --color-primary: #8C9DAE;   /* 主色調 (莫蘭迪灰藍) */
-            --color-primary-hover: #7A8B9C; 
-            --text-main: #4A5568;       /* 主要文字顏色 */
-            --text-sub: #718096;        /* 次要文字顏色 */
-            --card-bg: #FFFFFF;         /* 卡片背景 */
-            --card-border: #E2E0DB;     /* 卡片邊框 */
-            --success-color: #738A75;   /* 收入/成功 (莫蘭迪草綠) */
-            --danger-color: #A37073;    /* 支出/危險 (莫蘭迪乾燥玫瑰紅) */
-        }
-
-        body {
-            background-color: var(--bg-body);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        /* 2. 手機容器尺寸與外觀 */
-        .phone-container {
-            width: 100%;
-            max-width: 380px;      /* 手機精緻寬度 */
-            height: 100vh;
-            max-height: 720px;     /* 手機剛好的短尺寸高度 */
-            background-color: var(--bg-phone);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(115, 128, 140, 0.15);
-        }
-
-        /* 3. 單頁式切換邏輯 */
-        .page-content {
-            display: none;
-            flex-direction: column;
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-            padding-bottom: 80px; /* 預留底部導覽列空間 */
-        }
-        .page-content.active {
-            display: flex;
-        }
-
-        /* 4. 共用莫蘭迪元件樣式 */
-        header h1 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: var(--text-main);
-            margin: 0 0 4px 0;
-        }
-        header p {
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            margin: 0;
-        }
-
-        .morandi-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .morandi-card:hover {
-            background-color: #FAF9F5;
-        }
-
-        /* 餘額卡片 */
-        .balance-card {
-            background-color: var(--color-primary);
-            color: #FFFFFF;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
-        }
-        .balance-card span {
-            font-size: 0.75rem;
-            opacity: 0.9;
-        }
-        .balance-card h2 {
-            font-size: 1.75rem;
-            font-weight: bold;
-            margin: 4px 0 0 0;
-        }
-
-        /* 表單樣式 */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .form-input {
-            width: 100%;
-            font-size: 0.875rem;
-            padding: 8px 12px;
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            outline: none;
-            box-sizing: border-box;
-        }
-        .form-input:focus {
-            border-color: var(--color-primary);
-        }
-        .form-row {
-            display: flex;
-            gap: 8px;
-        }
-        .btn-submit {
-            width: 100%;
-            background-color: var(--color-primary);
-            color: #FFFFFF;
-            font-size: 0.875rem;
-            font-weight: 500;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .btn-submit:hover {
-            background-color: var(--color-primary-hover);
-        }
-
-        /* 交易明細清單 */
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 12px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 0.875rem;
-        }
-        .text-income { color: var(--success-color); font-weight: bold; }
-        .text-expense { color: var(--danger-color); font-weight: bold; }
-
-        /* 5. 底部固定導覽列 */
-        nav {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background-color: var(--card-bg);
-            border-top: 1px solid var(--card-border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 10;
-        }
-        .nav-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text-sub);
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-        .nav-btn.active {
-            color: var(--text-main);
-            font-weight: bold;
-        }
-    </style>
+    <title>手機版理財記賬助手</title>
+    <!-- 引入獨立的 CSS 樣式表 -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="phone-container">
         
-        <!-- 【第一頁：清單首頁】 -->
+        <!-- 【第一頁：首頁清單】 -->
         <div id="page-1" class="page-content active">
             <header>
                 <h1>理財導航首頁</h1>
                 <p>歡迎回來，這是您的 5 階段理財計劃</p>
             </header>
-            <div style="margin-top: 16px;">
-                <div onclick="switchPage(2)" class="morandi-card" style="cursor: pointer;">
-                    <h3 style="margin: 0 0 4px 0; font-size: 0.95rem; color: var(--text-main);">第二頁：記賬功能 (現正使用)</h3>
-                    <p style="margin: 0;">記錄日常收支、檢視當前餘額</p>
+            <div class="page-1-list">
+                <div onclick="switchPage(2)" class="morandi-card">
+                    <h3>第二頁：記賬功能 (現正使用)</h3>
+                    <p>記錄日常收支、檢視當前餘額</p>
                 </div>
-                <div onclick="switchPage(3)" class="morandi-card" style="cursor: pointer;">
-                    <h3 style="margin: 0 0 4px 0; font-size: 0.95rem; color: var(--text-main);">第三頁：理財階段一 (預留)</h3>
-                    <p style="margin: 0;">點擊切換至下階段討論</p>
+                <div onclick="switchPage(3)" class="morandi-card">
+                    <h3>第三頁：理財階段一 (預留)</h3>
+                    <p>點擊切換至下階段討論</p>
                 </div>
-                <div onclick="switchPage(4)" class="morandi-card" style="cursor: pointer;">
-                    <h3 style="margin: 0 0 4px 0; font-size: 0.95rem; color: var(--text-main);">第四頁：理財階段二 (預留)</h3>
-                    <p style="margin: 0;">點擊切換至下階段討論</p>
+                <div onclick="switchPage(4)" class="morandi-card">
+                    <h3>第四頁：理財階段二 (預留)</h3>
+                    <p>點擊切換至下階段討論</p>
                 </div>
-                <div onclick="switchPage(5)" class="morandi-card" style="cursor: pointer;">
-                    <h3 style="margin: 0 0 4px 0; font-size: 0.95rem; color: var(--text-main);">第五頁：理財階段三 (預留)</h3>
-                    <p style="margin: 0;">點擊切換至下階段討論</p>
+                <div onclick="switchPage(5)" class="morandi-card">
+                    <h3>第五頁：理財階段三 (預留)</h3>
+                    <p>點擊切換至下階段討論</p>
                 </div>
             </div>
         </div>
 
         <!-- 【第二頁：記賬頁面】 -->
         <div id="page-2" class="page-content">
-            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <header class="page-header-flex">
                 <div>
                     <h1>日常記賬</h1>
                     <p>管理您的日常收支</p>
                 </div>
-                <span style="font-size: 0.75rem; background-color: #E2E8F0; padding: 4px 8px; border-radius: 12px; color: var(--text-main);">記賬模式</span>
+                <span class="badge">記賬模式</span>
             </header>
             
             <!-- 結餘總覽卡片 -->
@@ -233,13 +54,13 @@
             </div>
 
             <!-- 新增記賬表單 -->
-            <div class="morandi-card" style="cursor: default; margin-bottom: 12px;">
-                <h3 style="margin: 0 0 8px 0; font-size: 0.875rem; color: var(--text-main);">新增收支</h3>
+            <div class="morandi-card form-card">
+                <h3>新增收支</h3>
                 <form id="expense-form" onsubmit="addTransaction(event)" class="form-group">
                     <input type="text" id="desc" placeholder="項目說明 (例如: 晚餐)" required class="form-input">
                     <div class="form-row">
-                        <input type="number" id="amount" placeholder="金額" required class="form-input" style="width: 50%;">
-                        <select id="type" class="form-input" style="width: 50%;">
+                        <input type="number" id="amount" placeholder="金額" required class="form-input half">
+                        <select id="type" class="form-input half">
                             <option value="income">收入 (+)</option>
                             <option value="expense" selected>支出 (-)</option>
                         </select>
@@ -250,28 +71,32 @@
 
             <!-- 歷史清單 -->
             <div>
-                <h3 style="margin: 0 0 8px 0; font-size: 0.875rem; color: var(--text-main);">收支明細</h3>
+                <h3>收支明細</h3>
                 <div id="transaction-list">
-                    <p style="font-size: 0.75rem; color: var(--text-sub); text-align: center; padding: 16px 0;">目前尚無記賬資料</p>
+                    <p class="empty-text">目前尚無記賬資料</p>
                 </div>
             </div>
         </div>
 
-        <!-- 【第三至五頁預留】 -->
+        <!-- 【第三頁：理財階段一】 -->
         <div id="page-3" class="page-content">
             <header><h1>理財階段一</h1></header>
-            <div class="morandi-card" style="margin-top: 12px; cursor: default;"><p style="margin: 0;">💡 階段討論中...</p></div>
-        </div>
-        <div id="page-4" class="page-content">
-            <header><h1>理財階段二</h1></header>
-            <div class="morandi-card" style="margin-top: 12px; cursor: default;"><p style="margin: 0;">💡 階段討論中...</p></div>
-        </div>
-        <div id="page-5" class="page-content">
-            <header><h1>理財階段三</h1></header>
-            <div class="morandi-card" style="margin-top: 12px; cursor: default;"><p style="margin: 0;">💡 階段討論中...</p></div>
+            <div class="morandi-card stage-card"><p>💡 階段討論中...</p></div>
         </div>
 
-        <!-- 底部導覽列 -->
+        <!-- 【第四頁：理財階段二】 -->
+        <div id="page-4" class="page-content">
+            <header><h1>理財階段二</h1></header>
+            <div class="morandi-card stage-card"><p>💡 階段討論中...</p></div>
+        </div>
+
+        <!-- 【第五頁：理財階段三】 -->
+        <div id="page-5" class="page-content">
+            <header><h1>理財階段三</h1></header>
+            <div class="morandi-card stage-card"><p>💡 階段討論中...</p></div>
+        </div>
+
+        <!-- 底部固定導覽列 -->
         <nav>
             <button onclick="switchPage(1)" id="nav-btn-1" class="nav-btn active"><span>首頁</span></button>
             <button onclick="switchPage(2)" id="nav-btn-2" class="nav-btn"><span>記賬</span></button>
@@ -281,61 +106,7 @@
         </nav>
     </div>
 
-    <!-- JavaScript 邏輯 -->
-    <script>
-        let transactions = [];
-
-        function switchPage(pageNum) {
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById(`page-${i}`).classList.remove('active');
-                document.getElementById(`nav-btn-${i}`).classList.remove('active');
-            }
-            document.getElementById(`page-${pageNum}`).classList.add('active');
-            document.getElementById(`nav-btn-${pageNum}`).classList.add('active');
-        }
-
-        function addTransaction(event) {
-            event.preventDefault();
-            const desc = document.getElementById('desc').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const type = document.getElementById('type').value;
-
-            const transaction = { id: Date.now(), desc, amount, type };
-            transactions.push(transaction);
-            updateUI();
-            document.getElementById('expense-form').reset();
-        }
-
-        function updateUI() {
-            const listContainer = document.getElementById('transaction-list');
-            const balanceEl = document.getElementById('total-balance');
-            
-            if (transactions.length === 0) {
-                listContainer.innerHTML = `<p style="font-size: 0.75rem; color: var(--text-sub); text-align: center; padding: 16px 0;">目前尚無記賬資料</p>`;
-                balanceEl.innerText = `$ 0`;
-                return;
-            }
-
-            let total = 0;
-            let html = '';
-
-            transactions.slice().reverse().forEach(t => {
-                const isIncome = t.type === 'income';
-                const sign = isIncome ? '+' : '-';
-                const cssClass = isIncome ? 'text-income' : 'text-expense';
-                total += isIncome ? t.amount : -t.amount;
-
-                html += `
-                    <div class="transaction-item">
-                        <span style="color: var(--text-main); font-weight: 500;">${t.desc}</span>
-                        <span class="${cssClass}">${sign}$ ${t.amount}</span>
-                    </div>
-                `;
-            });
-
-            listContainer.innerHTML = html;
-            balanceEl.innerText = `$ ${total}`;
-        }
-    </script>
+    <!-- 引入獨立的 JavaScript 邏輯檔 -->
+    <script src="script.js"></script>
 </body>
 </html>
