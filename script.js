@@ -288,6 +288,7 @@ function updateChart(categoryTotals) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            radius: '85%',
             plugins: {
                 legend: {
                     position: 'right',
