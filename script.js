@@ -260,7 +260,7 @@ function updateChart(categoryTotals) {
                     }
                 }
             },
-            cutout: '60%' // <--- 【關鍵】調整這裡的百分比！
+            cutout: '50%' // <--- 【關鍵】調整這裡的百分比！
         }
         });
         return;
