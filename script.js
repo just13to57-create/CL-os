@@ -19,6 +19,7 @@ function switchPage(pageNum) {
     }
     document.getElementById(`page-${pageNum}`).classList.add('active');
     document.getElementById(`nav-btn-${pageNum}`).classList.add('active');
+    localStorage.setItem('current_page', pageNum);
 }
 
 // 新增記賬處理函數 (支援選填說明與新分類)
