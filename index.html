@@ -12,7 +12,7 @@
 
     <div class="phone-container">
         
-        <!-- 【第一頁：首頁清單】 -->
+        <!-- 【第一頁：首頁清單】 (預設加上 active 確保啟動時顯示在第一頁) -->
         <div id="page-1" class="page-content active">
             <header>
                 <h1>理財導航首頁</h1>
@@ -20,7 +20,7 @@
             </header>
             <div class="page-1-list">
                 <div onclick="switchPage(2)" class="morandi-card">
-                    <h3>第二頁：記賬功能 (現正使用)</h3>
+                    <h3>第二頁：記賬功能</h3>
                     <p>記錄日常支出、檢視當月花費</p>
                 </div>
                 <div onclick="switchPage(3)" class="morandi-card">
@@ -38,8 +38,8 @@
             </div>
         </div>
 
-        <!-- 【第二頁：記賬頁面】 -->
-        <div id="page-2" class="page-content active">
+        <!-- 【第二頁：記賬頁面】 (移除預設的 active，由 JS 透過 localStorage 控制) -->
+        <div id="page-2" class="page-content">
             <header class="page-header-flex">
                 <div>
                     <h1>日常記賬</h1>
@@ -53,7 +53,6 @@
                 <span>當前總支出</span>
                 <h2 id="total-balance">$ 0</h2>
             </div>
-
 
             <!-- 新增記賬表單 -->
             <div class="morandi-card form-card">
@@ -81,7 +80,7 @@
                                 <option value="耐用品">生活 - 耐用品</option>
                                 <option value="消耗品">生活 - 消耗品</option>
                             </optgroup>
-                            <optgroup label="通訊">      
+                            <optgroup label="通訊">    
                                 <option value="話費">通訊 - 話費</option>
                                 <option value="訂閱">通訊 - 訂閱</option>
                             </optgroup> 
@@ -102,6 +101,7 @@
                     <button type="submit" class="btn-submit">新增紀錄</button>
                 </form>
             </div>
+
             <!-- 圓餅圖顯示區塊 -->
             <div class="chart-container">
                 <canvas id="expenseChart"></canvas>
