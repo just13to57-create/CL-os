@@ -48,13 +48,35 @@ body {
     display: none;
     flex-direction: column;
     flex: 1;
-    padding: 12px 16px;
+    padding: 10px 14px;
+    gap: 6px; /* 縮小各卡片間距，讓排版更緊密、充實 */
     overflow-y: hidden;    /* 關閉整頁滾動軸，確保排版剛好塞進畫面 */
-    padding-bottom: 70px;  /* 預留底部導覽列空間 */
 }
 
 .page-content.active {
     display: flex;
+}
+
+/* 讓圓餅圖或上方卡片在明細收起時，能自動延展吃滿剩餘空間 */
+.chart-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1; /* 自動填滿收合後空出來的空間 */
+    min-height: 90px;
+}
+
+/* 支出明細專屬卡片：平時收合時只保留標題的精緻高度 */
+.transaction-section {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 8px 12px;
+    /* 不設固定高，讓它依據收合/展開自動縮放 */
 }
 
 /* ==========================================
