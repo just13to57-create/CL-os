@@ -178,7 +178,7 @@ header p {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 90px; /* 固定高度，精緻不佔位 */
+    height: 110px; /* 固定高度，精緻不佔位 */
 }
 
 /* 支出明細專屬卡片 */
