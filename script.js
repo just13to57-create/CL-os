@@ -47,8 +47,8 @@ function addTransaction(event) {
     const newTransaction = {
         id: Date.now(),
         amount: amount,
-        category: categorySelect.value,
-        desc: descInput.value.trim() || '無說明',
+        category: categorySelect ? categorySelect.value : '未分類',
+        desc: descInput && descInput.value.trim() ? descInput.value.trim() : '無說明',
         date: new Date().toLocaleDateString()
     };
 
@@ -56,7 +56,7 @@ function addTransaction(event) {
     localStorage.setItem('expenses', JSON.stringify(expenses));
 
     amountInput.value = '';
-    descInput.value = '';
+    if (descInput) descInput.value = '';
     
     renderExpenses();
     updateChart();
@@ -80,9 +80,9 @@ function renderExpenses() {
     listContainer.innerHTML = expenses.map(item => `
         <div class="transaction-item">
             <div>
-                <span style="font-weight: 500; color: var(--text-main);">${item.desc}</span>
-                <span class="category-tag" style="margin-left: 6px;">${item.category}</span>
-                <span style="font-size: 0.65rem; color: var(--text-sub); display: block;">${item.date}</span>
+                <span style="font-weight: 500; color: var(--text-main);">${item.desc || '無說明'}</span>
+                <span class="category-tag" style="margin-left: 6px;">${item.category || '未分類'}</span>
+                <span style="font-size: 0.65rem; color: var(--text-sub); display: block;">${item.date || ''}</span>
             </div>
             <span class="text-expense">- $ ${item.amount.toLocaleString()}</span>
         </div>
@@ -94,16 +94,14 @@ function toggleTransactionBox() {
     const toggleText = document.getElementById('toggle-text');
     if (box) {
         box.classList.toggle('collapsed');
-        if (box.classList.contains('collapsed')) {
-            toggleText.innerText = '展開';
-        } else {
-            toggleText.innerText = '收合';
+        if (toggleText) {
+            toggleText.innerText = box.classList.contains('collapsed') ? '展開' : '收合';
         }
     }
 }
 
 function resetAppData() {
-    if (confirm("確定要清除所有記賬資料嗎？")) {
+    if (confirm("確定要清除所有記賬資料嗎？（這也會清除舊的格式錯誤資料）")) {
         localStorage.removeItem('expenses');
         expenses = [];
         renderExpenses();
@@ -117,7 +115,8 @@ function updateChart() {
 
     const categoryTotals = {};
     expenses.forEach(item => {
-        categoryTotals[item.category] = (categoryTotals[item.category] || 0) + item.amount;
+        const cat = item.category || '未分類';
+        categoryTotals[cat] = (categoryTotals[cat] || 0) + item.amount;
     });
 
     const labels = Object.keys(categoryTotals);
@@ -133,7 +132,7 @@ function updateChart() {
             labels: labels.length > 0 ? labels : ['無資料'],
             datasets: [{
                 data: data.length > 0 ? data : [1],
-                backgroundColor: ['#A37073', '#8C9DAE', '#D4A373', '#CCD5AE', '#E9EDC9', '#FAEDCD'],
+                backgroundColor: ['#8C7A6B', '#9C948C', '#B5A697', '#D4C5B9', '#E5E0D8', '#C4B5A5'],
                 borderWidth: 1
             }]
         },
@@ -224,8 +223,8 @@ function renderDepositList() {
     listContainer.innerHTML = emergencyDeposits.map(item => `
         <div class="transaction-item">
             <div>
-                <span style="font-weight: 500; color: var(--text-main);">${item.desc}</span>
-                <span style="font-size: 0.65rem; color: var(--text-sub); margin-left: 6px;">${item.date}</span>
+                <span style="font-weight: 500; color: var(--text-main);">${item.desc || '存入預備金'}</span>
+                <span style="font-size: 0.65rem; color: var(--text-sub); margin-left: 6px;">${item.date || ''}</span>
             </div>
             <span style="color: var(--accent); font-weight: 500;">+ $ ${item.amount.toLocaleString()}</span>
         </div>
