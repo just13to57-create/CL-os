@@ -57,6 +57,12 @@ body {
     display: flex;
 }
 
+#page-2 .chart-container,
+#page-3 .balance-card:nth-of-type(3) { /* 針對第三頁的結算卡片或圖表進行彈性延伸 */
+    flex-shrink: 0;
+}
+
+
 .page-header-flex {
     display: flex;
     justify-content: space-between;
