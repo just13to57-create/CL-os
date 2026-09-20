@@ -27,7 +27,7 @@ body {
 }
 
 /* ==========================================
-   2. 手機容器與頁面排版（滿版修正）
+   2. 手機容器與頁面排版
    ========================================== */
 .phone-container {
     width: 100%;
@@ -187,7 +187,7 @@ header p {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px;
+    height: 105px;
     flex-shrink: 0;
 }
 
@@ -196,10 +196,11 @@ header p {
     border: 1px solid var(--card-border);
     border-radius: 12px;
     padding: 10px 14px;
-    flex: 1; /* 自動填滿剩餘高度 */
+    flex: 1; 
     display: flex;
     flex-direction: column;
     min-height: 110px;
+    margin-bottom: 8px;
 }
 
 .transaction-header {
@@ -230,10 +231,6 @@ header p {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     flex: none;
-}
-
-.transaction-header.expanded span#toggle-arrow {
-    transform: rotate(90deg);
 }
 
 .transaction-item {
@@ -267,6 +264,9 @@ header p {
     gap: 4px;
     font-size: 0.7rem;
     color: var(--text-sub);
+    background-color: #F0ECE6;
+    padding: 1px 6px;
+    border-radius: 4px;
 }
 
 /* ==========================================
