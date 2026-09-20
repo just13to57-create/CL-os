@@ -162,11 +162,11 @@
                     <button type="button" onclick="addEmergencyDeposit()" class="btn-submit" style="margin-top: 2px;">➕ 存入預備金</button>
                 </div>
             </div>
-                <div class="balance-card" style="text-align: left; padding: 14px 16px; margin-bottom: 4px;">
+
+            <div class="balance-card" style="text-align: left; padding: 14px 16px; margin-bottom: 4px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="font-size: 0.70rem; color: var(--text-sub);">🛡️ 3個月安全防護網：</span>
                     <span id="target-3m" style="font-weight: 700; color: var(--accent); font-size: 0.9rem;">$ 0</span>
-            
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="font-size: 0.70rem; color: var(--text-sub);">🛡️ 6個月安心防護網：</span>
@@ -183,12 +183,16 @@
                 </div>
             </div>
 
+            <!-- 🌟 階段一明細：改造成跟日常記帳一樣的收合/展開結構 -->
             <div class="transaction-section" style="margin-bottom: 0; padding: 12px 14px;">
-                <div class="transaction-header" style="margin-bottom: 4px;">
+                <div class="transaction-header" onclick="toggleDepositBox()" style="cursor: pointer; margin-bottom: 4px;">
                     <h3 style="font-size: 0.85rem;">存入明細紀錄</h3>
-                    <span id="deposit-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span id="deposit-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
+                        <span id="deposit-toggle-text" style="font-size: 0.75rem; color: var(--accent); font-weight: 500;">展開</span>
+                    </div>
                 </div>
-                <div id="deposit-list" class="transaction-scroll-box" style="max-height: 90px; overflow-y: auto;">
+                <div id="deposit-list" class="transaction-scroll-box collapsed">
                     <p class="empty-text">目前尚無存入紀錄</p>
                 </div>
             </div>
