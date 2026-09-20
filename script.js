@@ -3,7 +3,6 @@
 // ==========================================
 let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 let emergencyDeposits = JSON.parse(localStorage.getItem('emergency_deposits')) || [];
-let currentActivePage = 1;
 let expenseChartInstance = null;
 
 // 切換頁面
@@ -14,7 +13,6 @@ function switchPage(pageNum) {
     const targetPage = document.getElementById(`page-${pageNum}`);
     if (targetPage) {
         targetPage.classList.add('active');
-        currentActivePage = pageNum;
         if (pageNum === 2) {
             renderExpenses();
             updateChart();
@@ -91,11 +89,11 @@ function renderExpenses() {
 
 function toggleTransactionBox() {
     const box = document.getElementById('transaction-list');
-    const section = box.closest('.transaction-section'); // 找到外層卡片
+    const section = box ? box.closest('.transaction-section') : null;
     const toggleText = document.getElementById('toggle-text');
     if (box) {
         box.classList.toggle('collapsed');
-        if (section) section.classList.toggle('collapsed'); // 外層卡片同步收合
+        if (section) section.classList.toggle('collapsed');
         if (toggleText) {
             toggleText.innerText = box.classList.contains('collapsed') ? '展開' : '收合';
         }
@@ -104,11 +102,11 @@ function toggleTransactionBox() {
 
 function toggleDepositBox() {
     const box = document.getElementById('deposit-list');
-    const section = box.closest('.transaction-section'); // 找到外層卡片
+    const section = box ? box.closest('.transaction-section') : null;
     const toggleText = document.getElementById('deposit-toggle-text');
     if (box) {
         box.classList.toggle('collapsed');
-        if (section) section.classList.toggle('collapsed'); // 外層卡片同步收合
+        if (section) section.classList.toggle('collapsed');
         if (toggleText) {
             toggleText.innerText = box.classList.contains('collapsed') ? '展開' : '收合';
         }
@@ -116,7 +114,7 @@ function toggleDepositBox() {
 }
 
 function resetAppData() {
-    if (confirm("確定要清除所有記賬資料嗎？（這也會清除舊的格式錯誤資料）")) {
+    if (confirm("確定要清除所有記賬資料嗎？")) {
         localStorage.removeItem('expenses');
         expenses = [];
         renderExpenses();
@@ -244,18 +242,6 @@ function renderDepositList() {
             <span style="color: var(--accent); font-weight: 500;">+ $ ${item.amount.toLocaleString()}</span>
         </div>
     `).join('');
-}
-
-// 🌟 新增：控制階段一存入明細收合 / 展開的切換函數
-function toggleDepositBox() {
-    const box = document.getElementById('deposit-list');
-    const toggleText = document.getElementById('deposit-toggle-text');
-    if (box) {
-        box.classList.toggle('collapsed');
-        if (toggleText) {
-            toggleText.innerText = box.classList.contains('collapsed') ? '展開' : '收合';
-        }
-    }
 }
 
 // 網頁載入初始化
