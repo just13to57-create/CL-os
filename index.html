@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>手機版理財記賬助手</title>
-    <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -28,8 +28,8 @@
                     <p>記錄日常支出、檢視當月花費</p>
                 </div>
                 <div onclick="switchPage(3)" class="morandi-card">
-                    <h3>第三頁：理財階段一 (預留)</h3>
-                    <p>點擊切換至下階段討論</p>
+                    <h3>第三頁：理財階段一 (緊急預備金)</h3>
+                    <p>建立財務安全網，抵禦突發風險</p>
                 </div>
                 <div onclick="switchPage(4)" class="morandi-card">
                     <h3>第四頁：理財階段二 (預留)</h3>
@@ -63,7 +63,6 @@
             <div class="morandi-card form-card">
                 <h3>新增支出</h3>
                 <form id="expense-form" onsubmit="addTransaction(event)" class="form-group">
-                    <!-- 第一行：金額 (左) 與 分類 (右) -->
                     <div class="form-row">
                         <input type="number" id="amount" placeholder="金額" required class="form-input half">
                         <select id="category" class="form-input half">
@@ -104,7 +103,6 @@
                         </select>
                     </div>
 
-                    <!-- 第二行：說明欄位 -->
                     <div class="form-group">
                         <input type="text" id="description" placeholder="說明 (例如: 午餐，可不填)" class="form-input">
                     </div>
@@ -117,7 +115,6 @@
                 <canvas id="expenseChart"></canvas>
             </div>
 
-            <!-- 獨立一格的支出明細區塊 -->
             <div class="transaction-section">
                 <div class="transaction-header" onclick="toggleTransactionBox()" style="cursor: pointer;">
                     <h3>支出明細</h3>
@@ -126,14 +123,13 @@
                         <span id="toggle-text" style="font-size: 0.75rem; color: var(--accent); font-weight: 500;">展開</span>
                     </div>
                 </div>
-                <!-- 明細列表容器，預設加上 .collapsed 隱藏 -->
                 <div id="transaction-list" class="transaction-scroll-box collapsed">
                     <p class="empty-text">目前尚無記賬資料</p>
                 </div>
             </div>
         </div>
 
-        <!-- 【第三頁：理財階段一 - 緊急預備金計算器】 -->
+        <!-- 【第三頁：理財階段一】 -->
         <div id="page-3" class="page-content" style="gap: 12px; padding-top: 14px; padding-bottom: 24px;">
             <header class="page-header-flex" style="margin-bottom: 8px;">
                 <div>
@@ -145,7 +141,6 @@
                 </div>
             </header>
 
-            <!-- 說明卡片 (加高留白) -->
             <div class="morandi-card" style="margin-bottom: 4px; padding: 14px 16px;">
                 <h3 style="font-size: 0.85rem; margin-bottom: 6px;">💡 為什麼需要預備金？</h3>
                 <p style="font-size: 0.75rem; color: var(--text-sub); line-height: 1.6;">
@@ -153,7 +148,6 @@
                 </p>
             </div>
 
-            <!-- 輸入與計算卡片 -->
             <div class="morandi-card form-card" style="margin-bottom: 4px; padding: 14px 16px;">
                 <h3 style="margin-bottom: 8px; font-size: 0.85rem;">預備金計算與存入設定</h3>
                 <div class="form-group" style="gap: 10px;">
@@ -169,7 +163,6 @@
                 </div>
             </div>
 
-            <!-- 計算結果與目前已存總額卡片 -->
             <div class="balance-card" style="text-align: left; padding: 14px 16px; margin-bottom: 4px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="font-size: 0.75rem; color: var(--text-sub);">🛡️ 3個月安全防護網：</span>
@@ -190,7 +183,6 @@
                 </div>
             </div>
 
-            <!-- 存入明細清單區塊 -->
             <div class="transaction-section" style="margin-bottom: 0; padding: 12px 14px;">
                 <div class="transaction-header" style="margin-bottom: 4px;">
                     <h3 style="font-size: 0.85rem;">存入明細紀錄</h3>
@@ -201,6 +193,7 @@
                 </div>
             </div>
         </div>
+
         <!-- 【第四頁：理財階段二】 -->
         <div id="page-4" class="page-content">
             <header class="page-header-flex">
@@ -225,7 +218,7 @@
                 <h3>快速導航選單</h3>
                 <button onclick="switchPage(1); toggleMenu();">🏠 理財導航首頁</button>
                 <button onclick="switchPage(2); toggleMenu();">📊 每日日常記賬</button>
-                <button onclick="switchPage(3); toggleMenu();">🎯 理財階段一</button>
+                <button onclick="switchPage(3); toggleMenu();">🎯 階段一：緊急預備金</button>
                 <button onclick="switchPage(4); toggleMenu();">🎯 理財階段二</button>
                 <button onclick="switchPage(5); toggleMenu();">🎯 理財階段三</button>
             </div>
@@ -236,112 +229,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-// ==========================================
-// 階段一：緊急預備金邏輯
-// ==========================================
-
-// 全域變數：儲存預備金明細
-let emergencyDeposits = JSON.parse(localStorage.getItem('emergency_deposits')) || [];
-
-// 計算並更新緊急預備金介面
-function calculateEmergencyFund() {
-    const expenseInput = document.getElementById('monthly-expense');
-    if (!expenseInput) return;
-
-    const monthlyExpense = parseFloat(expenseInput.value) || 0;
-    const target3m = monthlyExpense * 3;
-    const target6m = monthlyExpense * 6;
-
-    // 計算總已存金額
-    let totalSaved = emergencyDeposits.reduce((sum, item) => sum + item.amount, 0);
-
-    // 更新目標與總金額顯示
-    const t3mEl = document.getElementById('target-3m');
-    const t6mEl = document.getElementById('target-6m');
-    const totalSavedEl = document.getElementById('total-saved-display');
-    const progressEl = document.getElementById('saving-progress-text');
-
-    if (t3mEl) t3mEl.innerText = `$ ${target3m.toLocaleString()}`;
-    if (t6mEl) t6mEl.innerText = `$ ${target6m.toLocaleString()}`;
-    if (totalSavedEl) totalSavedEl.innerText = `$ ${totalSaved.toLocaleString()}`;
-
-    // 計算達成率（以 6 個月目標為基準）
-    let progress = 0;
-    if (target6m > 0) {
-        progress = Math.min(Math.round((totalSaved / target6m) * 100), 100);
-    }
-    if (progressEl) progressEl.innerText = `${progress}%`;
-
-    // 儲存每月開銷到 LocalStorage
-    localStorage.setItem('emergency_monthly_expense', monthlyExpense);
-    
-    // 渲染存款明細列表
-    renderDepositList();
-}
-
-// 新增一筆預備金存入紀錄
-function addEmergencyDeposit() {
-    const amountInput = document.getElementById('deposit-amount');
-    const descInput = document.getElementById('deposit-desc');
-
-    if (!amountInput) return;
-
-    const amount = parseFloat(amountInput.value);
-    if (!amount || amount <= 0) {
-        alert("請輸入有效的存入金額！");
-        return;
-    }
-
-    const description = descInput && descInput.value.trim() ? descInput.value.trim() : '存入預備金';
-
-    const newDeposit = {
-        id: Date.now(),
-        amount: amount,
-        desc: description,
-        date: new Date().toLocaleDateString()
-    };
-
-    emergencyDeposits.unshift(newDeposit); // 放在最前面
-    localStorage.setItem('emergency_deposits', JSON.stringify(emergencyDeposits));
-
-    // 清空輸入框
-    amountInput.value = '';
-    if (descInput) descInput.value = '';
-
-    // 重新計算與渲染
-    calculateEmergencyFund();
-}
-
-// 渲染存入明細清單
-function renderDepositList() {
-    const listContainer = document.getElementById('deposit-list');
-    const countEl = document.getElementById('deposit-count');
-    if (!listContainer) return;
-
-    if (countEl) countEl.innerText = `共 ${emergencyDeposits.length} 筆`;
-
-    if (emergencyDeposits.length === 0) {
-        listContainer.innerHTML = `<p class="empty-text">目前尚無存入紀錄</p>`;
-        return;
-    }
-
-    listContainer.innerHTML = emergencyDeposits.map(item => `
-        <div class="transaction-item">
-            <div>
-                <span style="font-weight: 500; color: var(--text-main);">${item.desc}</span>
-                <span style="font-size: 0.65rem; color: var(--text-sub); margin-left: 6px;">${item.date}</span>
-            </div>
-            <span style="color: var(--accent); font-weight: 500;">+ $ ${item.amount.toLocaleString()}</span>
-        </div>
-    `).join('');
-}
-
-// 頁面載入時初始化預備金資料
-document.addEventListener('DOMContentLoaded', () => {
-    const savedExpense = localStorage.getItem('emergency_monthly_expense');
-    const expenseInput = document.getElementById('monthly-expense');
-    if (savedExpense !== null && expenseInput) {
-        expenseInput.value = savedExpense;
-    }
-    calculateEmergencyFund();
-});
