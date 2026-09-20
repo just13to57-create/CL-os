@@ -11,11 +11,13 @@
 }
 
 body {
-    background-color: #E9E6DF;  /* 網頁外側背景 */
+    background-color: #F0ECE4;   /* 網頁外側背景 */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;           /* 改用 min-height，避免被內容撐破 */
+    min-height: 100svh;          /* 針對手機瀏覽器工具列的最佳解 (Small Viewport Height) */
+    margin: 0;                   /* 確保沒有預設的外距干擾 */
     overflow: hidden;
 }
 
