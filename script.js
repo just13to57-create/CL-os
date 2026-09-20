@@ -231,6 +231,18 @@ function renderDepositList() {
     `).join('');
 }
 
+// 🌟 新增：控制階段一存入明細收合 / 展開的切換函數
+function toggleDepositBox() {
+    const box = document.getElementById('deposit-list');
+    const toggleText = document.getElementById('deposit-toggle-text');
+    if (box) {
+        box.classList.toggle('collapsed');
+        if (toggleText) {
+            toggleText.innerText = box.classList.contains('collapsed') ? '展開' : '收合';
+        }
+    }
+}
+
 // 網頁載入初始化
 document.addEventListener('DOMContentLoaded', () => {
     const savedExpense = localStorage.getItem('emergency_monthly_expense');
