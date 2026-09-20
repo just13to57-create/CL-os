@@ -36,6 +36,7 @@ body {
     width: 100%;
     max-width: 380px;      /* 手機固定寬度 */
     height: 600px;         /* 手機固定高度，剛好一目了然 */
+    max-height: 90vh;
     background-color: var(--bg-phone);
     display: flex;
     flex-direction: column;
