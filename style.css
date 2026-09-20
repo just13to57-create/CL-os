@@ -12,13 +12,30 @@
 
 body {
     background-color: #F0ECE4;   /* 網頁外側背景 */
+    min-height: 100vh;           
+    min-height: 100svh;          
+    margin: 0;                   
+    display: block;              /* 👈 取消原本的 flex 置中 */
+    position: relative;          
+}
+
+.phone-container {
+    width: 100%;
+    max-width: 380px;     
+    height: 660px;               /* 手機容器高度 */
+    background-color: var(--bg-phone);
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;           /* 改用 min-height，避免被內容撐破 */
-    min-height: 100svh;          /* 針對手機瀏覽器工具列的最佳解 (Small Viewport Height) */
-    margin: 0;                   /* 確保沒有預設的外距干擾 */
-    overflow: hidden;
+    flex-direction: column;
+    
+    /* 🛡️ 關鍵：用這個絕對置中，在手機上最穩固 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+
+    box-shadow: 0 4px 20px rgba(115, 128, 140, 0.15);
+    border-radius: 24px;   
+    overflow: hidden;      
 }
 
 * {
