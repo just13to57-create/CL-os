@@ -91,9 +91,24 @@ function renderExpenses() {
 
 function toggleTransactionBox() {
     const box = document.getElementById('transaction-list');
+    const section = box.closest('.transaction-section'); // 找到外層卡片
     const toggleText = document.getElementById('toggle-text');
     if (box) {
         box.classList.toggle('collapsed');
+        if (section) section.classList.toggle('collapsed'); // 外層卡片同步收合
+        if (toggleText) {
+            toggleText.innerText = box.classList.contains('collapsed') ? '展開' : '收合';
+        }
+    }
+}
+
+function toggleDepositBox() {
+    const box = document.getElementById('deposit-list');
+    const section = box.closest('.transaction-section'); // 找到外層卡片
+    const toggleText = document.getElementById('deposit-toggle-text');
+    if (box) {
+        box.classList.toggle('collapsed');
+        if (section) section.classList.toggle('collapsed'); // 外層卡片同步收合
         if (toggleText) {
             toggleText.innerText = box.classList.contains('collapsed') ? '展開' : '收合';
         }
