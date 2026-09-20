@@ -134,58 +134,73 @@
         </div>
 
         <!-- 【第三頁：理財階段一 - 緊急預備金計算器】 -->
-        <div id="page-3" class="page-content" style="gap: 10px; padding-bottom: 24px;">
-            <header class="page-header-flex" style="margin-bottom: 4px;">
+        <div id="page-3" class="page-content" style="gap: 12px; padding-top: 14px; padding-bottom: 24px;">
+            <header class="page-header-flex" style="margin-bottom: 8px;">
                 <div>
-                    <h1>階段一：緊急預備金</h1>
-                    <p>建立財務安全網，抵禦突發風險</p>
+                    <h1 style="font-size: 1.3rem; margin-bottom: 4px;">階段一：緊急預備金</h1>
+                    <p style="font-size: 0.8rem;">建立財務安全網，抵禦突發風險</p>
                 </div>
                 <div class="header-btns">
                     <button onclick="toggleMenu()" class="badge menu-trigger" style="cursor: pointer; border: 1px solid var(--card-border); background-color: var(--card-bg);">📋 選單</button>
                 </div>
             </header>
 
-            <!-- 說明卡片 -->
-            <div class="morandi-card" style="margin-bottom: 10px; padding: 12px 14px;">
-                <h3 style="font-size: 0.8rem; margin-bottom: 6px;">💡 為什麼需要預備金？</h3>
-                <p style="font-size: 0.75rem; color: var(--text-sub); line-height: 1.5;">
-                    緊急預備金應存放於高流動性帳戶中，建議金額為 3 到 6 個月的每月基本開銷，讓您在面對突發狀況時更有安全感。
+            <!-- 說明卡片 (加高留白) -->
+            <div class="morandi-card" style="margin-bottom: 4px; padding: 14px 16px;">
+                <h3 style="font-size: 0.85rem; margin-bottom: 6px;">💡 為什麼需要預備金？</h3>
+                <p style="font-size: 0.75rem; color: var(--text-sub); line-height: 1.6;">
+                    緊急預備金建議為 3 到 6 個月基本開銷。您可以設定每月開銷並透過下方按鈕一筆一筆記錄存入金額。
                 </p>
             </div>
 
             <!-- 輸入與計算卡片 -->
-            <div class="morandi-card form-card" style="margin-bottom: 10px; padding: 12px 14px;">
-                <h3 style="margin-bottom: 8px;">預備金計算設定</h3>
+            <div class="morandi-card form-card" style="margin-bottom: 4px; padding: 14px 16px;">
+                <h3 style="margin-bottom: 8px; font-size: 0.85rem;">預備金計算與存入設定</h3>
                 <div class="form-group" style="gap: 10px;">
                     <div>
                         <span style="font-size: 0.7rem; color: var(--text-sub); display: block; margin-bottom: 3px;">每月基本開銷 (元)</span>
                         <input type="number" id="monthly-expense" placeholder="例如: 25000" class="form-input" oninput="calculateEmergencyFund()">
                     </div>
-                    <div>
-                        <span style="font-size: 0.7rem; color: var(--text-sub); display: block; margin-bottom: 3px;">目前已存金額 (元)</span>
-                        <input type="number" id="current-saving" placeholder="例如: 50000" class="form-input" oninput="calculateEmergencyFund()">
+                    <div class="form-row">
+                        <input type="number" id="deposit-amount" placeholder="欲存入金額 (元)" class="form-input half">
+                        <input type="text" id="deposit-desc" placeholder="備註 (例如: 年終獎金)" class="form-input half">
                     </div>
+                    <button type="button" onclick="addEmergencyDeposit()" class="btn-submit" style="margin-top: 2px;">➕ 存入預備金</button>
                 </div>
             </div>
 
-            <!-- 計算結果卡片 -->
-            <div class="balance-card" style="text-align: left; padding: 14px 16px; margin-bottom: 0;">
+            <!-- 計算結果與目前已存總額卡片 -->
+            <div class="balance-card" style="text-align: left; padding: 14px 16px; margin-bottom: 4px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="font-size: 0.75rem; color: var(--text-sub);">🛡️ 3個月安全防護網：</span>
                     <span id="target-3m" style="font-weight: 700; color: var(--accent); font-size: 0.9rem;">$ 0</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="font-size: 0.75rem; color: var(--text-sub);">🛡️ 6個月安心防護網：</span>
                     <span id="target-6m" style="font-weight: 700; color: var(--accent); font-size: 0.9rem;">$ 0</span>
                 </div>
-                <hr style="border: none; border-top: 1px solid var(--card-border); margin: 10px 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 2px;">
+                <hr style="border: none; border-top: 1px solid var(--card-border); margin: 8px 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 0.75rem; color: var(--text-main); font-weight: 500;">目前已存總金額 (唯讀)：</span>
+                    <span id="total-saved-display" style="font-weight: 700; font-size: 1rem; color: var(--accent);">$ 0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-size: 0.75rem; color: var(--text-main); font-weight: 500;">達成率 (以6個月計)：</span>
                     <span id="saving-progress-text" style="font-weight: 700; font-size: 1rem; color: var(--accent);">0%</span>
                 </div>
             </div>
-        </div>
 
+            <!-- 存入明細清單區塊 -->
+            <div class="transaction-section" style="margin-bottom: 0; padding: 12px 14px;">
+                <div class="transaction-header" style="margin-bottom: 4px;">
+                    <h3 style="font-size: 0.85rem;">存入明細紀錄</h3>
+                    <span id="deposit-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
+                </div>
+                <div id="deposit-list" class="transaction-scroll-box" style="max-height: 90px; overflow-y: auto;">
+                    <p class="empty-text">目前尚無存入紀錄</p>
+                </div>
+            </div>
+        </div>
         <!-- 【第四頁：理財階段二】 -->
         <div id="page-4" class="page-content">
             <header class="page-header-flex">
