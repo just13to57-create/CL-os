@@ -213,13 +213,19 @@ body {
 /* ==========================================
    明細收合與無留白特效 (核心修正處)
    ========================================== */
+/* 明細外層容器 */
 .transaction-section {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 12px 14px;
     box-sizing: border-box;
-    transition: padding 0.3s ease; /* 讓外框上下留白也能平滑收起 */
+    transition: padding 0.3s ease, border-color 0.3s ease; /* 讓上下留白平滑收起 */
+}
+
+/* 🌟 當外層卡片也進入 collapsed 時，把上下 padding 與邊框間距降到最低或歸零，徹底消除留白 */
+.transaction-section.collapsed {
+    padding: 10px 14px; /* 只保留標題列本身的上下微小空間，或直接改為 8px 14px */
 }
 
 .transaction-header {
@@ -232,6 +238,21 @@ body {
     margin: 0;
     font-size: 0.85rem;
     color: var(--text-main);
+}
+
+/* 內容滾動盒 */
+.transaction-scroll-box {
+    max-height: 150px;
+    overflow-y: auto;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
+    margin-top: 8px;
+}
+
+/* 收合狀態：高度歸零、外邊距歸零 */
+.transaction-scroll-box.collapsed {
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
 }
 
 /* 展開時的內容滾動盒預設樣式 */
