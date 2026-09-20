@@ -177,7 +177,7 @@ header p {
 }
 
 /* ==========================================
-   5. 圖表與支出明細區塊
+   5. 圖表與支出明細區塊（修正放大與佔比）
    ========================================== */
 .chart-container {
     background-color: var(--card-bg);
@@ -187,7 +187,7 @@ header p {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 105px;
+    height: 140px; /* 放大圓餅圖區塊高度 */
     flex-shrink: 0;
 }
 
@@ -196,10 +196,9 @@ header p {
     border: 1px solid var(--card-border);
     border-radius: 12px;
     padding: 10px 14px;
-    flex: 1; 
+    flex-shrink: 0; /* 避免未展開時被強行拉大佔比 */
     display: flex;
     flex-direction: column;
-    min-height: 110px;
     margin-bottom: 8px;
 }
 
@@ -207,7 +206,6 @@ header p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
     flex-shrink: 0;
 }
 
@@ -218,10 +216,10 @@ header p {
 }
 
 .transaction-scroll-box {
-    flex: 1;
+    max-height: 150px;
     overflow-y: auto;
-    padding-top: 2px;
-    padding-bottom: 2px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     transition: max-height 0.3s ease, padding 0.3s ease;
 }
 
@@ -230,7 +228,6 @@ header p {
     overflow: hidden !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    flex: none;
 }
 
 .transaction-item {
