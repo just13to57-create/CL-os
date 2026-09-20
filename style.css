@@ -235,7 +235,7 @@ header p {
 
 /* 明細專屬的內部捲動區塊 */
 .transaction-scroll-box {
-    max-height: 45px;
+    max-height: 42px;
     overflow-y: auto;
     padding-right: 2px;
    transition: max-height 0.3s ease, padding 0.3s ease;
