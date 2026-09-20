@@ -47,14 +47,14 @@ body {
 }
 
 /* ==========================================
-   頁面切換與捲動控制 (解決畫面干涉的核心)
+   頁面切換與捲動控制
    ========================================== */
 .page-content {
     display: none;
     flex-direction: column;
     flex: 1;
     height: 100%;
-    overflow-y: auto; /* 🌟 關鍵：讓每一頁（特別是第三頁）在內容過長時可以順暢捲動，絕不干涉螢幕 */
+    overflow-y: auto;
     box-sizing: border-box;
     padding: 16px;
     gap: 12px;
@@ -211,7 +211,7 @@ body {
 }
 
 /* ==========================================
-   明細收合與滾動特效 (防止超出螢幕的關鍵)
+   明細收合與無留白特效 (核心修正處)
    ========================================== */
 .transaction-section {
     background-color: var(--card-bg);
@@ -219,6 +219,7 @@ body {
     border-radius: 16px;
     padding: 12px 14px;
     box-sizing: border-box;
+    transition: padding 0.3s ease; /* 讓外框上下留白也能平滑收起 */
 }
 
 .transaction-header {
@@ -233,20 +234,18 @@ body {
     color: var(--text-main);
 }
 
-/* 🌟 核心修正：設定展開時的最大高度與內部滾動，杜絕干涉螢幕 */
+/* 展開時的內容滾動盒預設樣式 */
 .transaction-scroll-box {
-    max-height: 150px; /* 超過此高度會在內部產生卷軸，絕不會往下撐破版面 */
+    max-height: 150px; /* 超過此高度會在內部產生卷軸 */
     overflow-y: auto;
-    transition: max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
     margin-top: 8px;
 }
 
-/* 收合狀態：高度歸零、隱藏溢出、消除內距與邊界 */
+/* 🌟 核心：收合時讓高度、邊距全部歸零，達成完全「零留白」 */
 .transaction-scroll-box.collapsed {
     max-height: 0;
     overflow: hidden;
-    padding-top: 0;
-    padding-bottom: 0;
     margin-top: 0;
 }
 
