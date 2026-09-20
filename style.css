@@ -15,24 +15,26 @@ body {
     min-height: 100vh;           
     min-height: 100svh;          
     margin: 0;                   
-    display: block;              /* 👈 取消原本的 flex 置中 */
-    position: relative;          
+    
+    /* 🛡️ 改用簡單的 Flex 垂直置頂，並加上一點上下安全距離 (padding) */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;     /* 貼齊上方，但透過 body 的 padding 留白 */
+    padding: 20px 0;             /* 上下各留 20px 的安全距離，絕不卡框！ */
+    box-sizing: border-box;
 }
 
 .phone-container {
     width: 100%;
     max-width: 380px;     
-    height: 660px;               /* 手機容器高度 */
+    height: 640px;               /* 手機容器高度（稍微調試合適的高度） */
     background-color: var(--bg-phone);
     display: flex;
     flex-direction: column;
     
-    /* 🛡️ 關鍵：用這個絕對置中，在手機上最穩固 */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); 
-
+    /* 拿掉所有絕對定位和 transform，讓它自然排列 */
+    position: relative;          
+    
     box-shadow: 0 4px 20px rgba(115, 128, 140, 0.15);
     border-radius: 24px;   
     overflow: hidden;      
