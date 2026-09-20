@@ -236,3 +236,112 @@
     <script src="script.js"></script>
 </body>
 </html>
+// ==========================================
+// 階段一：緊急預備金邏輯
+// ==========================================
+
+// 全域變數：儲存預備金明細
+let emergencyDeposits = JSON.parse(localStorage.getItem('emergency_deposits')) || [];
+
+// 計算並更新緊急預備金介面
+function calculateEmergencyFund() {
+    const expenseInput = document.getElementById('monthly-expense');
+    if (!expenseInput) return;
+
+    const monthlyExpense = parseFloat(expenseInput.value) || 0;
+    const target3m = monthlyExpense * 3;
+    const target6m = monthlyExpense * 6;
+
+    // 計算總已存金額
+    let totalSaved = emergencyDeposits.reduce((sum, item) => sum + item.amount, 0);
+
+    // 更新目標與總金額顯示
+    const t3mEl = document.getElementById('target-3m');
+    const t6mEl = document.getElementById('target-6m');
+    const totalSavedEl = document.getElementById('total-saved-display');
+    const progressEl = document.getElementById('saving-progress-text');
+
+    if (t3mEl) t3mEl.innerText = `$ ${target3m.toLocaleString()}`;
+    if (t6mEl) t6mEl.innerText = `$ ${target6m.toLocaleString()}`;
+    if (totalSavedEl) totalSavedEl.innerText = `$ ${totalSaved.toLocaleString()}`;
+
+    // 計算達成率（以 6 個月目標為基準）
+    let progress = 0;
+    if (target6m > 0) {
+        progress = Math.min(Math.round((totalSaved / target6m) * 100), 100);
+    }
+    if (progressEl) progressEl.innerText = `${progress}%`;
+
+    // 儲存每月開銷到 LocalStorage
+    localStorage.setItem('emergency_monthly_expense', monthlyExpense);
+    
+    // 渲染存款明細列表
+    renderDepositList();
+}
+
+// 新增一筆預備金存入紀錄
+function addEmergencyDeposit() {
+    const amountInput = document.getElementById('deposit-amount');
+    const descInput = document.getElementById('deposit-desc');
+
+    if (!amountInput) return;
+
+    const amount = parseFloat(amountInput.value);
+    if (!amount || amount <= 0) {
+        alert("請輸入有效的存入金額！");
+        return;
+    }
+
+    const description = descInput && descInput.value.trim() ? descInput.value.trim() : '存入預備金';
+
+    const newDeposit = {
+        id: Date.now(),
+        amount: amount,
+        desc: description,
+        date: new Date().toLocaleDateString()
+    };
+
+    emergencyDeposits.unshift(newDeposit); // 放在最前面
+    localStorage.setItem('emergency_deposits', JSON.stringify(emergencyDeposits));
+
+    // 清空輸入框
+    amountInput.value = '';
+    if (descInput) descInput.value = '';
+
+    // 重新計算與渲染
+    calculateEmergencyFund();
+}
+
+// 渲染存入明細清單
+function renderDepositList() {
+    const listContainer = document.getElementById('deposit-list');
+    const countEl = document.getElementById('deposit-count');
+    if (!listContainer) return;
+
+    if (countEl) countEl.innerText = `共 ${emergencyDeposits.length} 筆`;
+
+    if (emergencyDeposits.length === 0) {
+        listContainer.innerHTML = `<p class="empty-text">目前尚無存入紀錄</p>`;
+        return;
+    }
+
+    listContainer.innerHTML = emergencyDeposits.map(item => `
+        <div class="transaction-item">
+            <div>
+                <span style="font-weight: 500; color: var(--text-main);">${item.desc}</span>
+                <span style="font-size: 0.65rem; color: var(--text-sub); margin-left: 6px;">${item.date}</span>
+            </div>
+            <span style="color: var(--accent); font-weight: 500;">+ $ ${item.amount.toLocaleString()}</span>
+        </div>
+    `).join('');
+}
+
+// 頁面載入時初始化預備金資料
+document.addEventListener('DOMContentLoaded', () => {
+    const savedExpense = localStorage.getItem('emergency_monthly_expense');
+    const expenseInput = document.getElementById('monthly-expense');
+    if (savedExpense !== null && expenseInput) {
+        expenseInput.value = savedExpense;
+    }
+    calculateEmergencyFund();
+});
