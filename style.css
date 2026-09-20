@@ -239,20 +239,20 @@ header p {
     color: var(--text-main);
 }
 
-/* 明細專屬的內部捲動區塊與摺疊動畫 */
+/* 預設的滾動收合區塊樣式 */
 .transaction-scroll-box {
-    max-height: 200px; 
+    max-height: 200px; /* 或者你設定的高度 */
     overflow-y: auto;
-    padding-top: 4px;
-    padding-bottom: 4px;
     transition: max-height 0.3s ease, padding 0.3s ease;
 }
 
+/* 當有 collapsed 類別時，高度歸零並隱藏 */
 .transaction-scroll-box.collapsed {
-    max-height: 0px !important;
-    overflow: hidden !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    max-height: 0;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+    border: none;
 }
 
 .transaction-header.expanded span#toggle-arrow {
