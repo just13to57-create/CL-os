@@ -2,16 +2,12 @@
    1. 全域變數與重置 (莫蘭迪色系)
    ========================================== */
 :root {
-    --bg-phone: #F8F9FA;         /* 更清爽的手機底色 */
-    --card-bg: #FFFFFF;          /* 卡片保持乾淨純白 */
-    --card-border: #E9ECEF;      /* 柔和的邊框線條 */
-    --text-main: #2D3748;        /* 更深、對比更明顯的主文字 */
-    --text-sub: #718096;         /* 次要文字 */
-    
-    /* 🎨 從這裡開始調整為更豐富的色彩 */
-    --accent: #E53E3E;           /* 金額或重點強調色改為清爽的「活力紅/珊瑚紅」 */
-    --primary-blue: #3182CE;     /* 新增：用於導航或特定按鈕的「清新藍」 */
-    --success-green: #38A169;    /* 新增：用於達成率或收入的「好心情綠」 */
+    --bg-phone: #F4F3F0;       
+    --card-bg: #FFFFFF;        
+    --card-border: #E2DFDA;    
+    --text-main: #4A5568;      
+    --text-sub: #8C9DAE;       
+    --accent: #A37073;         
 }
 
 body {
