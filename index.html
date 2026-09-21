@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>手機版理財記賬助手</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-
-    <div class="phone-container">
+<div class="phone-container">
     
     <!-- 【第一頁：首頁導航】 -->
     <div id="page-1" class="page-content active">
@@ -24,34 +13,123 @@
         </header>
         <div class="page-1-list">
             <div onclick="switchPage(2)" class="morandi-card">
-                <h3>1. 緊急預備金</h3>
-                <p>建立財務安全網，抵禦突發風險</p>
+                <h3>1. 日常記帳</h3>
+                <p>記錄日常支出、檢視當月花費流向</p>
             </div>
             <div onclick="switchPage(3)" class="morandi-card">
-                <h3>2. 基礎保險配置</h3>
-                <p>轉嫁人生重大風險，避免資產歸零</p>
+                <h3>2. 緊急預備金</h3>
+                <p>建立財務安全網，抵禦突發風險</p>
             </div>
             <div onclick="switchPage(4)" class="morandi-card">
-                <h3>3. 目標管理</h3>
-                <p>設定短期與長期人生財務目標</p>
+                <h3>3. 基礎保險配置</h3>
+                <p>轉嫁人生重大風險，避免資產歸零</p>
             </div>
             <div onclick="switchPage(5)" class="morandi-card">
-                <h3>4. 負債管理</h3>
-                <p>梳理貸款與卡債，擬定還款計畫</p>
+                <h3>4. 目標管理</h3>
+                <p>設定短期與長期人生財務目標</p>
             </div>
             <div onclick="switchPage(6)" class="morandi-card">
-                <h3>5. 資產配置</h3>
-                <p>多元化投資佈局，讓資產穩健增長</p>
+                <h3>5. 負債管理</h3>
+                <p>梳理貸款與卡債，擬定還款計畫</p>
             </div>
             <div onclick="switchPage(7)" class="morandi-card">
-                <h3>6. 財務複盤</h3>
+                <h3>6. 資產配置</h3>
+                <p>多元化投資佈局，讓資產穩健增長</p>
+            </div>
+            <div onclick="switchPage(8)" class="morandi-card">
+                <h3>7. 財務複盤</h3>
                 <p>定期檢視收支與資產變化，持續優化</p>
             </div>
         </div>
     </div>
 
-    <!-- 【第二頁：緊急預備金 (原第三頁)】 -->
+    <!-- 【第二頁：日常記帳】 -->
     <div id="page-2" class="page-content">
+        <header class="page-header-flex">
+            <div>
+                <h1>日常記帳</h1>
+                <p>掌握您的消費流向</p>
+            </div>
+            <div class="header-btns">
+                <button onclick="resetAppData()" class="badge" style="cursor: pointer; border: 1px solid var(--card-border); background-color: var(--card-bg);">🔄 清除</button>
+                <button onclick="toggleMenu()" class="badge" style="cursor: pointer; border: 1px solid var(--card-border); background-color: var(--card-bg);">📋 選單</button>
+            </div>
+        </header>
+        
+        <div class="balance-card">
+            <span>當前總支出</span>
+            <h2 id="total-balance">$ 0</h2>
+        </div>
+
+        <div class="morandi-card form-card">
+            <h3>新增支出</h3>
+            <form id="expense-form" onsubmit="addTransaction(event)" class="form-group">
+                <div class="form-row">
+                    <input type="number" id="amount" placeholder="金額" required class="form-input half">
+                    <select id="category" class="form-input half">
+                        <optgroup label="住房">
+                            <option value="房租">住房 - 房租</option>
+                            <option value="水電">住房 - 水電</option>
+                            <option value="住房其他">住房 - 其他</option>
+                        </optgroup>
+                        <optgroup label="飲食">
+                            <option value="食材">飲食 - 食材</option>
+                            <option value="外食">飲食 - 外食</option>
+                            <option value="點心">飲食 - 點心</option>
+                        </optgroup>
+                        <optgroup label="交通">
+                            <option value="大眾運輸">交通 - 大眾運輸</option>
+                            <option value="打車">交通 - 打車</option>
+                            <option value="油錢">交通 - 油錢</option>
+                        </optgroup>
+                        <optgroup label="生活用品">
+                            <option value="耐用品">生活 - 耐用品</option>
+                            <option value="消耗品">生活 - 消耗品</option>
+                        </optgroup>
+                        <optgroup label="通訊">    
+                            <option value="話費">通訊 - 話費</option>
+                            <option value="訂閱">通訊 - 訂閱</option>
+                        </optgroup> 
+                        <optgroup label="娛樂">
+                            <option value="旅遊">娛樂 - 旅遊</option>
+                            <option value="社交">娛樂 - 社交</option>
+                            <option value="娛樂其他">娛樂 - 其他</option>
+                        </optgroup>
+                        <optgroup label="教育">
+                            <option value="課程">教育 - 課程</option>
+                            <option value="書籍">教育 - 書籍</option>
+                            <option value="教育其他">教育 - 其他</option>
+                        </optgroup>
+                        <option value="保險">保險</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="description" placeholder="說明 (例如: 午餐，可不填)" class="form-input">
+                </div>
+                <button type="submit" class="btn-submit">新增紀錄</button>
+            </form>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="expenseChart"></canvas>
+        </div>
+
+        <div class="transaction-section">
+            <div class="transaction-header" onclick="toggleTransactionBox()" style="cursor: pointer;">
+                <h3>支出明細</h3>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span id="transaction-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
+                    <span id="toggle-text" style="font-size: 0.75rem; color: var(--text-sub); font-weight: 500;">展開</span>
+                </div>
+            </div>
+            <div id="transaction-list" class="transaction-scroll-box collapsed">
+                <p class="empty-text">目前尚無記賬資料</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 【第三頁：緊急預備金】 -->
+    <div id="page-3" class="page-content">
         <header class="page-header-flex">
             <div>
                 <h1>緊急預備金</h1>
@@ -118,8 +196,8 @@
         </div>
     </div>
 
-    <!-- 【第三頁：基礎保險配置】 -->
-    <div id="page-3" class="page-content">
+    <!-- 【第四頁：基礎保險配置】 -->
+    <div id="page-4" class="page-content">
         <header class="page-header-flex">
             <div><h1>基礎保險配置</h1><p>轉嫁人生重大風險</p></div>
             <button onclick="toggleMenu()" class="badge" style="cursor: pointer; border: 1px solid var(--card-border); background-color: var(--card-bg);">📋 選單</button>
@@ -131,21 +209,21 @@
         <div class="morandi-card"><p>🛠️ 檢核清單與規劃功能建置中，敬請期待！</p></div>
     </div>
 
-    <!-- 【第四頁：目標】 -->
-    <div id="page-4" class="page-content">
+    <!-- 【第五頁：目標管理】 -->
+    <div id="page-5" class="page-content">
         <header class="page-header-flex">
             <div><h1>目標管理</h1><p>實現您的財務夢想藍圖</p></div>
             <button onclick="toggleMenu()" class="badge" style="cursor: pointer; border: 1px solid var(--card-border); background-color: var(--card-bg);">📋 選單</button>
         </header>
         <div class="morandi-card">
             <h3>🎯 我的財務目標</h3>
-            <p style="margin-top: 4px;">設定您的短期（如買車、旅遊）與長期（如購屋、退休）財務目標並追蹤進度。</p>
+            <p style="margin-top: 4px;">設定您的短期與長期財務目標並追蹤進度。</p>
         </div>
         <div class="morandi-card"><p>🛠️ 目標追蹤功能建置中，敬請期待！</p></div>
     </div>
 
-    <!-- 【第五頁：負債】 -->
-    <div id="page-5" class="page-content">
+    <!-- 【第六頁：負債管理】 -->
+    <div id="page-6" class="page-content">
         <header class="page-header-flex">
             <div><h1>負債管理</h1><p>有效管理與清償各項貸款</p></div>
             <button onclick="toggleMenu()" class="badge" style="cursor: pointer; border: 1px solid var(--card-border); background-color: var(--card-bg);">📋 選單</button>
@@ -157,8 +235,8 @@
         <div class="morandi-card"><p>🛠️ 負債管理功能建置中，敬請期待！</p></div>
     </div>
 
-    <!-- 【第六頁：資產配置】 -->
-    <div id="page-6" class="page-content">
+    <!-- 【第七頁：資產配置】 -->
+    <div id="page-7" class="page-content">
         <header class="page-header-flex">
             <div><h1>資產配置</h1><p>多元化資產組合與投資規劃</p></div>
             <button onclick="toggleMenu()" class="badge" style="cursor: pointer; border: 1px solid var(--card-border); background-color: var(--card-bg);">📋 選單</button>
@@ -170,8 +248,8 @@
         <div class="morandi-card"><p>🛠️ 資產配置功能建置中，敬請期待！</p></div>
     </div>
 
-    <!-- 【第七頁：複盤】 -->
-    <div id="page-7" class="page-content">
+    <!-- 【第八頁：財務複盤】 -->
+    <div id="page-8" class="page-content">
         <header class="page-header-flex">
             <div><h1>財務複盤</h1><p>定期檢視與財務健康檢查</p></div>
             <button onclick="toggleMenu()" class="badge" style="cursor: pointer; border: 1px solid var(--card-border); background-color: var(--card-bg);">📋 選單</button>
@@ -183,22 +261,19 @@
         <div class="morandi-card"><p>🛠️ 複盤筆記功能建置中，敬請期待！</p></div>
     </div>
 
-    <!-- 全域導航選單 Modal (更新為 7 個選項) -->
+    <!-- 全域導航選單 Modal (更新為 8 個選項) -->
     <div id="nav-modal" class="nav-modal-overlay" onclick="toggleMenu()">
         <div class="nav-modal-content" onclick="event.stopPropagation()">
             <h3>快速導航選單</h3>
             <button onclick="switchPage(1); toggleMenu();">🏠 理財導航首頁</button>
-            <button onclick="switchPage(2); toggleMenu();">🛡️ 1. 緊急預備金</button>
-            <button onclick="switchPage(3); toggleMenu();">☂️ 2. 基礎保險配置</button>
-            <button onclick="switchPage(4); toggleMenu();">🎯 3. 目標管理</button>
-            <button onclick="switchPage(5); toggleMenu();">💳 4. 負債管理</button>
-            <button onclick="switchPage(6); toggleMenu();">📈 5. 資產配置</button>
-            <button onclick="switchPage(7); toggleMenu();">📝 6. 財務複盤</button>
+            <button onclick="switchPage(2); toggleMenu();">📊 1. 日常記帳</button>
+            <button onclick="switchPage(3); toggleMenu();">🛡️ 2. 緊急預備金</button>
+            <button onclick="switchPage(4); toggleMenu();">☂️ 3. 基礎保險配置</button>
+            <button onclick="switchPage(5); toggleMenu();">🎯 4. 目標管理</button>
+            <button onclick="switchPage(6); toggleMenu();">💳 5. 負債管理</button>
+            <button onclick="switchPage(7); toggleMenu();">📈 6. 資產配置</button>
+            <button onclick="switchPage(8); toggleMenu();">📝 7. 財務複盤</button>
         </div>
     </div>
 
 </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
