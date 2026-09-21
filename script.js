@@ -322,8 +322,9 @@ function editGoal(id) {
     const goal = financialGoals.find(g => g.id === id);
     if (!goal) return;
 
+    // 1. 先跳出修改標題的視窗（這就是你要的改文字功能）
     const newTitle = prompt("修改目標名稱：", goal.title);
-    if (newTitle === null) return;
+    if (newTitle === null) return; // 如果按取消就中斷
 
     const newCurrent = prompt("修改目前已存金額：", goal.current);
     if (newCurrent === null) return;
@@ -334,14 +335,14 @@ function editGoal(id) {
     const newDate = prompt("修改預計達成日期 (YYYY-MM-DD)：", goal.date);
     if (newDate === null) return;
 
+    // 更新資料
     goal.title = newTitle.trim() || goal.title;
     goal.current = parseFloat(newCurrent) >= 0 ? parseFloat(newCurrent) : goal.current;
     goal.target = parseFloat(newTarget) > 0 ? parseFloat(newTarget) : goal.target;
     goal.date = newDate.trim() || goal.date;
 
-    // 如果修改的是 ID 1（緊急預備金），同時同步回應第三頁的預備金總額
+    // 如果修改的是 ID 1（緊急預備金），同時同步更新第三頁的預備金總額
     if (id === 1) {
-        // 透過調整 emergencyDeposits 陣列讓總額符合修改後的 current
         emergencyDeposits = [{
             id: Date.now(),
             amount: goal.current,
@@ -351,10 +352,11 @@ function editGoal(id) {
         localStorage.setItem('emergency_deposits', JSON.stringify(emergencyDeposits));
     }
 
+    // 儲存並重新渲染畫面
     localStorage.setItem('financial_goals', JSON.stringify(financialGoals));
     renderGoals();
     
-    // 如果目前在第三頁，順便更新第三頁的畫面顯示
+    // 如果目前在第三頁，順便更新第三頁畫面
     if (typeof calculateEmergencyFund === 'function') {
         calculateEmergencyFund();
     }
