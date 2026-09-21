@@ -158,6 +158,70 @@
             margin: 4px 0 0 0;
         }
 
+        /* 左右排版區塊（左側文字/數據，右側小豬公） */
+        .piggy-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .piggy-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 65%;
+        }
+
+        /* 小豬公容器與樣式 */
+        .piggy-container {
+            position: relative;
+            width: 75px;
+            height: 60px;
+            border: 2px solid var(--text-main);
+            border-radius: 30px 30px 24px 24px;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            box-sizing: border-box;
+        }
+
+        /* 小豬鼻子與耳朵小裝飾 */
+        .piggy-container::before {
+            content: "🐽";
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+
+        /* 豬公內部水位 */
+        .piggy-water {
+            width: 100%;
+            background-color: #E29578; /* 溫潤的磚橘色水位 */
+            transition: height 0.4s ease;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            opacity: 0.85;
+        }
+
+        .piggy-percentage {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            z-index: 3;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+
         .form-card .form-group {
             display: flex;
             flex-direction: column;
@@ -513,18 +577,28 @@
                     <span style="font-size: 0.70rem;">🛡️ 3個月安全防護網：</span>
                     <span id="target-3m" style="font-weight: 600; color: var(--text-main); font-size: 0.85rem;">$ 0</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="font-size: 0.70rem;">🛡️ 6個月安心防護網：</span>
                     <span id="target-6m" style="font-weight: 600; color: var(--text-main); font-size: 0.85rem;">$ 0</span>
                 </div>
                 <hr style="border: none; border-top: 1px solid var(--card-border); margin: 6px 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <span style="font-size: 0.75rem; font-weight: 500;">目前已存總金額：</span>
-                    <span id="total-saved-display" style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">$ 0</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 0.75rem; font-weight: 500;">達成率 (以6個月計)：</span>
-                    <span id="saving-progress-text" style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">0%</span>
+                
+                <!-- 達成率與小豬公水位展示 -->
+                <div class="piggy-layout" style="margin-top: 8px;">
+                    <div class="piggy-info">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.75rem; font-weight: 500;">已存總金額：</span>
+                            <span id="total-saved-display" style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);">$ 0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.75rem; font-weight: 500;">達成率(6個月)：</span>
+                            <span id="saving-progress-text" style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);">0%</span>
+                        </div>
+                    </div>
+                    <div class="piggy-container">
+                        <div id="piggy-water-emergency" class="piggy-water" style="height: 0%;"></div>
+                        <div id="piggy-text-emergency" class="piggy-percentage">0%</div>
+                    </div>
                 </div>
             </div>
 
@@ -828,6 +902,8 @@
             const t6mEl = document.getElementById('target-6m');
             const totalSavedEl = document.getElementById('total-saved-display');
             const progressEl = document.getElementById('saving-progress-text');
+            const waterEl = document.getElementById('piggy-water-emergency');
+            const textEl = document.getElementById('piggy-text-emergency');
 
             if (t3mEl) t3mEl.innerText = `$ ${target3m.toLocaleString()}`;
             if (t6mEl) t6mEl.innerText = `$ ${target6m.toLocaleString()}`;
@@ -838,6 +914,8 @@
                 progress = Math.min(Math.round((totalSaved / target6m) * 100), 100);
             }
             if (progressEl) progressEl.innerText = `${progress}%`;
+            if (waterEl) waterEl.style.height = `${progress}%`;
+            if (textEl) textEl.innerText = `${progress}%`;
 
             localStorage.setItem('emergency_monthly_expense', monthlyExpense);
             renderDepositList();
@@ -911,14 +989,19 @@
                 const percent = goal.target > 0 ? Math.min(Math.round((goal.current / goal.target) * 100), 100) : 0;
                 return `
                     <div class="morandi-card" onclick="editGoal('${categoryKey}', ${goal.id})">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                            <h3 style="margin: 0; font-size: 0.85rem;">${goal.title}</h3>
-                            <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-main);">${percent}%</span>
-                        </div>
-                        <p style="font-size: 0.7rem; color: var(--text-sub); margin-bottom: 6px;">${goal.desc}</p>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-sub);">
-                            <span>已存: $ ${goal.current.toLocaleString()}</span>
-                            <span>目標: $ ${goal.target.toLocaleString()}</span>
+                        <div class="piggy-layout">
+                            <div class="piggy-info" style="width: 72%;">
+                                <h3 style="margin: 0 0 4px 0; font-size: 0.85rem;">${goal.title}</h3>
+                                <p style="font-size: 0.68rem; color: var(--text-sub); margin-bottom: 4px;">${goal.desc}</p>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-sub);">
+                                    <span>已存: $ ${goal.current.toLocaleString()}</span>
+                                    <span>目標: $ ${goal.target.toLocaleString()}</span>
+                                </div>
+                            </div>
+                            <div class="piggy-container">
+                                <div class="piggy-water" style="height: ${percent}%;"></div>
+                                <div class="piggy-percentage">${percent}%</div>
+                            </div>
                         </div>
                     </div>
                 `;
