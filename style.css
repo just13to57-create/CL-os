@@ -11,7 +11,7 @@
 
 body {
     margin: 0;
-    padding: 16px;
+    padding: 0; /* 改為 0，避免電腦版加上 padding 後超出視窗高度 */
     background-color: #2C2521;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     display: flex;
@@ -32,13 +32,14 @@ body {
     position: relative;
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    border-radius: 36px;
     box-sizing: border-box;
 }
 
 @media (min-width: 415px) {
     .phone-container {
-        height: 88vh;
+        height: 85vh; /* 稍微縮減高度，確保在各尺寸電腦螢幕都能完美顯示 */
+        max-height: 840px;
+        border-radius: 36px;
         border: 8px solid #4A403A;
     }
 }
@@ -61,7 +62,7 @@ body {
 
 /* 針對首頁（#page-1）在電腦版進行完美均分，消除底部不自然的空白 */
 #page-1 {
-    justify-content: flex-start; /* 保持由上往下排列，但透過內部間距優化 */
+    justify-content: flex-start;
     padding-top: 20px;
     padding-bottom: 16px;
 }
@@ -76,7 +77,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding-top: 4px;
-    padding-bottom: 12px; /* 標題下方保有舒服的呼吸空間 */
+    padding-bottom: 12px;
 }
 
 .page-header-flex h1 {
@@ -101,6 +102,8 @@ body {
     border-radius: 12px;
     font-size: 0.75rem;
     color: var(--text-main);
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
 }
 
 .morandi-card {
@@ -229,6 +232,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
 }
 
 .transaction-header h3 {
@@ -344,7 +348,11 @@ body {
     transition: background-color 0.1s;
 }
 
-/* 目標卡片專屬樣式 */
+.nav-modal-content button:active {
+    background-color: var(--card-border);
+}
+
+/* 目標卡片與群組樣式 */
 .goal-card {
     display: flex;
     flex-direction: column;
@@ -375,7 +383,6 @@ body {
     margin: 0 0 4px 0;
 }
 
-/* 進度條外框 */
 .progress-bar-container {
     width: 100%;
     height: 8px;
@@ -386,7 +393,6 @@ body {
     border: 1px solid var(--card-border);
 }
 
-/* 進度條填滿部分（帶有柔和過渡動畫） */
 .progress-bar-fill {
     height: 100%;
     background-color: var(--text-main);
@@ -407,11 +413,6 @@ body {
     color: var(--text-sub);
 }
 
-.nav-modal-content button:active {
-    background-color: var(--card-border);
-}
-
-/* 目標群組區塊樣式 */
 .goal-section {
     display: flex;
     flex-direction: column;
