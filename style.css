@@ -68,13 +68,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
+    margin-top: 8px;    /* 上方增加留白 */
+    margin-bottom: 16px;  /* 下方增加留白，讓標題與下方卡片更有距離 */
 }
 
 .page-header-flex h1 {
     font-size: 1.2rem;
     color: var(--text-main);
-    margin: 0 0 2px 0;
+    margin: 0 0 4px 0;
 }
 
 .page-header-flex p {
