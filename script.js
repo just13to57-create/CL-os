@@ -322,16 +322,19 @@ function editGoal(id) {
     const goal = financialGoals.find(g => g.id === id);
     if (!goal) return;
 
-    // 1. 先跳出修改標題的視窗（這就是你要的改文字功能）
+    // 1. 修改目標名稱
     const newTitle = prompt("修改目標名稱：", goal.title);
-    if (newTitle === null) return; // 如果按取消就中斷
+    if (newTitle === null) return;
 
+    // 2. 修改目前已存金額
     const newCurrent = prompt("修改目前已存金額：", goal.current);
     if (newCurrent === null) return;
 
+    // 3. 修改目標總金額
     const newTarget = prompt("修改目標總金額：", goal.target);
     if (newTarget === null) return;
 
+    // 4. 修改預計達成日期
     const newDate = prompt("修改預計達成日期 (YYYY-MM-DD)：", goal.date);
     if (newDate === null) return;
 
@@ -355,6 +358,11 @@ function editGoal(id) {
     // 儲存並重新渲染畫面
     localStorage.setItem('financial_goals', JSON.stringify(financialGoals));
     renderGoals();
+    
+    if (typeof calculateEmergencyFund === 'function') {
+        calculateEmergencyFund();
+    }
+}
     
     // 如果目前在第三頁，順便更新第三頁畫面
     if (typeof calculateEmergencyFund === 'function') {
