@@ -3,11 +3,15 @@
 // ==========================================
 let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 let emergencyDeposits = JSON.parse(localStorage.getItem('emergency_deposits')) || [];
-let financialGoals = JSON.parse(localStorage.getItem('financial_goals')) || [
+
+// 💡 換成這段全新的目標資料（它會自動幫您修正舊資料的問題）
+let financialGoals = [
     { id: 1, type: 'short', title: '🏖️ 日本賞楓之旅', current: 45000, target: 60000, date: '2026-11-30', tag: '旅遊基金' },
     { id: 2, type: 'mid', title: '🚗 換新車頭期款', current: 180000, target: 300000, date: '2028-06-30', tag: '大筆消費' },
     { id: 3, type: 'long', title: '🏡 購屋頭期款基金', current: 600000, target: 2000000, date: '2033-12-31', tag: '房產頭期' }
 ];
+localStorage.setItem('financial_goals', JSON.stringify(financialGoals));
+
 let expenseChartInstance = null;
 
 // 切換頁面
