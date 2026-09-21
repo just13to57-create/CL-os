@@ -13,10 +13,7 @@ function switchPage(pageNum) {
     const targetPage = document.getElementById(`page-${pageNum}`);
     if (targetPage) {
         targetPage.classList.add('active');
-        if (pageNum === 2) {
-            renderExpenses();
-            updateChart();
-        } else if (pageNum === 3) {
+        if (pageNum === 2) { // 頁面 2 現在對應緊急預備金
             calculateEmergencyFund();
         }
     }
