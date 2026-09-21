@@ -27,6 +27,8 @@ function switchPage(pageNum) {
             updateChart();
         } else if (pageNum === 3) {
             calculateEmergencyFund();
+        } else if (pageNum === 5) {
+            renderGoals(); // 💡 加上這行，切到第5頁時才會畫出目標清單！
         }
     }
 }
