@@ -265,8 +265,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderExpenses();
     updateChart();
     calculateEmergencyFund();
+    renderGoals(); // 💡 加上這行，確保網頁一開好就渲染目標
 });
-
 
 // ==========================================
 // 第五頁：目標管理邏輯
