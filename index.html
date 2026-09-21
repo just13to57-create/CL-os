@@ -1,154 +1,290 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>個人理財導航系統</title>
+    <title>手機版理財記賬與導航助手</title>
     <!-- 引入 Chart.js 圖表庫 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #F7F5F0;
+            --bg-color: #F4F1EA;
             --card-bg: #FFFFFF;
-            --text-main: #4A4543;
-            --text-sub: #8C8581;
+            --card-border: #E3DCD2;
+            --text-main: #4A403A;
+            --text-sub: #8C7A6B;
             --accent: #8C7A6B;
-            --accent-light: #EFECE6;
-            --border-color: #E2DFD8;
-            --expense-color: #A36B6B;
-            --income-color: #6B8E7B;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --accent-light: #F9F6F0;
+            --danger: #C85A53;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 16px;
+            margin: 0;
+            padding: 0;
+            background-color: #2C2521;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
         }
 
-        .container {
+        .phone-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 414px;
+            height: 100%;
+            max-height: 896px;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        @media (min-width: 415px) {
+            .phone-container {
+                height: 85vh;
+                border-radius: 36px;
+                border: 8px solid #4A403A;
+            }
         }
 
         .page-content {
             display: none;
+            flex-direction: column;
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+            box-sizing: border-box;
+            padding: 16px;
+            gap: 12px;
         }
 
         .page-content.active {
-            display: block;
+            display: flex;
         }
 
         .page-header-flex {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-top: 0;
+            margin-bottom: 8px;
+            padding-top: 12px !important;    
+            padding-bottom: 16px !important; 
         }
 
         .page-header-flex h1 {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             color: var(--text-main);
+            margin: 0 0 2px 0;
         }
 
         .page-header-flex p {
             font-size: 0.75rem;
             color: var(--text-sub);
+            margin: 0;
+        }
+
+        .header-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-main);
+            cursor: pointer;
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
         }
 
         .morandi-card {
             background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 14px;
+            box-sizing: border-box;
         }
 
         .morandi-card h3 {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-main);
-            margin-bottom: 8px;
+            margin: 0 0 6px 0;
         }
 
-        .badge {
-            background-color: var(--accent-light);
-            color: var(--accent);
-            border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
+        .morandi-card p {
             font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
+            color: var(--text-sub);
+            margin: 0;
         }
 
-        /* 導航 Modal 樣式 */
-        .nav-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .nav-modal-overlay.active {
-            display: flex;
-        }
-
-        .nav-modal-content {
-            background: var(--card-bg);
-            padding: 24px;
-            border-radius: 16px;
-            width: 80%;
-            max-width: 320px;
+        .page-1-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
-        .nav-modal-content h3 {
-            text-align: center;
-            margin-bottom: 8px;
-            font-size: 1rem;
-        }
-
-        .nav-modal-content button {
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 8px;
-            text-align: left;
-            font-size: 0.85rem;
+        .page-1-list .morandi-card {
             cursor: pointer;
+            transition: transform 0.1s ease, background-color 0.1s ease;
+        }
+
+        .page-1-list .morandi-card:active {
+            transform: scale(0.98);
+            background-color: var(--accent-light);
+        }
+
+        .balance-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .balance-card span {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        .balance-card h2 {
+            font-size: 1.5rem;
             color: var(--text-main);
+            margin: 4px 0 0 0;
+        }
+
+
+         /* 左右排版區塊（左側文字/數據，右側小豬公） */
+        .piggy-layout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .piggy-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 65%;
+        }
+
+        /* 小豬公容器與樣式 */
+        .piggy-container {
+            position: relative;
+            width: 75px;
+            height: 60px;
+            border: 2px solid var(--text-main);
+            border-radius: 30px 30px 24px 24px;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            box-sizing: border-box;
+        }
+
+        /* 小豬鼻子與耳朵小裝飾 */
+        .piggy-container::before {
+            content: "🐽";
+            position: absolute;
+            top: 37px;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 透過位移讓正中心對齊容器中心 */
+            font-size: 0.8rem;
+            z-index: 2;
+            opacity: 0.8;
+        }
+
+        /* 豬公內部水位 */
+        .piggy-water {
+            width: 100%;
+            background-color: #E29578; /* 溫潤的磚橘色水位 */
+            transition: height 0.4s ease;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            opacity: 0.85;
+        }
+        /* % 數字顯示 */
+        .piggy-percentage {
+            position: absolute;
+            top: 11px;                /* 直接用 top 決定距離容器頂部的絕對位置 */
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            z-index: 3;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+
+        
+        .form-card .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            background-color: var(--bg-color);
+            font-size: 0.85rem;
+            color: var(--text-main);
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .form-input.half {
+            width: 50%;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--text-main);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
             font-weight: 500;
-            transition: background 0.2s;
+            cursor: pointer;
         }
 
-        .nav-modal-content button:hover {
-            background: var(--accent-light);
+        .btn-submit:active {
+            opacity: 0.85;
         }
 
-        /* 交易與紀錄清單 */
+        .chart-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 12px;
+            height: 180px;
+            box-sizing: border-box;
+        }
+
         .transaction-section {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 12px 14px;
+            box-sizing: border-box;
         }
 
         .transaction-header {
@@ -158,21 +294,23 @@
             cursor: pointer;
         }
 
+        .transaction-header h3 {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
         .transaction-scroll-box {
-            max-height: 250px;
+            max-height: 150px;
             overflow-y: auto;
-            margin-top: 12px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 8px;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.3s ease, margin-top 0.3s ease;
+            margin-top: 8px;
         }
 
         .transaction-scroll-box.collapsed {
             max-height: 0;
             overflow: hidden;
             margin-top: 0;
-            border-top: none;
-            padding-top: 0;
         }
 
         .transaction-item {
@@ -180,76 +318,308 @@
             justify-content: space-between;
             align-items: center;
             padding: 8px 0;
-            border-bottom: 1px dashed var(--border-color);
-            font-size: 0.8rem;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.75rem;
         }
 
         .transaction-item:last-child {
             border-bottom: none;
         }
 
+        .category-tag {
+            background-color: var(--bg-color);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            color: var(--text-sub);
+        }
+
+        .text-expense {
+            color: var(--danger);
+            font-weight: 500;
+        }
+
         .empty-text {
             text-align: center;
             color: var(--text-sub);
             font-size: 0.75rem;
-            padding: 12px 0;
+            margin: 10px 0;
         }
 
-        .category-tag {
-            background: var(--accent-light);
-            color: var(--accent);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.65rem;
-        }
-
-        .text-expense {
-            color: var(--expense-color);
-            font-weight: 500;
-        }
-
-        /* 小豬撲滿進度條相關樣式 */
-        .piggy-layout {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .piggy-container {
-            width: 50px;
-            height: 70px;
-            border: 2px solid var(--accent);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            background: var(--bg-color);
-        }
-
-        .piggy-water {
+        .nav-modal-overlay {
             position: absolute;
-            bottom: 0;
-            width: 100%;
-            background-color: var(--accent);
-            opacity: 0.3;
-            transition: height 0.4s ease;
-        }
-
-        .piggy-percentage {
-            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.7rem;
-            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            z-index: 999;
+        }
+
+        .nav-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .nav-modal-content {
+            background-color: var(--card-bg);
+            width: 85%;
+            max-width: 280px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: scale(0.9);
+            transition: transform 0.25s ease;
+        }
+
+        .nav-modal-overlay.active .nav-modal-content {
+            transform: scale(1);
+        }
+
+        .nav-modal-content h3 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
             color: var(--text-main);
+            text-align: center;
+        }
+
+        .nav-modal-content button {
+            padding: 10px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            cursor: pointer;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .nav-modal-content button:active {
+            background-color: var(--card-border);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="phone-container">
+        
+        <!-- 【第一頁：首頁導航】 -->
+        <div id="page-1" class="page-content active">
+            <header class="page-header-flex">
+                <div>
+                    <h1>理財導航首頁</h1>
+                    <p>歡迎回來，開啟您的全方位財務旅程</p>
+                </div>
+                <div class="header-btns">
+                    <button onclick="toggleMenu()" class="badge">📋 選單</button>
+                </div>
+            </header>
+            <div class="page-1-list">
+                <div onclick="switchPage(2)" class="morandi-card">
+                    <h3>1. 日常記帳</h3>
+                    <p>記錄日常支出、檢視當月花費流向</p>
+                </div>
+                <div onclick="switchPage(3)" class="morandi-card">
+                    <h3>2. 緊急預備金</h3>
+                    <p>建立財務安全網，抵禦突發風險</p>
+                </div>
+                <div onclick="switchPage(4)" class="morandi-card">
+                    <h3>3. 基礎保險配置</h3>
+                    <p>轉嫁人生重大風險，避免資產歸零</p>
+                </div>
+                <div onclick="switchPage(5)" class="morandi-card">
+                    <h3>4. 目標管理</h3>
+                    <p>設定短期與長期人生財務目標</p>
+                </div>
+                <div onclick="switchPage(6)" class="morandi-card">
+                    <h3>5. 負債管理</h3>
+                    <p>梳理貸款與卡債，擬定還款計畫</p>
+                </div>
+                <div onclick="switchPage(7)" class="morandi-card">
+                    <h3>6. 資產配置</h3>
+                    <p>多元化投資佈局，讓資產穩健增長</p>
+                </div>
+                <div onclick="switchPage(8)" class="morandi-card">
+                    <h3>7. 財務複盤</h3>
+                    <p>定期檢視收支與資產變化，持續優化</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 【第二頁：日常記帳】 -->
+        <div id="page-2" class="page-content">
+            <header class="page-header-flex">
+                <div>
+                    <h1>日常記帳</h1>
+                    <p>掌握您的消費流向</p>
+                </div>
+                <div class="header-btns">
+                    <button onclick="resetAppData()" class="badge">🔄 清除</button>
+                    <button onclick="toggleMenu()" class="badge">📋 選單</button>
+                </div>
+            </header>
+            
+            <div class="balance-card">
+                <span>當前總支出</span>
+                <h2 id="total-balance">$ 0</h2>
+            </div>
+
+            <div class="morandi-card form-card">
+                <h3>新增支出</h3>
+                <form id="expense-form" onsubmit="addTransaction(event)" class="form-group">
+                    <div class="form-row">
+                        <input type="number" id="amount" placeholder="金額" required class="form-input half">
+                        <select id="category" class="form-input half">
+                            <optgroup label="住房">
+                                <option value="房租">住房 - 房租</option>
+                                <option value="水電">住房 - 水電</option>
+                                <option value="住房其他">住房 - 其他</option>
+                            </optgroup>
+                            <optgroup label="飲食">
+                                <option value="食材">飲食 - 食材</option>
+                                <option value="外食">飲食 - 外食</option>
+                                <option value="點心">飲食 - 點心</option>
+                            </optgroup>
+                            <optgroup label="交通">
+                                <option value="大眾運輸">交通 - 大眾運輸</option>
+                                <option value="打車">交通 - 打車</option>
+                                <option value="油錢">交通 - 油錢</option>
+                            </optgroup>
+                            <optgroup label="生活用品">
+                                <option value="耐用品">生活 - 耐用品</option>
+                                <option value="消耗品">生活 - 消耗品</option>
+                            </optgroup>
+                            <optgroup label="通訊">    
+                                <option value="話費">通訊 - 話費</option>
+                                <option value="訂閱">通訊 - 訂閱</option>
+                            </optgroup> 
+                            <optgroup label="娛樂">
+                                <option value="旅遊">娛樂 - 旅遊</option>
+                                <option value="社交">娛樂 - 社交</option>
+                                <option value="娛樂其他">娛樂 - 其他</option>
+                            </optgroup>
+                            <optgroup label="教育">
+                                <option value="課程">教育 - 課程</option>
+                                <option value="書籍">教育 - 書籍</option>
+                                <option value="教育其他">教育 - 其他</option>
+                            </optgroup>
+                            <option value="保險">保險</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="description" placeholder="說明 (例如: 午餐，可不填)" class="form-input">
+                    </div>
+                    <button type="submit" class="btn-submit">新增紀錄</button>
+                </form>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="expenseChart"></canvas>
+            </div>
+
+            <div class="transaction-section">
+                <div class="transaction-header" onclick="toggleTransactionBox()">
+                    <h3>支出明細</h3>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span id="transaction-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
+                        <span id="toggle-text" style="font-size: 0.75rem; color: var(--text-sub); font-weight: 500;">展開</span>
+                    </div>
+                </div>
+                <div id="transaction-list" class="transaction-scroll-box collapsed">
+                    <p class="empty-text">目前尚無記賬資料</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 【第三頁：緊急預備金】 -->
+        <div id="page-3" class="page-content">
+            <header class="page-header-flex">
+                <div>
+                    <h1>緊急預備金</h1>
+                    <p>建立財務安全網，抵禦突發風險</p>
+                </div>
+                <div class="header-btns">
+                    <button onclick="toggleMenu()" class="badge">📋 選單</button>
+                </div>
+            </header>
+
+            <div class="morandi-card" style="padding: 12px 14px;">
+                <h3>💡 為什麼需要預備金？</h3>
+                <p style="margin-top: 4px; line-height: 1.4;">
+                    緊急預備金建議為 3 到 6 個月基本開銷。您可以設定每月開銷並透過下方按鈕記錄存入金額。
+                </p>
+            </div>
+
+            <div class="morandi-card form-card" style="padding: 12px 14px;">
+                <h3>預備金計算與存入設定</h3>
+                <div class="form-group" style="gap: 8px; margin-top: 6px;">
+                    <div>
+                        <span style="font-size: 0.7rem; color: var(--text-sub); display: block; margin-bottom: 2px;">每月基本開銷 (元)</span>
+                        <input type="number" id="monthly-expense" placeholder="例如: 25000" class="form-input" oninput="calculateEmergencyFund()">
+                    </div>
+                    <div class="form-row">
+                        <input type="number" id="deposit-amount" placeholder="欲存入金額" class="form-input half">
+                        <input type="text" id="deposit-desc" placeholder="備註 (可不填)" class="form-input half">
+                    </div>
+                    <button type="button" onclick="addEmergencyDeposit()" class="btn-submit" style="margin-top: 2px;">➕ 存入預備金</button>
+                </div>
+            </div>
+
+            <div class="balance-card" style="text-align: left; padding: 12px 14px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="font-size: 0.70rem;">🛡️ 3個月安全防護網：</span>
+                    <span id="target-3m" style="font-weight: 600; color: var(--text-main); font-size: 0.85rem;">$ 0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.70rem;">🛡️ 6個月安心防護網：</span>
+                    <span id="target-6m" style="font-weight: 600; color: var(--text-main); font-size: 0.85rem;">$ 0</span>
+                </div>
+                <hr style="border: none; border-top: 1px solid var(--card-border); margin: 6px 0;">
+                
+                <!-- 達成率與小豬公水位展示 -->
+                <div class="piggy-layout" style="margin-top: 8px;">
+                    <div class="piggy-info">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.75rem; font-weight: 500;">已存總金額：</span>
+                            <span id="total-saved-display" style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);">$ 0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.75rem; font-weight: 500;">達成率(6個月)：</span>
+                            <span id="saving-progress-text" style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);">0%</span>
+                        </div>
+                    </div>
+                    <div class="piggy-container">
+                        <div id="piggy-water-emergency" class="piggy-water" style="height: 0%;"></div>
+                        <div id="piggy-text-emergency" class="piggy-percentage">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transaction-section">
+                <div class="transaction-header" onclick="toggleDepositBox()">
+                    <h3>存入明細紀錄</h3>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span id="deposit-count" style="font-size: 0.75rem; color: var(--text-sub);">共 0 筆</span>
+                        <span id="deposit-toggle-text" style="font-size: 0.75rem; color: var(--text-sub); font-weight: 500;">展開</span>
+                    </div>
+                </div>
+                <div id="deposit-list" class="transaction-scroll-box collapsed">
+                    <p class="empty-text">目前尚無存入紀錄</p>
+                </div>
+            </div>
+        </div>
 
         <!-- 【第四頁：基礎保險配置】 -->
         <div id="page-4" class="page-content">
@@ -264,8 +634,8 @@
             <div class="morandi-card"><p>🛠️ 檢核清單與規劃功能建置中，敬請期待！</p></div>
         </div>
 
-        <!-- 【第五頁：目標管理】 -->
-        <div id="page-5" class="page-content active">
+       <!-- 【第五頁：目標管理】 -->
+        <div id="page-5" class="page-content">
             <header class="page-header-flex">
                 <div>
                     <h1>目標管理</h1>
@@ -370,6 +740,8 @@
             ]
         };
 
+        let expenseChartInstance = null;
+
         function switchPage(pageNum) {
             document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.remove('active');
@@ -377,7 +749,12 @@
             const targetPage = document.getElementById(`page-${pageNum}`);
             if (targetPage) {
                 targetPage.classList.add('active');
-                if (pageNum === 5) {
+                if (pageNum === 2) {
+                    renderExpenses();
+                    updateChart();
+                } else if (pageNum === 3) {
+                    calculateEmergencyFund();
+                } else if (pageNum === 5) {
                     renderGoals();
                 }
             }
@@ -388,6 +765,213 @@
             if (modal) {
                 modal.classList.toggle('active');
             }
+        }
+
+        function addTransaction(event) {
+            event.preventDefault();
+            const amountInput = document.getElementById('amount');
+            const categorySelect = document.getElementById('category');
+            const descInput = document.getElementById('description');
+
+            const amount = parseFloat(amountInput.value);
+            if (!amount || amount <= 0) return;
+
+            const newTransaction = {
+                id: Date.now(),
+                amount: amount,
+                category: categorySelect ? categorySelect.value : '未分類',
+                desc: descInput && descInput.value.trim() ? descInput.value.trim() : '無說明',
+                date: new Date().toLocaleDateString()
+            };
+
+            expenses.unshift(newTransaction);
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+
+            amountInput.value = '';
+            if (descInput) descInput.value = '';
+            
+            renderExpenses();
+            updateChart();
+        }
+
+        function renderExpenses() {
+            const listContainer = document.getElementById('transaction-list');
+            const countEl = document.getElementById('transaction-count');
+            const totalBalanceEl = document.getElementById('total-balance');
+            if (!listContainer) return;
+
+            let total = expenses.reduce((sum, item) => sum + item.amount, 0);
+            if (totalBalanceEl) totalBalanceEl.innerText = `$ ${total.toLocaleString()}`;
+            if (countEl) countEl.innerText = `共 ${expenses.length} 筆`;
+
+            if (expenses.length === 0) {
+                listContainer.innerHTML = `<p class="empty-text">目前尚無記賬資料</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = expenses.map(item => `
+                <div class="transaction-item">
+                    <div>
+                        <span style="font-weight: 500; color: var(--text-main);">${item.desc || '無說明'}</span>
+                        <span class="category-tag" style="margin-left: 6px;">${item.category || '未分類'}</span>
+                        <span style="font-size: 0.65rem; color: var(--text-sub); display: block;">${item.date || ''}</span>
+                    </div>
+                    <span class="text-expense">- $ ${item.amount.toLocaleString()}</span>
+                </div>
+            `).join('');
+        }
+
+        function toggleTransactionBox() {
+            const box = document.getElementById('transaction-list');
+            const section = box ? box.closest('.transaction-section') : null;
+            const toggleText = document.getElementById('toggle-text');
+            if (box) {
+                box.classList.toggle('collapsed');
+                if (section) section.classList.toggle('collapsed');
+                if (toggleText) {
+                    toggleText.innerText = box.classList.contains('collapsed') ? '展開' : '收合';
+                }
+            }
+        }
+
+        function toggleDepositBox() {
+            const box = document.getElementById('deposit-list');
+            const section = box ? box.closest('.transaction-section') : null;
+            const toggleText = document.getElementById('deposit-toggle-text');
+            if (box) {
+                box.classList.toggle('collapsed');
+                if (section) section.classList.toggle('collapsed');
+                if (toggleText) {
+                    toggleText.innerText = box.classList.contains('collapsed') ? '展開' : '收合';
+                }
+            }
+        }
+
+        function resetAppData() {
+            if (confirm("確定要清除所有記賬資料嗎？")) {
+                localStorage.removeItem('expenses');
+                expenses = [];
+                renderExpenses();
+                updateChart();
+            }
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById('expenseChart');
+            if (!ctx) return;
+
+            const categoryTotals = {};
+            expenses.forEach(item => {
+                const cat = item.category || '未分類';
+                categoryTotals[cat] = (categoryTotals[cat] || 0) + item.amount;
+            });
+
+            const labels = Object.keys(categoryTotals);
+            const data = Object.values(categoryTotals);
+
+            if (expenseChartInstance) {
+                expenseChartInstance.destroy();
+            }
+
+            expenseChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels.length > 0 ? labels : ['無資料'],
+                    datasets: [{
+                        data: data.length > 0 ? data : [1],
+                        backgroundColor: ['#8C7A6B', '#9C948C', '#B5A697', '#D4C5B9', '#E5E0D8', '#C4B5A5'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        function calculateEmergencyFund() {
+            const expenseInput = document.getElementById('monthly-expense');
+            if (!expenseInput) return;
+
+            const monthlyExpense = parseFloat(expenseInput.value) || 0;
+            const target3m = monthlyExpense * 3;
+            const target6m = monthlyExpense * 6;
+
+            let totalSaved = emergencyDeposits.reduce((sum, item) => sum + item.amount, 0);
+
+            const t3mEl = document.getElementById('target-3m');
+            const t6mEl = document.getElementById('target-6m');
+            const totalSavedEl = document.getElementById('total-saved-display');
+            const progressEl = document.getElementById('saving-progress-text');
+            const waterEl = document.getElementById('piggy-water-emergency');
+            const textEl = document.getElementById('piggy-text-emergency');
+
+            if (t3mEl) t3mEl.innerText = `$ ${target3m.toLocaleString()}`;
+            if (t6mEl) t6mEl.innerText = `$ ${target6m.toLocaleString()}`;
+            if (totalSavedEl) totalSavedEl.innerText = `$ ${totalSaved.toLocaleString()}`;
+
+            let progress = 0;
+            if (target6m > 0) {
+                progress = Math.min(Math.round((totalSaved / target6m) * 100), 100);
+            }
+            if (progressEl) progressEl.innerText = `${progress}%`;
+            if (waterEl) waterEl.style.height = `${progress}%`;
+            if (textEl) textEl.innerText = `${progress}%`;
+
+            localStorage.setItem('emergency_monthly_expense', monthlyExpense);
+            renderDepositList();
+        }
+
+        function addEmergencyDeposit() {
+            const amountInput = document.getElementById('deposit-amount');
+            const descInput = document.getElementById('deposit-desc');
+
+            if (!amountInput) return;
+
+            const amount = parseFloat(amountInput.value);
+            if (!amount || amount <= 0) return;
+
+            const newDeposit = {
+                id: Date.now(),
+                amount: amount,
+                desc: descInput && descInput.value.trim() ? descInput.value.trim() : '存入預備金',
+                date: new Date().toLocaleDateString()
+            };
+
+            emergencyDeposits.unshift(newDeposit);
+            localStorage.setItem('emergency_deposits', JSON.stringify(emergencyDeposits));
+
+            amountInput.value = '';
+            if (descInput) descInput.value = '';
+
+            calculateEmergencyFund();
+        }
+
+        function renderDepositList() {
+            const listContainer = document.getElementById('deposit-list');
+            const countEl = document.getElementById('deposit-count');
+            if (!listContainer) return;
+
+            if (countEl) countEl.innerText = `共 ${emergencyDeposits.length} 筆`;
+
+            if (emergencyDeposits.length === 0) {
+                listContainer.innerHTML = `<p class="empty-text">目前尚無存入紀錄</p>`;
+                return;
+            }
+
+            listContainer.innerHTML = emergencyDeposits.map(item => `
+                <div class="transaction-item">
+                    <div>
+                        <span style="font-weight: 500; color: var(--text-main);">${item.desc}</span>
+                        <span style="font-size: 0.65rem; color: var(--text-sub); display: block;">${item.date}</span>
+                    </div>
+                    <span style="color: #4A7C59; font-weight: 500;">+ $ ${item.amount.toLocaleString()}</span>
+                </div>
+            `).join('');
         }
 
         function renderGoals() {
@@ -409,7 +993,7 @@
             container.innerHTML = goals.map(goal => {
                 const percent = goal.target > 0 ? Math.min(Math.round((goal.current / goal.target) * 100), 100) : 0;
                 return `
-                    <div class="morandi-card" onclick="editGoal('${categoryKey}', ${goal.id})" style="cursor: pointer;">
+                    <div class="morandi-card" onclick="editGoal('${categoryKey}', ${goal.id})">
                         <div class="piggy-layout">
                             <div class="piggy-info" style="width: 72%;">
                                 <h3 style="margin: 0 0 4px 0; font-size: 0.85rem;">${goal.title}</h3>
@@ -447,6 +1031,12 @@
 
         // 初始化載入
         window.addEventListener('DOMContentLoaded', () => {
+            const savedMonthly = localStorage.getItem('emergency_monthly_expense');
+            if (savedMonthly) {
+                const expenseInput = document.getElementById('monthly-expense');
+                if (expenseInput) expenseInput.value = savedMonthly;
+            }
+            calculateEmergencyFund();
             renderGoals();
         });
     </script>
