@@ -297,13 +297,15 @@ body {
 
 .nav-modal-content {
     background-color: var(--card-bg);
-    width: 80%;
+    width: 85%;
     max-width: 280px;
+    max-height: 80vh; /* 限制最大高度 */
+    overflow-y: auto;  /* 超出時顯示捲軸 */
     border-radius: 20px;
-    padding: 20px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     transform: scale(0.9);
     transition: transform 0.25s ease;
