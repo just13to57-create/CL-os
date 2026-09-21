@@ -260,3 +260,68 @@ document.addEventListener('DOMContentLoaded', () => {
     updateChart();
     calculateEmergencyFund();
 });
+
+
+// ==========================================
+// 第五頁：目標管理邏輯
+// ==========================================
+function renderGoals() {
+    renderGoalGroup('short-goal-list', financialGoals.filter(g => g.type === 'short'));
+    renderGoalGroup('mid-goal-list', financialGoals.filter(g => g.type === 'mid'));
+    renderGoalGroup('long-goal-list', financialGoals.filter(g => g.type === 'long'));
+}
+
+function renderGoalGroup(containerId, goals) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (goals.length === 0) {
+        container.innerHTML = `<p class="empty-text">尚無此區間目標</p>`;
+        return;
+    }
+
+    container.innerHTML = goals.map(item => {
+        const percent = item.target > 0 ? Math.min(Math.round((item.current / item.target) * 100), 100) : 0;
+        return `
+            <div class="morandi-card goal-card" onclick="editGoal(${item.id})" style="cursor: pointer;">
+                <div class="goal-header">
+                    <h3>${item.title}</h3>
+                    <span class="goal-amount">NT$ ${item.current.toLocaleString()} / ${item.target.toLocaleString()}</span>
+                </div>
+                <p class="goal-date">預計達成：${item.date}</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                </div>
+                <div class="goal-footer">
+                    <span class="category-tag">${item.tag || '一般目標'}</span>
+                    <span class="text-percentage">${percent}%</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function editGoal(id) {
+    const goal = financialGoals.find(g => g.id === id);
+    if (!goal) return;
+
+    const newTitle = prompt("修改目標名稱：", goal.title);
+    if (newTitle === null) return;
+
+    const newCurrent = prompt("修改目前已存金額：", goal.current);
+    if (newCurrent === null) return;
+
+    const newTarget = prompt("修改目標總金額：", goal.target);
+    if (newTarget === null) return;
+
+    const newDate = prompt("修改預計達成日期 (YYYY-MM-DD)：", goal.date);
+    if (newDate === null) return;
+
+    goal.title = newTitle.trim() || goal.title;
+    goal.current = parseFloat(newCurrent) >= 0 ? parseFloat(newCurrent) : goal.current;
+    goal.target = parseFloat(newTarget) > 0 ? parseFloat(newTarget) : goal.target;
+    goal.date = newDate.trim() || goal.date;
+
+    localStorage.setItem('financial_goals', JSON.stringify(financialGoals));
+    renderGoals();
+}
