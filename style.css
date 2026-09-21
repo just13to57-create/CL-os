@@ -24,8 +24,8 @@ body {
 .phone-container {
     width: 100%;
     max-width: 414px;
-    height: 100vh; /* 在手機或小螢幕撐滿全高 */
-    max-height: 880px; /* 給予適當且充裕的手機外框最大高度限制 */
+    height: 100vh;
+    max-height: 880px;
     background-color: var(--bg-color);
     display: flex;
     flex-direction: column;
@@ -38,7 +38,7 @@ body {
 
 @media (min-width: 415px) {
     .phone-container {
-        height: 88vh; /* 電腦版讓畫面稍微擴展，佔據更多舒適垂直空間 */
+        height: 88vh;
         border: 8px solid #4A403A;
     }
 }
@@ -64,18 +64,21 @@ body {
     flex-shrink: 0;
 }
 
+/* 已加大上下留白間距 */
 .page-header-flex {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;    /* 上方增加留白 */
-    margin-bottom: 16px;  /* 下方增加留白，讓標題與下方卡片更有距離 */
+    margin-top: 16px !important;
+    margin-bottom: 24px !important;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .page-header-flex h1 {
     font-size: 1.2rem;
     color: var(--text-main);
-    margin: 0 0 4px 0;
+    margin: 0 0 6px 0;
 }
 
 .page-header-flex p {
