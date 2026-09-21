@@ -410,3 +410,18 @@ body {
 .nav-modal-content button:active {
     background-color: var(--card-border);
 }
+
+/* 目標群組區塊樣式 */
+.goal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.section-title {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    margin: 6px 0 2px 4px;
+    font-weight: 600;
+}
