@@ -572,41 +572,19 @@
                 <p>將夢想拆解為短、中、長期，點擊任一目標卡片即可直接修改內容！</p>
             </div>
 
-            <!-- 短期目標：初設為空，有新增時才動態加入 -->
             <div class="goal-section">
                 <h3 class="section-title" style="font-size: 0.85rem; color: var(--text-main); margin: 6px 0;">⚡ 短期目標（1 - 3 年內）</h3>
-                <div class="page-1-list" id="short-goal-list">
-                    <p class="empty-text">目前尚無短期目標，點擊新增</p>
-                </div>
+                <div class="page-1-list" id="short-goal-list"></div>
             </div>
 
-            <!-- 中期目標：初設為空，有新增時才動態加入 -->
             <div class="goal-section">
                 <h3 class="section-title" style="font-size: 0.85rem; color: var(--text-main); margin: 6px 0;">🌱 中期目標（3 - 5 年）</h3>
-                <div class="page-1-list" id="mid-goal-list">
-                    <p class="empty-text">目前尚無中期目標，點擊新增</p>
-                </div>
+                <div class="page-1-list" id="mid-goal-list"></div>
             </div>
 
-            <!-- 長期目標：保留一個你指定的預設目標 -->
             <div class="goal-section">
                 <h3 class="section-title" style="font-size: 0.85rem; color: var(--text-main); margin: 6px 0;">🌳 長期目標（10 年以上）</h3>
-                <div class="page-1-list" id="long-goal-list">
-                    <!-- 預設只有一個長期目標 -->
-                    <div class="morandi-card goal-card">
-                        <div class="goal-header">
-                            <h3>每個月 5w 被動收入</h3>
-                            <span class="goal-amount">已達成: $ 0 / 目標: $ 12,000,000</span>
-                        </div>
-                        <p class="goal-date">預計達成：2036-12-31</p>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill" style="width: 0%;"></div>
-                        </div>
-                        <div class="goal-footer">
-                            <span class="text-percentage">0%</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="page-1-list" id="long-goal-list"></div>
             </div>
         </div>
 
@@ -631,7 +609,7 @@
             </header>
             <div class="morandi-card">
                 <h3>📈 投資組合配置</h3>
-                <p style="margin-top: 4px;">配置股票、債券、現金與其他資產比例，平衡風險與報酬。</p>
+                <p style="margin-top: 4px;">配置股票, 債券, 現金與其他資產比例，平衡風險與報酬。</p>
             </div>
             <div class="morandi-card"><p>🛠️ 資產配置功能建置中，敬請期待！</p></div>
         </div>
@@ -673,15 +651,12 @@
         
         let financialGoals = JSON.parse(localStorage.getItem('financial_goals')) || {
             short: [
-                { id: 1, title: "存滿 6 個月緊急預備金", target: 150000, current: 50000, desc: "確保失業或突發狀況時的安全網" },
-                { id: 2, title: "清償所有信用卡循環利息", target: 20000, current: 5000, desc: "避免高額利息侵蝕資產" }
+                { id: 1, title: "存滿 6 個月緊急預備金", target: 150000, current: 50000, desc: "確保失業或突發狀況時的安全網" }
             ],
             mid: [
-                { id: 3, title: "存取第一桶金（50萬）", target: 500000, current: 120000, desc: "作為未來買房或投資的頭期本金" },
-                { id: 4, title: "完成基礎保險全面配置", target: 30000, current: 15000, desc: "建構完整醫療與意外保障" }
+                { id: 3, title: "存取第一桶金（50萬）", target: 500000, current: 120000, desc: "作為未來買房或投資的頭期本金" }
             ],
             long: [
-                { id: 5, title: "購屋頭期款準備", target: 1500000, current: 200000, desc: "為 5 年內擁有自己的家做準備" },
                 { id: 6, title: "啟動被動收入退休計畫", target: 5000000, current: 300000, desc: "達成財務自由的終極目標" }
             ]
         };
@@ -875,17 +850,12 @@
             if (!amountInput) return;
 
             const amount = parseFloat(amountInput.value);
-            if (!amount || amount <= 0) {
-                alert("請輸入有效的存入金額！");
-                return;
-            }
-
-            const description = descInput && descInput.value.trim() ? descInput.value.trim() : '存入預備金';
+            if (!amount || amount <= 0) return;
 
             const newDeposit = {
                 id: Date.now(),
                 amount: amount,
-                desc: description,
+                desc: descInput && descInput.value.trim() ? descInput.value.trim() : '存入預備金',
                 date: new Date().toLocaleDateString()
             };
 
@@ -916,7 +886,7 @@
                         <span style="font-weight: 500; color: var(--text-main);">${item.desc}</span>
                         <span style="font-size: 0.65rem; color: var(--text-sub); display: block;">${item.date}</span>
                     </div>
-                    <span style="color: #5B7065; font-weight: 500;">+ $ ${item.amount.toLocaleString()}</span>
+                    <span style="color: #4A7C59; font-weight: 500;">+ $ ${item.amount.toLocaleString()}</span>
                 </div>
             `).join('');
         }
@@ -931,27 +901,24 @@
             const container = document.getElementById(containerId);
             if (!container) return;
 
-            const goals = financialGoals[categoryKey] || [];
-            if (goals.length === 0) {
-                container.innerHTML = `<p class="empty-text">目前尚無此階段目標</p>`;
+            const goals = financialGoals[categoryKey];
+            if (!goals || goals.length === 0) {
+                container.innerHTML = `<p class="empty-text">目前尚無目標</p>`;
                 return;
             }
 
             container.innerHTML = goals.map(goal => {
                 const percent = goal.target > 0 ? Math.min(Math.round((goal.current / goal.target) * 100), 100) : 0;
                 return `
-                    <div class="morandi-card" onclick="editGoal('${categoryKey}', ${goal.id})" style="cursor: pointer;">
+                    <div class="morandi-card" onclick="editGoal('${categoryKey}', ${goal.id})">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                             <h3 style="margin: 0; font-size: 0.85rem;">${goal.title}</h3>
-                            <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-sub);">${percent}%</span>
+                            <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-main);">${percent}%</span>
                         </div>
-                        <p style="font-size: 0.7rem; margin-bottom: 8px;">${goal.desc || ''}</p>
+                        <p style="font-size: 0.7rem; color: var(--text-sub); margin-bottom: 6px;">${goal.desc}</p>
                         <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-sub);">
-                            <span>已達成: $ ${goal.current.toLocaleString()}</span>
+                            <span>已存: $ ${goal.current.toLocaleString()}</span>
                             <span>目標: $ ${goal.target.toLocaleString()}</span>
-                        </div>
-                        <div style="width: 100%; background-color: var(--bg-color); height: 6px; border-radius: 3px; margin-top: 6px; overflow: hidden;">
-                            <div style="width: ${percent}%; background-color: var(--text-main); height: 100%; border-radius: 3px;"></div>
                         </div>
                     </div>
                 `;
@@ -959,38 +926,28 @@
         }
 
         function editGoal(categoryKey, goalId) {
-            const goal = financialGoals[categoryKey].find(g => g.id === goalId);
+            const goals = financialGoals[categoryKey];
+            const goal = goals.find(g => g.id === goalId);
             if (!goal) return;
 
-            const newTitle = prompt("修改目標名稱：", goal.title);
-            if (newTitle === null) return;
-
-            const newTarget = prompt("修改目標金額：", goal.target);
-            if (newTarget === null) return;
-
-            const newCurrent = prompt("修改目前已存金額：", goal.current);
-            if (newCurrent === null) return;
-
-            const newDesc = prompt("修改目標說明：", goal.desc);
-            if (newDesc === null) return;
-
-            goal.title = newTitle.trim() || goal.title;
-            goal.target = parseFloat(newTarget) || goal.target;
-            goal.current = parseFloat(newCurrent) || goal.current;
-            goal.desc = newDesc.trim();
-
-            localStorage.setItem('financial_goals', JSON.stringify(financialGoals));
-            renderGoals();
+            const newCurrent = prompt(`更新目標「${goal.title}」的目前已存金額：`, goal.current);
+            if (newCurrent !== null) {
+                const val = parseFloat(newCurrent);
+                if (!isNaN(val) && val >= 0) {
+                    goal.current = val;
+                    localStorage.setItem('financial_goals', JSON.stringify(financialGoals));
+                    renderGoals();
+                }
+            }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedExpense = localStorage.getItem('emergency_monthly_expense');
-            const expenseInput = document.getElementById('monthly-expense');
-            if (savedExpense !== null && expenseInput) {
-                expenseInput.value = savedExpense;
+        // 初始化載入
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedMonthly = localStorage.getItem('emergency_monthly_expense');
+            if (savedMonthly) {
+                const expenseInput = document.getElementById('monthly-expense');
+                if (expenseInput) expenseInput.value = savedMonthly;
             }
-            renderExpenses();
-            updateChart();
             calculateEmergencyFund();
             renderGoals();
         });
