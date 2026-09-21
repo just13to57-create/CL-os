@@ -158,72 +158,7 @@
             margin: 4px 0 0 0;
         }
 
-        /* 左右排版區塊（左側文字/數據，右側小豬公） */
-        .piggy-layout {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .piggy-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            width: 65%;
-        }
-
-        /* 小豬公容器與樣式 */
-        .piggy-container {
-            position: relative;
-            width: 75px;
-            height: 60px;
-            border: 2px solid var(--text-main);
-            border-radius: 30px 30px 24px 24px;
-            background-color: var(--bg-color);
-            overflow: hidden;
-            display: flex;
-            align-items: flex-end;
-            box-sizing: border-box;
-        }
-
-        /* 小豬鼻子與耳朵小裝飾 */
-        .piggy-container::before {
-            content: "🐽";
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translate(-50%, -50%); /* 透過位移讓正中心對齊容器中心 */
-            font-size: 0.8rem;
-            z-index: 2;
-            opacity: 0.8;
-        }
-
-        /* 豬公內部水位 */
-        .piggy-water {
-            width: 100%;
-            background-color: #E29578; /* 溫潤的磚橘色水位 */
-            transition: height 0.4s ease;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            z-index: 1;
-            opacity: 0.85;
-        }
-        /* % 數字顯示 */
-        .piggy-percentage {
-            position: absolute;
-            top: 35px;                /* 直接用 top 決定距離容器頂部的絕對位置 */
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-main);
-            z-index: 3;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
-        }
+       
         .form-card .form-group {
             display: flex;
             flex-direction: column;
