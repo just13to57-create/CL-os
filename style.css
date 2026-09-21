@@ -59,10 +59,11 @@ body {
     display: flex;
 }
 
-/* 針對第一頁（首頁導航）特別增加上下呼吸空間與排版優化 */
+/* 針對首頁（#page-1）在電腦版進行完美均分，消除底部不自然的空白 */
 #page-1 {
-    padding-top: 24px !important;
-    padding-bottom: 24px !important;
+    justify-content: flex-start; /* 保持由上往下排列，但透過內部間距優化 */
+    padding-top: 20px;
+    padding-bottom: 16px;
 }
 
 #page-2 .chart-container,
@@ -74,8 +75,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 8px;
-    padding-bottom: 12px;
+    padding-top: 4px;
+    padding-bottom: 12px; /* 標題下方保有舒服的呼吸空間 */
 }
 
 .page-header-flex h1 {
@@ -126,7 +127,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 8px; /* 讓標題下方與卡片清單保持舒適距離 */
 }
 
 .page-1-list .morandi-card {
