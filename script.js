@@ -4,8 +4,8 @@
 let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 let emergencyDeposits = JSON.parse(localStorage.getItem('emergency_deposits')) || [];
 
-// 💡 更新後的目標清單
-let financialGoals = [
+// 初始化目標清單（若 localStorage 已經有儲存過則優先讀取，沒有則使用預設值）
+let financialGoals = JSON.parse(localStorage.getItem('financial_goals')) || [
     { id: 1, type: 'short', title: '🛡️ 存滿 6 個月緊急預備金', current: 60000, target: 180000, date: '2026-12-31', tag: '安全網' },
     { id: 2, type: 'mid', title: '💰 存取第一桶金（50萬）', current: 150000, target: 500000, date: '2028-12-31', tag: '資本累積' },
     { id: 3, type: 'long', title: '🌅 啟動被動收入退休計畫', current: 300000, target: 3000000, date: '2035-12-31', tag: '退休規劃' }
@@ -28,7 +28,7 @@ function switchPage(pageNum) {
         } else if (pageNum === 3) {
             calculateEmergencyFund();
         } else if (pageNum === 5) {
-            renderGoals(); // 💡 加上這行，切到第5頁時才會畫出目標清單！
+            renderGoals(); // 切到第5頁時渲染目標清單
         }
     }
 }
@@ -183,6 +183,16 @@ function calculateEmergencyFund() {
 
     let totalSaved = emergencyDeposits.reduce((sum, item) => sum + item.amount, 0);
 
+    // 同步更新到目標管理中的第 1 個目標（6個月緊急預備金）
+    const emergencyGoal = financialGoals.find(g => g.id === 1);
+    if (emergencyGoal) {
+        emergencyGoal.current = totalSaved;
+        if (target6m > 0) {
+            emergencyGoal.target = target6m; // 自動依每月開銷更新 6 個月目標總額
+        }
+        localStorage.setItem('financial_goals', JSON.stringify(financialGoals));
+    }
+
     const t3mEl = document.getElementById('target-3m');
     const t6mEl = document.getElementById('target-6m');
     const totalSavedEl = document.getElementById('total-saved-display');
@@ -193,8 +203,9 @@ function calculateEmergencyFund() {
     if (totalSavedEl) totalSavedEl.innerText = `$ ${totalSaved.toLocaleString()}`;
 
     let progress = 0;
-    if (target6m > 0) {
-        progress = Math.min(Math.round((totalSaved / target6m) * 100), 100);
+    const currentTarget = emergencyGoal ? emergencyGoal.target : target6m;
+    if (currentTarget > 0) {
+        progress = Math.min(Math.round((totalSaved / currentTarget) * 100), 100);
     }
     if (progressEl) progressEl.innerText = `${progress}%`;
 
@@ -265,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderExpenses();
     updateChart();
     calculateEmergencyFund();
-    renderGoals(); // 💡 加上這行，確保網頁一開好就渲染目標
+    renderGoals(); 
 });
 
 // ==========================================
@@ -328,6 +339,23 @@ function editGoal(id) {
     goal.target = parseFloat(newTarget) > 0 ? parseFloat(newTarget) : goal.target;
     goal.date = newDate.trim() || goal.date;
 
+    // 如果修改的是 ID 1（緊急預備金），同時同步回應第三頁的預備金總額
+    if (id === 1) {
+        // 透過調整 emergencyDeposits 陣列讓總額符合修改後的 current
+        emergencyDeposits = [{
+            id: Date.now(),
+            amount: goal.current,
+            desc: '手動調整預備金',
+            date: new Date().toLocaleDateString()
+        }];
+        localStorage.setItem('emergency_deposits', JSON.stringify(emergencyDeposits));
+    }
+
     localStorage.setItem('financial_goals', JSON.stringify(financialGoals));
     renderGoals();
+    
+    // 如果目前在第三頁，順便更新第三頁的畫面顯示
+    if (typeof calculateEmergencyFund === 'function') {
+        calculateEmergencyFund();
+    }
 }
