@@ -59,20 +59,23 @@ body {
     display: flex;
 }
 
+/* 針對第一頁（首頁導航）特別增加上下呼吸空間與排版優化 */
+#page-1 {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+}
+
 #page-2 .chart-container,
 #page-3 .balance-card:nth-of-type(3) {
     flex-shrink: 0;
 }
 
-/* 已加大上下留白間距 */
 .page-header-flex {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 16px !important;
-    margin-bottom: 24px !important;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 8px;
+    padding-bottom: 12px;
 }
 
 .page-header-flex h1 {
@@ -123,6 +126,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-top: 8px; /* 讓標題下方與卡片清單保持舒適距離 */
 }
 
 .page-1-list .morandi-card {
