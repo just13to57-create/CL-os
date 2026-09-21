@@ -558,18 +558,74 @@
             <div class="morandi-card"><p>🛠️ 檢核清單與規劃功能建置中，敬請期待！</p></div>
         </div>
 
-        <!-- 【第五頁：目標管理】 -->
-        <div id="page-5" class="page-content">
-            <header class="page-header-flex">
-                <div><h1>目標管理</h1><p>實現您的財務夢想藍圖</p></div>
-                <button onclick="toggleMenu()" class="badge">📋 選單</button>
-            </header>
-            <div class="morandi-card">
-                <h3>🎯 我的財務目標</h3>
-                <p style="margin-top: 4px;">設定您的短期與長期財務目標並追蹤進度。</p>
-            </div>
-            <div class="morandi-card"><p>🛠️ 目標追蹤功能建置中，敬請期待！</p></div>
+       <!-- 【第五頁：目標管理】 -->
+<div id="page-5" class="page-content">
+    <header class="page-header-flex">
+        <div>
+            <h1>目標管理</h1>
+            <p>設定您的理財方向，追蹤每一步實現的進度</p>
         </div>
+        <div class="header-btns">
+            <button onclick="switchPage(1)" class="badge">🏠 首頁</button>
+            <button class="badge" style="background-color: var(--text-main); color: white;">＋ 新增</button>
+        </div>
+    </header>
+
+    <div class="morandi-card" style="background-color: var(--accent-light);">
+        <h3>🎯 目標達成總覽</h3>
+        <p>目前共有 3 個進行中的夢想，已累積達成總額的 58%！</p>
+    </div>
+
+    <div class="page-1-list">
+        <!-- 目標卡片 1 -->
+        <div class="morandi-card goal-card">
+            <div class="goal-header">
+                <h3>🏖️ 日本賞楓之旅</h3>
+                <span class="goal-amount">NT$ 45,000 / 60,000</span>
+            </div>
+            <p class="goal-date">預計達成：2026-11-30（剩餘 2 個月）</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: 75%;"></div>
+            </div>
+            <div class="goal-footer">
+                <span class="category-tag">旅遊基金</span>
+                <span class="text-percentage">75%</span>
+            </div>
+        </div>
+
+        <!-- 目標卡片 2 -->
+        <div class="morandi-card goal-card">
+            <div class="goal-header">
+                <h3>🚗 換新車頭期款</h3>
+                <span class="goal-amount">NT$ 180,000 / 300,000</span>
+            </div>
+            <p class="goal-date">預計達成：2027-06-30</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: 60%;"></div>
+            </div>
+            <div class="goal-footer">
+                <span class="category-tag">大筆消費</span>
+                <span class="text-percentage">60%</span>
+            </div>
+        </div>
+
+        <!-- 目標卡片 3 -->
+        <div class="morandi-card goal-card">
+            <div class="goal-header">
+                <h3>💰 緊急預備金</h3>
+                <span class="goal-amount">NT$ 120,000 / 240,000</span>
+            </div>
+            <p class="goal-date">預計達成：2026-12-31</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: 50%;"></div>
+            </div>
+            <div class="goal-footer">
+                <span class="category-tag">安全防護</span>
+                <span class="text-percentage">50%</span>
+            </div>
+        </div>
+    </div>
+</div>
 
         <!-- 【第六頁：負債管理】 -->
         <div id="page-6" class="page-content">
