@@ -572,19 +572,41 @@
                 <p>將夢想拆解為短、中、長期，點擊任一目標卡片即可直接修改內容！</p>
             </div>
 
+            <!-- 短期目標：初設為空，有新增時才動態加入 -->
             <div class="goal-section">
                 <h3 class="section-title" style="font-size: 0.85rem; color: var(--text-main); margin: 6px 0;">⚡ 短期目標（1 - 3 年內）</h3>
-                <div class="page-1-list" id="short-goal-list"></div>
+                <div class="page-1-list" id="short-goal-list">
+                    <p class="empty-text">目前尚無短期目標，點擊新增</p>
+                </div>
             </div>
 
+            <!-- 中期目標：初設為空，有新增時才動態加入 -->
             <div class="goal-section">
                 <h3 class="section-title" style="font-size: 0.85rem; color: var(--text-main); margin: 6px 0;">🌱 中期目標（3 - 5 年）</h3>
-                <div class="page-1-list" id="mid-goal-list"></div>
+                <div class="page-1-list" id="mid-goal-list">
+                    <p class="empty-text">目前尚無中期目標，點擊新增</p>
+                </div>
             </div>
 
+            <!-- 長期目標：保留一個你指定的預設目標 -->
             <div class="goal-section">
                 <h3 class="section-title" style="font-size: 0.85rem; color: var(--text-main); margin: 6px 0;">🌳 長期目標（10 年以上）</h3>
-                <div class="page-1-list" id="long-goal-list"></div>
+                <div class="page-1-list" id="long-goal-list">
+                    <!-- 預設只有一個長期目標 -->
+                    <div class="morandi-card goal-card">
+                        <div class="goal-header">
+                            <h3>每個月 5w 被動收入</h3>
+                            <span class="goal-amount">已達成: $ 0 / 目標: $ 12,000,000</span>
+                        </div>
+                        <p class="goal-date">預計達成：2036-12-31</p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <div class="goal-footer">
+                            <span class="text-percentage">0%</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
